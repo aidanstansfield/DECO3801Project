@@ -148,7 +148,7 @@ def determine_group_numbers(no_people, min_size, ideal_size, max_size):
     return final_result    
                 
 #determine_group_numbers(20, 3, 4, 5)
-print(determine_group_numbers(5531, 18, 24, 38))
+#print(determine_group_numbers(5531, 18, 24, 38))
 #determine_group_numbers(10, 4, 4, 5)
 #determine_group_numbers(56, 3, 54, 55)
 #determine_group_numbers(15, 8, 9, 10)

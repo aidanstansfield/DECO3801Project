@@ -5,19 +5,25 @@ import random
 
 import simanneal
 
+from group_size_generator import determine_group_numbers
+
+def split_teams(students, teams):
+	i = 0
+	for team_size, team_count in teams.items():
+		for _ in range(team_count):
+			yield students[i:i+team_size]
+			i += team_size
 
 class TeamBuilder(simanneal.Annealer):
-	def __init__(self, state, team_size, student_info, constraints):
-		self.team_size = team_size
+	def __init__(self, state, team_sizes, student_info, constraints):
+		self.team_sizes = team_sizes
 		self.student_info = student_info
 		self.constraints = constraints
-		self.num_teams = math.ceil(len(state) / team_size)
 		super().__init__(state)
 	
 	# Naive teams sizes, just to keep this prototype simple
 	def teams(self):
-		for i in range(self.num_teams):
-			yield self.state[i*self.team_size:(i+1)*self.team_size]
+		return split_teams(self.state, self.team_sizes)
 	
 	# All moves are just swaps
 	def move(self):
@@ -83,29 +89,31 @@ class IntegerCountConstraint(Constraint):
 			return len(team) - self.count_bxy.distance(count)
 		
 
+
+
 students     = [ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13]
 student_ages = [23, 21, 20, 26, 28, 21, 16, 18, 18, 19, 18, 19, 17, 19]
 student_info = {sid:{"age":student_ages[sid]} for sid in students}
 
-team_size = 3
-num_teams = math.ceil(len(students) / team_size)
+team_sizes = determine_group_numbers(len(students), 2, 3, 4)
 
 age_constraint = IntegerCountConstraint("age_constraint", "age", 1, True, BXY(1,1), True, BXY(20,30))
 
-tb = TeamBuilder(students, team_size, student_info, [age_constraint])
-tb.steps = 10**2
+tb = TeamBuilder(students, team_sizes, student_info, [age_constraint])
+tb.steps = 10**3
 tb.copy_strategy = "slice"  # state is a list
 result, cost = tb.anneal()
+print()
 print()
 print(result)
 print(cost)
 print()
-for team_no in range(0, num_teams):
-	team = result[team_no*team_size:(team_no+1)*team_size]
+for team_no, team in enumerate(split_teams(result, team_sizes)):
 	print(f"Team {team_no}")
 	for member in team:
 		print(f"sid: {member:3}   age: {student_info[member]['age']:3}")
 	print(f"cost:  {age_constraint.evaluate(team, student_info)}")
 	print()
-print(tb.state)
-print()
+#print(tb.state)
+#print()
+
