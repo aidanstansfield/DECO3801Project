@@ -22,6 +22,8 @@ class Constraint:
 
 
 class IntegerCountConstraint(Constraint):
+	should_tune = 1.0
+	shouldnt_tune = 1.0
 	# Each team <should/shouldn’t> have <BXY> members <with/without> [age] <BXY>.
 	#                   |                 \-----------------\  |             |
 	#                   \------------------------- \        |  \--------\    \------\
@@ -41,9 +43,38 @@ class IntegerCountConstraint(Constraint):
 				count += 1
 		
 		if self.should_bool:
-			return self.count_bxy.distance(count)
+			return self.should_tune * self.priority * self.count_bxy.distance(count)
 		else:
-			return len(team) - self.count_bxy.distance(count)
+			return self.shouldnt_tune * self.priority * (len(team) - self.count_bxy.distance(count))
+
+
+class SubsetSimilarityConstraint(Constraint):
+	similar_tune = 1.0
+	diverse_tune = 1.0
+	# Each team should have <similar/diverse> [interests].
+	#                             |                
+	#                             \--------------- \
+	#                                              V
+	def __init__(self, name, field, priority, similar_bool, candidates):
+		super().__init__(name, field, "integer", priority)
+		self.similar_bool = similar_bool
+		self.candidates = candidates
+	
+	def evaluate(self, team, student_info):
+		votes = {candidate:0 for candidate in self.candidates}
+		voter_count = 0
 		
+		# Collect votes
+		for student in team:
+			num_votes = len(student_info[student][self.field])
+			if num_votes > 0:
+				voter_count += 1
+				for candidate in student_info[student][self.field]:
+					votes[candidate] += 1/num_votes
+		
+		if self.similar_bool:
+			return self.similar_tune * self.priority * (voter_count - max(votes.values()))
+		else:
+			return self.diverse_tune * self.priority * (voter_count/len(candidates) - min(votes.values()))
 
 
