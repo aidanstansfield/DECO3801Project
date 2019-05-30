@@ -4,7 +4,7 @@ import random
 import simanneal
 
 from constraints import *
-from group_size_generator import determine_group_numbers
+from group_size_generator import get_group_sizes
 
 
 ANNEAL_STEPS = 1000
@@ -53,7 +53,7 @@ class TeamBuilder(simanneal.Annealer):
 
 def allocate_teams(min_size, ideal_size, max_size, student_info, constraints):
 	students = list(student_info.keys())
-	team_sizes = determine_group_numbers(len(students), min_size, ideal_size, max_size)
+	team_sizes = get_group_sizes(len(students), min_size, ideal_size, max_size)
 	allocator = TeamBuilder(students, team_sizes, student_info, constraints)
 	allocator.steps = ANNEAL_STEPS
 	allocator.copy_strategy = "slice"  # state is a list

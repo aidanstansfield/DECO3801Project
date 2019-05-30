@@ -214,6 +214,16 @@ def determine_group_numbers(no_people, min_size, ideal_size, max_size):
         raise ImpossibleConstraintsError()
     
     return collate_formed_groups(formed_groups) 
+
+def get_group_sizes(no_people, min_size, ideal_size, max_size):
+    """
+        Returns a dictionary containing the sizes of the 
+        groups formed and the number of groups of that size
+        to be made.
+
+        get_group_sizes(int, int, int, int) -> dict(int : int)
+    """
+    return determine_group_numbers(no_people, min_size, ideal_size, max_size)
                 
 #print(determine_group_numbers(20, 3, 4, 5))
 #print(determine_group_numbers(5531, 18, 24, 38))
