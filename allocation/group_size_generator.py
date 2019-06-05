@@ -45,7 +45,7 @@ def validate_entered_group_sizes(min_size, ideal_size, max_size):
     if max_size < ideal_size:
         raise ValueError("max size cannot be less than ideal size")
 
-def attempt_to_form_ideal_groups(no_people, ideal_size):
+def form_ideal_groups(no_people, ideal_size):
     """
         Forms the maximum number of ideally sized groups given
         the number of people.
@@ -60,7 +60,7 @@ def attempt_to_form_ideal_groups(no_people, ideal_size):
     
     return (remaining_people, groups)
 
-def attempt_to_form_smaller_groups(no_people, ideal_size, min_size):
+def form_smaller_groups(no_people, ideal_size, min_size):
     """
         Attempts to form smaller groups as close to the ideal
         size using the given number of people.
@@ -81,7 +81,7 @@ def attempt_to_form_smaller_groups(no_people, ideal_size, min_size):
 
     return (no_people, formed_groups)
 
-def attempt_to_add_to_existing_groups(no_people, existing_groups, max_size):
+def add_to_existing_groups(no_people, existing_groups, max_size):
     """
         Attempts to add the given number of people to the list of
         existing groups without exceeding the maximum group size.
@@ -103,7 +103,7 @@ def attempt_to_add_to_existing_groups(no_people, existing_groups, max_size):
     
     return no_people
 
-def attempt_to_form_min_sized_group_from_existing(no_people, existing_groups, min_size):
+def form_min_sized_group_from_existing(no_people, existing_groups, min_size):
     """
         Attempts to form a minimum sized group using the given number
         of people by extracting people from the existing groups. People will
@@ -165,19 +165,27 @@ def collate_formed_groups(created_groups):
 
     return collated_result
 
-def determine_group_numbers(no_people, min_size, ideal_size, max_size):
+def determine_group_sizes(no_people, min_size, ideal_size, max_size):
     """
         Attempts to generate a list of group sizes within the given
         size parameters to fit no_people into. 
 
-        If successful, returns a dictionary containing the group sizes
-        to be formed and the number of groups of that size to make.
-        If it is not possible to form groups to match the given
-        constaints, raises an ImpossibleConstraintsError.
+        If successful, returns a dictionary containing the 
+        group sizes to be formed as its keys, with the associated
+        values being the number of groups to form.
+
+        Raises a ValueError when:
+            - There aren't enough people to allocate
+            - The number of people to allocate is negative
+            - The given group sizes are invalid
+        
+        Raises an ImpossibleConstraintsError when it is not
+        possible to allocate the given number of people into
+        groups of the given sizes.
     """
 
     if no_people < 0:
-        ValueError("number of people cannot be negative")
+        raise ValueError("number of people cannot be negative")
 
     validate_entered_group_sizes(min_size, ideal_size, max_size)
 
@@ -191,27 +199,27 @@ def determine_group_numbers(no_people, min_size, ideal_size, max_size):
     # We now know that there are enough people for a minimum sized group,
     # so we try to form ideal sized groups first
     remaining_people, ideal_groups = \
-        attempt_to_form_ideal_groups(no_people, ideal_size)
+        form_ideal_groups(no_people, ideal_size)
     formed_groups.extend(ideal_groups)
 
     # Now, remaining_people < ideal_size
     # We have two options, we can either form smaller groups, or add the
     # remaining people to the existing groups
     remaining_people, smaller_groups = \
-        attempt_to_form_smaller_groups(remaining_people, ideal_size, min_size)
+        form_smaller_groups(remaining_people, ideal_size, min_size)
     formed_groups.extend(smaller_groups)
 
     remaining_people = \
-        attempt_to_add_to_existing_groups(remaining_people, formed_groups, max_size)
+        add_to_existing_groups(remaining_people, formed_groups, max_size)
 
     # The only option left is to try and break people out of
     # groups in order to form another group of minimum size
     remaining_people = \
-        attempt_to_form_min_sized_group_from_existing(remaining_people, formed_groups, min_size)
+        form_min_sized_group_from_existing(remaining_people, formed_groups, min_size)
 
     # If we still have people left over, then it's not possible
     if remaining_people > 0:
-        raise ImpossibleConstraintsError()
+        raise ImpossibleConstraintsError("Cannot form groups of the given sizes")
     
     return collate_formed_groups(formed_groups) 
 
@@ -223,11 +231,4 @@ def get_group_sizes(no_people, min_size, ideal_size, max_size):
 
         get_group_sizes(int, int, int, int) -> dict(int : int)
     """
-    return determine_group_numbers(no_people, min_size, ideal_size, max_size)
-                
-#print(determine_group_numbers(20, 3, 4, 5))
-#print(determine_group_numbers(5531, 18, 24, 38))
-#print(determine_group_numbers(10, 4, 4, 5))
-#print(determine_group_numbers(56, 24, 54, 55))
-#print(determine_group_numbers(1000, 78, 79, 80))
-#print(determine_group_numbers(15, 8, 9, 10))
+    return determine_group_sizes(no_people, min_size, ideal_size, max_size)
