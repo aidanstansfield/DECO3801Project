@@ -1,3 +1,4 @@
+# Simple class for working with ranges in constraints
 class BXY:
 	def __init__(self, lower, upper):
 		self.lower = lower
@@ -10,6 +11,7 @@ class BXY:
 		return max(0, self.lower - value, value - self.upper)
 
 
+# ABC for all constraints
 class Constraint:
 	def __init__(self, name, field, constraint_type, priority):
 		self.name = name
@@ -17,13 +19,16 @@ class Constraint:
 		self.constraint_type = constraint_type
 		self.priority = priority
 	
+	# Returns a "badness" score for the tested team
 	def evaluate(self, team, student_info):
 		raise NotImplementedError
 
 
+# A constraint that controls the number of members per-team which match an integer-based condition 
 class IntegerCountConstraint(Constraint):
-	should_tune = 1.0
+	should_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
 	shouldnt_tune = 1.0
+	
 	# Each team <should/shouldn’t> have <BXY> members <with/without> [age] <BXY>.
 	#                   |                 \-----------------\  |             |
 	#                   \------------------------- \        |  \--------\    \------\
@@ -48,9 +53,12 @@ class IntegerCountConstraint(Constraint):
 			return self.shouldnt_tune * self.priority * (len(team) - self.count_bxy.distance(count))
 
 
+# A constraint requires members of a team to be more/less similar to each other
+# in their answers to a "subset" (select multiple values) question 
 class SubsetSimilarityConstraint(Constraint):
-	similar_tune = 1.0
+	similar_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
 	diverse_tune = 1.0
+	
 	# Each team should have <similar/diverse> [interests].
 	#                             |                
 	#                             \--------------- \

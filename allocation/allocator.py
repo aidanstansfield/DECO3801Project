@@ -7,9 +7,13 @@ from constraints import *
 from group_size_generator import get_group_sizes
 
 
-ANNEAL_STEPS = 1000
+# Number of annealing steps to perform.
+#This should be set in some intelligent way, rather than just using a constant.
+ANNEAL_STEPS = 10**4
 
 
+# Given a list of students and a {size->number} description of desired team sizes
+# yield an iterator over subsets of the students that form groups of those sizes.
 def split_teams(students, teams):
 	i = 0
 	for team_size, team_count in teams.items():
@@ -18,6 +22,7 @@ def split_teams(students, teams):
 			i += team_size
 
 
+# simanneal derived class, used for all allocations
 class TeamBuilder(simanneal.Annealer):
 	def __init__(self, state, team_sizes, student_info, constraints):
 		self.team_sizes = team_sizes
@@ -25,7 +30,7 @@ class TeamBuilder(simanneal.Annealer):
 		self.constraints = constraints
 		super().__init__(state)
 	
-	# Naive teams sizes, just to keep this prototype simple
+	# Produce an iterator over the current state of the teams 
 	def teams(self):
 		return split_teams(self.state, self.team_sizes)
 	
@@ -51,6 +56,7 @@ class TeamBuilder(simanneal.Annealer):
 		return cost
 
 
+# Given a dictionary of information about students and a list of constraints, perform an allocation.
 def allocate_teams(min_size, ideal_size, max_size, student_info, constraints):
 	students = list(student_info.keys())
 	team_sizes = get_group_sizes(len(students), min_size, ideal_size, max_size)
