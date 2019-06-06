@@ -28,7 +28,8 @@ class TeamBuilder(simanneal.Annealer):
 		self.team_sizes = team_sizes
 		self.student_info = student_info
 		self.constraints = constraints
-		super().__init__(state)
+		self.copy_strategy = "slice"  # state is a list
+		super().__init__(list(state))
 	
 	# Produce an iterator over the current state of the teams 
 	def teams(self):
@@ -48,7 +49,7 @@ class TeamBuilder(simanneal.Annealer):
 		return cost
 	
 	# Energy is sum of squares of team costs
-	# Sum of squares ensures that imperfections are spread out across the class, rather than making one "bad" team.s
+	# Sum of squares ensures that imperfections are spread out across the class, rather than making one "bad" team.
 	def energy(self):
 		cost = 0
 		for team in self.teams():
@@ -62,6 +63,5 @@ def allocate_teams(min_size, ideal_size, max_size, student_info, constraints):
 	team_sizes = get_group_sizes(len(students), min_size, ideal_size, max_size)
 	allocator = TeamBuilder(students, team_sizes, student_info, constraints)
 	allocator.steps = ANNEAL_STEPS
-	allocator.copy_strategy = "slice"  # state is a list
 	allocator.anneal()
 	return {tuple(team):allocator.team_energy(team) for team in allocator.teams()}
