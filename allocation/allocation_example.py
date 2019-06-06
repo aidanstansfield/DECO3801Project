@@ -34,7 +34,7 @@ preference_constraint = allocator.SubsetSimilarityConstraint("preference constra
 constraints = [age_constraint, preference_constraint]
 
 # Allocate
-teams = allocator.allocate_teams(2, 3, 4, student_info, constraints)
+teams = allocator.allocate_teams(2, 3, 4, student_info, constraints, progress=True)
 
 # Print results
 print()

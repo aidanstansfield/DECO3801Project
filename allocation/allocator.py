@@ -58,10 +58,13 @@ class TeamBuilder(simanneal.Annealer):
 
 
 # Given a dictionary of information about students and a list of constraints, perform an allocation.
-def allocate_teams(min_size, ideal_size, max_size, student_info, constraints):
+# Set "progress" to True to enable printing progress updates to stderr while simulated anneal is running.
+def allocate_teams(min_size, ideal_size, max_size, student_info, constraints, progress=False):
 	students = list(student_info.keys())
 	team_sizes = get_group_sizes(len(students), min_size, ideal_size, max_size)
 	allocator = TeamBuilder(students, team_sizes, student_info, constraints)
 	allocator.steps = ANNEAL_STEPS
+	if not progress:
+		allocator.updates = 0
 	allocator.anneal()
 	return {tuple(team):allocator.team_energy(team) for team in allocator.teams()}

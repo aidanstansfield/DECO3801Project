@@ -89,7 +89,6 @@ class TestTeamBuilderMethods(unittest.TestCase):
 
 # Test that complete allocations will occur successfully
 # WARNING: allocate_teams() is not deterministic. It's possible, but incredibly unlikely, for this test to fail by chance.
-# Also, simanneal doesn't seem to have an option for turning off printing to stderr.
 class TestAllocation(unittest.TestCase):
 	def test_allocate_teams(self):
 		student_info = {"A":True, "B":False, "C":True, "D":False, "E":True, "F":True, "G":False, "H":False}
