@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Allocation Results:</title>
+		<style>
+			table {border-collapse: collapse;}
+			table, th, td {border: 1px solid black;}
+		</style>
+	</head>
+	<body>
+	{% for num, members, cost in teams %}
+	<p>
+		<table>
+			<caption>Team:{{num}} -- Cost:{{cost}}</caption>
+			{% for member in members %}
+			<tr>
+				<td>{{student_info[member]["name"]}}</td>
+				<td>{{student_info[member]["age"]}}</td>
+				<td>{{student_info[member]["preferences"] | join(", ")}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</p>
+	{% endfor %}
+	</body>
+</html>
