@@ -8,8 +8,8 @@ from group_size_generator import get_group_sizes
 
 
 # Number of annealing steps to perform.
-#This should be set in some intelligent way, rather than just using a constant.
-ANNEAL_STEPS = 10**4
+# This REALLY should be set in some intelligent way, rather than just using a constant.
+ANNEAL_STEPS = 10**5
 
 
 # Given a list of students and a {size->number} description of desired team sizes
@@ -59,11 +59,11 @@ class TeamBuilder(simanneal.Annealer):
 
 # Given a dictionary of information about students and a list of constraints, perform an allocation.
 # Set "progress" to True to enable printing progress updates to stderr while simulated anneal is running.
-def allocate_teams(min_size, ideal_size, max_size, student_info, constraints, progress=False):
+def allocate_teams(min_size, ideal_size, max_size, student_info, constraints, steps=ANNEAL_STEPS, progress=False):
 	students = list(student_info.keys())
 	team_sizes = get_group_sizes(len(students), min_size, ideal_size, max_size)
 	allocator = TeamBuilder(students, team_sizes, student_info, constraints)
-	allocator.steps = ANNEAL_STEPS
+	allocator.steps = steps
 	if not progress:
 		allocator.updates = 0
 	allocator.anneal()

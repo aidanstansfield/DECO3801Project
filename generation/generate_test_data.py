@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import sys
 
@@ -73,8 +74,12 @@ preferences = {
 	"gameplay":   0.4,
 	}
 
+# Paths to name files. Not great.
+fnames = os.path.join(os.path.dirname(sys.argv[0]), "fnames.txt")
+lnames = os.path.join(os.path.dirname(sys.argv[0]), "lnames.txt")
+
 students = gen_students(count, {
-		"name": gen_student_name("fnames.txt", "lnames.txt"),
+		"name": gen_student_name(fnames, lnames),
 		"age": gen_student_age(17,27),
 		"preferences": gen_student_preferences(preferences),
 		})
