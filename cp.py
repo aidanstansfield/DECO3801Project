@@ -22,8 +22,8 @@ print("Formatting data for mip...")
 students = list(data.keys())  # represent students by id
 preferences = ["ui", "networking", "graphics", "gameplay"]
 
-# Age range constraint data. Want at least <count> people in age range(a1, a2)
-# per group
+# Age range constraint settings. Want at least <count> people
+# in age range(a1, a2) per group
 count = 2
 age_range = (20, 30)
 
@@ -88,7 +88,7 @@ for g in groups:
     for p in preferences:
         model.Add(v[g, p] == sum(x[s, g]*student_preference[s, p]
                                  for s in students))
-        model.Add(maxv[g] >= v[g, p])
+        model.Add(maxv[g] >= v[g, p])  # this is insufficient
 
 print("   ...Done.")
 
