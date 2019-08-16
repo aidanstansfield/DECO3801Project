@@ -193,7 +193,7 @@ def determine_group_sizes(no_people, min_size, ideal_size, max_size):
     # group.
     if no_people < min_size:
         raise ValueError("There aren't enough people to allocate")
-    
+
     formed_groups = []
 
     # We now know that there are enough people for a minimum sized group,
