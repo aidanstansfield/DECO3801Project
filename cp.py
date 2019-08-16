@@ -9,8 +9,9 @@ from allocation.group_size_generator import get_group_sizes
 fnames = "generation/fnames.txt"
 lnames = "generation/lnames.txt"
 
+print("Generating data...")
 data = gen_poc_data(100, fnames, lnames)
-
+print("   ...Done.")
 
 # =============================================================================
 # Data
@@ -50,7 +51,7 @@ for size, num in group_sizes.items():
 print("   ...Done.")
 
 # =============================================================================
-# MIP Model
+# Variables
 # =============================================================================
 
 print("Forming model...")
@@ -71,7 +72,9 @@ maxv = {
     for g in groups
 }
 
-# CONSTRAINTS
+# =============================================================================
+# Constraints
+# =============================================================================
 
 # Every student needs to be in exactly one group
 for s in students:
@@ -88,9 +91,19 @@ for g in groups:
     for p in preferences:
         model.Add(v[g, p] == sum(x[s, g]*student_preference[s, p]
                                  for s in students))
-        model.Add(maxv[g] >= v[g, p])  # this is insufficient
+        # model.Add(maxv[g] >= sum(x[s, g]*student_preference[s, p]
+        #                          for s in students))  # this is insufficient
+
+        # Ensure that each group has every preference listed by someone
+        model.Add(v[g, p] >= 1)
 
 print("   ...Done.")
+
+# =============================================================================
+# Objective
+# =============================================================================
+
+# model.Minimize(sum(maxv[g] for g in groups))
 
 # =============================================================================
 # Solve!
@@ -104,17 +117,18 @@ print("   ...Done.")
 # Model Output
 # =============================================================================
 
-if status == cp_model.FEASIBLE:
-    print("Success!")
-    for g in groups:
-        print("\nGroup {}:".format(g))
-        for s in students:
-            if solver.Value(x[s, g]) == 1:
-                print("  " + str(list(data[s].values())))
-        for p in preferences:
-            print("  " + p + ": " + str(solver.Value(v[g, p])))
+show_solution = True
 
-        # maximum votes
-        print("  maximum votes: ", solver.Value(maxv[g]))
+if status == cp_model.FEASIBLE or status == cp_model.OPTIMAL:
+    print("Success!")
+    print("Solution found in {} seconds".format(round(solver.WallTime(), 2)))
+    if show_solution:
+        for g in groups:
+            print("\nGroup {}:".format(g))
+            for s in students:
+                if solver.Value(x[s, g]) == 1:
+                    print("  " + str(list(data[s].values())))
+            for p in preferences:
+                print("  " + p + ": " + str(solver.Value(v[g, p])))
 else:
     print("Model infeasible. No solution exists.")
