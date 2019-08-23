@@ -1,0 +1,13 @@
+// container.scss
+//
+// Contains styling for the overarching
+// container which contains elements of the
+// page.
+
+.container {
+    @include centered-block;
+    width: 100%;
+    height: 100%;
+    max-width: 1000px;
+    position: relative;
+}

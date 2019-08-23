@@ -1,0 +1,22 @@
+// general.scss
+//
+// Contains general styles that are not limited
+// to a particular set of elements.
+
+// Converts pixels to rem units
+//
+// @param   $px :   the pixel value to convert
+// @param   $base:  the font size to use for conversion
+//
+// @return  the rem units for the given pixel size
+@function px_to_rem($px, $base) {
+    @return ($px / $base) * 1rem;
+}
+
+@mixin centered-text {
+    text-align: center;
+}
+
+@mixin centered-block {
+    margin: 0 auto;
+}

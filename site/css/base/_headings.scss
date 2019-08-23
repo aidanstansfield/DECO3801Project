@@ -1,0 +1,51 @@
+// headings.scss
+//
+// Contains the base styling for headings in
+// the application.
+
+$heading__font: $font__roboto;
+$heading__colour: $colour__gray--dark;
+$heading__font-size: px_to_rem(32px, $font__base-font-size);
+$heading__margin: $paragraph__margin * 1.2;
+$heading__line-height: 1.25em;
+
+@mixin heading {
+    font-family: $heading__font;
+    margin-top: $heading__margin;
+    color: $heading__colour;
+    line-height: $heading__line-height;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    @include heading;
+}
+
+h1 {
+    font-size: $heading__font-size;
+    margin-bottom: $heading__margin;
+}
+
+h2 {
+    font-size: $heading__font-size / 1.3;
+    margin-bottom: $heading__margin / 1.3;
+}
+
+h3 {
+    font-size: $heading__font-size / 1.5;
+    margin-bottom: $heading__margin / 1.5;
+}
+
+h4 {
+    font-size: $heading__font-size / 1.7;
+    margin-bottom: $heading__margin / 1.7;
+}
+
+h5 {
+    font-size: $heading__font-size / 1.8;
+    margin-bottom: $heading__margin / 1.8;
+}
+
+h6 {
+    font-size: $heading__font-size / 2;
+    margin-bottom: $heading__margin / 2;
+}

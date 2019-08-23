@@ -1,0 +1,240 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,400i,700&display=swap");
+* {
+  box-sizing: border-box; }
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  height: 100%; }
+
+body {
+  margin: 0;
+  height: 100%; }
+
+main {
+  display: block; }
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0; }
+
+hr {
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible; }
+
+pre {
+  font-family: monospace, monospace;
+  font-size: 1em; }
+
+a {
+  background-color: transparent; }
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration: underline dotted; }
+
+b,
+strong {
+  font-weight: bolder; }
+
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em; }
+
+small {
+  font-size: 80%; }
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline; }
+
+sub {
+  bottom: -0.25em; }
+
+sup {
+  top: -0.5em; }
+
+img {
+  border-style: none; }
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0; }
+
+button,
+input {
+  overflow: visible; }
+
+button,
+select {
+  text-transform: none; }
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button; }
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0; }
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText; }
+
+fieldset {
+  padding: 0.35em 0.75em 0.625em; }
+
+legend {
+  box-sizing: border-box;
+  color: inherit;
+  display: table;
+  max-width: 100%;
+  padding: 0;
+  white-space: normal; }
+
+progress {
+  vertical-align: baseline; }
+
+textarea {
+  overflow: auto; }
+
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box;
+  padding: 0; }
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto; }
+
+[type="search"] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px; }
+
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none; }
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit; }
+
+details {
+  display: block; }
+
+summary {
+  display: list-item; }
+
+template {
+  display: none; }
+
+[hidden] {
+  display: none; }
+
+*,
+html,
+body {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%; }
+
+p {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.14286rem;
+  line-height: 1.5em;
+  color: #808080;
+  margin-bottom: 1em; }
+
+strong, em {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.14286rem;
+  line-height: 1.5em;
+  color: #808080; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Roboto", sans-serif;
+  margin-top: 1.2em;
+  color: #808080;
+  line-height: 1.25em; }
+
+h1 {
+  font-size: 2.28571rem;
+  margin-bottom: 1.2em; }
+
+h2 {
+  font-size: 1.75824rem;
+  margin-bottom: 0.92308em; }
+
+h3 {
+  font-size: 1.52381rem;
+  margin-bottom: 0.8em; }
+
+h4 {
+  font-size: 1.34454rem;
+  margin-bottom: 0.70588em; }
+
+h5 {
+  font-size: 1.26984rem;
+  margin-bottom: 0.66667em; }
+
+h6 {
+  font-size: 1.14286rem;
+  margin-bottom: 0.6em; }
+
+.centered-children {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  max-width: 1000px;
+  position: relative; }
+
+.landing-info {
+  text-align: center;
+  width: 70%; }
+  .landing-info__logo {
+    width: 100%;
+    max-width: 325px; }
+  .landing-info__button {
+    font-family: "Roboto", sans-serif;
+    font-size: 1.14286rem;
+    line-height: 1.5em;
+    padding: 20px 10px;
+    color: #fff;
+    background-color: #6CE6C5;
+    text-decoration: none;
+    display: block;
+    border: 2px solid transparent;
+    margin: 0 auto;
+    width: 40%; }
+    .landing-info__button:hover {
+      background-color: #fff;
+      color: #6CE6C5;
+      border: 2px solid #6CE6C5; }
+
+/*# sourceMappingURL=style.css.map */

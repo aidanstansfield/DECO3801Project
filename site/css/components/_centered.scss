@@ -1,0 +1,10 @@
+// centered.scss
+//
+// Contains the styling for the centered component
+// which vertically centers its children.
+
+.centered-children {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

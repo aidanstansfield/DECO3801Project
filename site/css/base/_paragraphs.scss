@@ -1,0 +1,31 @@
+// _paragraphs.scss
+//
+// Contains the base styling for paragraphs in 
+// the application.
+
+$paragraph__font: $font__roboto;
+$paragraph__colour: $colour__gray--dark;
+$paragraph__margin: 1em;
+$paragraph__line-height: 1.5em;
+$paragraph__font-size: px_to_rem(16px, $font__base-font-size);
+
+@mixin paragraph-font {
+    font-family: $paragraph__font;
+    font-size: $paragraph__font-size;
+    line-height: $paragraph__line-height;
+}
+
+@mixin paragraph-colour {
+    color: $paragraph__colour;
+}
+
+p {
+    @include paragraph-font;
+    @include paragraph-colour;
+    margin-bottom: $paragraph__margin;
+}
+
+strong, em {
+    @include paragraph-font;
+    @include paragraph-colour;
+}
