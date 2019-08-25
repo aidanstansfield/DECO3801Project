@@ -1,0 +1,35 @@
+// header.scss
+//
+// Contains styling for the header that is
+// present at the top of each page. 
+
+.header {
+
+    @include flexbox();
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    &__logo {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    &__monogram {
+        @include flexbox();
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: $colour__gray--blue;
+        margin-right: 10px;
+    }
+
+    &__monogram-content {
+        font-size: $heading__font-size;
+        color: $colour__white;
+        margin: 0;
+        padding: 0;
+    }
+}
