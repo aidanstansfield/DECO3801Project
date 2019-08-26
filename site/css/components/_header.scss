@@ -15,21 +15,31 @@
         max-width: 200px;
     }
 
-    &__monogram {
+    &__logout {
         @include flexbox();
         align-items: center;
         justify-content: center;
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background-color: $colour__gray--blue;
+        border: 1px dashed $colour__gray--blue;
+        background-color: $colour__gray--white;
         margin-right: 10px;
-    }
+        cursor: pointer;
 
-    &__monogram-content {
-        font-size: $heading__font-size;
-        color: $colour__white;
-        margin: 0;
-        padding: 0;
+        &:hover {
+            border: 2px solid transparent;
+            background-color: $colour__gray--blue;
+        }
+
+        &-content {
+            color: $colour__gray--blue;
+            font-size: $heading__font-size / 1.2;
+            margin-left: 5px;
+        }
+
+        &:hover &-content {
+            color: $colour__white;
+        }
     }
 }

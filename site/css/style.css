@@ -224,12 +224,12 @@ h6 {
   width: 70%; }
   .landing-info__logo {
     width: 100%;
-    max-width: 325px; }
+    max-width: 250px; }
   .landing-info__button {
     font-family: "Roboto", sans-serif;
     font-size: 1.14286rem;
     line-height: 1.5em;
-    padding: 20px 10px;
+    padding: 10px;
     color: #fff;
     background-color: #6CE6C5;
     text-decoration: none;
@@ -254,7 +254,7 @@ h6 {
   .header__logo {
     width: 100%;
     max-width: 200px; }
-  .header__monogram {
+  .header__logout {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -265,12 +265,18 @@ h6 {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #78939D;
-    margin-right: 10px; }
-  .header__monogram-content {
-    font-size: 2.28571rem;
-    color: #fff;
-    margin: 0;
-    padding: 0; }
+    border: 1px dashed #78939D;
+    background-color: #ececec;
+    margin-right: 10px;
+    cursor: pointer; }
+    .header__logout:hover {
+      border: 2px solid transparent;
+      background-color: #78939D; }
+    .header__logout-content {
+      color: #78939D;
+      font-size: 1.90476rem;
+      margin-left: 5px; }
+    .header__logout:hover .header__logout-content {
+      color: #fff; }
 
 /*# sourceMappingURL=style.css.map */

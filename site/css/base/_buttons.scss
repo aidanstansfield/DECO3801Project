@@ -8,7 +8,7 @@ $button__colour--primary: $colour__white;
 
 @mixin button-base {
     @include paragraph-font;
-    padding: 20px 10px;
+    padding: 10px;
     color: $button__colour--primary;
     background-color: $button__background--primary;
     text-decoration: none;
