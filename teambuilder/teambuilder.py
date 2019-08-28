@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 from flask import Flask, request, abort, send_from_directory
-import json
-import werkzeug.exceptions
 import os
 
 app = Flask(__name__)
@@ -12,9 +10,9 @@ explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414',
 @app.before_request
 def check_auth():
     if (request.headers.get('X-Uq-User-Type') != None and \
-            'staff' in request.headers.get('X-Uq-User-Type').lower) or \
+            'staff' in request.headers.get('X-Uq-User-Type').lower()) or \
             (request.headers.get('X-Uq-User') != None and \
-            request.headers.get('X-Uq-User').lower in explicitly_allowed_users):
+            request.headers.get('X-Uq-User').lower() in explicitly_allowed_users):
         return
     # if we haven't returned, user is not allowed
     abort(403)
