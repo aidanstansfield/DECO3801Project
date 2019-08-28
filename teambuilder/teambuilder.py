@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, request, abort, send_from_directory
+from flask import Flask, request, abort, send_from_directory, render_template
 import os
 
 app = Flask(__name__)
@@ -29,7 +29,8 @@ def favicon():
 
 @app.route('/')
 def home():
-    return str(request.headers)
+    #return str(request.headers)
+    return render_template('landing.html')
 
 if __name__ == "__main__":
 	host = "0.0.0.0"

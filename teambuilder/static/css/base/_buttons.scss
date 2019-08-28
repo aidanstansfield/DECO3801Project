@@ -1,0 +1,23 @@
+// buttons.scss
+//
+// Contains the base styling for buttons and links
+// used as buttons throughout the application.
+
+$button__background--primary: $colour__teal;
+$button__colour--primary: $colour__white;
+
+@mixin button-base {
+    @include paragraph-font;
+    padding: 10px;
+    color: $button__colour--primary;
+    background-color: $button__background--primary;
+    text-decoration: none;
+    display: block;
+    border: 2px solid transparent;
+
+    &:hover {
+        background-color: $button__colour--primary;
+        color: $button__background--primary;
+        border: 2px solid $button__background--primary;
+    }
+}
