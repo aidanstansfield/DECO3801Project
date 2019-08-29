@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, request, abort, send_from_directory, render_template, make_response
+from flask import Flask, request, abort, send_from_directory, render_template, make_response, redirect
 import os
 
 app = Flask(__name__)
@@ -39,10 +39,7 @@ def allocation():
 
 @app.route('/logout')
 def logout():
-    res = make_response()
-    res.set_cookie("EAIT_WEB", value="", max_age=0)
-    return res
-    # return render_template('allocation.html')
+    return redirect('https://api.uqcloud.net/logout')
 
 if __name__ == "__main__":
 	host = "0.0.0.0"
