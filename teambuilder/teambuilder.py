@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-from flask import Flask, request, abort, send_from_directory, render_template
+from flask import Flask, request, abort, send_from_directory, render_template, make_response
 import os
 
 app = Flask(__name__)
 
 explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414', 
     's4432329', 's4436755']
+ignore_auth = True
 
 @app.before_request
 def check_auth():
-    if (request.headers.get('X-Uq-User-Type') != None and \
+    if ignore_auth or (request.headers.get('X-Uq-User-Type') != None and \
             'staff' in request.headers.get('X-Uq-User-Type').lower()) or \
             (request.headers.get('X-Uq-User') != None and \
             request.headers.get('X-Uq-User').lower() in explicitly_allowed_users):
@@ -31,6 +32,17 @@ def favicon():
 def home():
     #return str(request.headers)
     return render_template('landing.html')
+
+@app.route('/allocation')
+def allocation():
+    return render_template('allocation.html')
+
+@app.route('/logout')
+def logout():
+    res = make_response()
+    res.set_cookie("EAIT_WEB", value="", max_age=0)
+    return res
+    # return render_template('allocation.html')
 
 if __name__ == "__main__":
 	host = "0.0.0.0"
