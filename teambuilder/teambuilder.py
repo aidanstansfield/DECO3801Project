@@ -6,11 +6,12 @@ app = Flask(__name__)
 
 explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414', 
     's4432329', 's4436755']
-ignore_auth = True
+ignore_auth = False
 
 @app.before_request
 def check_auth():
-    if ignore_auth or (request.headers.get('X-Uq-User-Type') != None and \
+    if ignore_auth or request.path == '/' or \
+	    (request.headers.get('X-Uq-User-Type') != None and \
             'staff' in request.headers.get('X-Uq-User-Type').lower()) or \
             (request.headers.get('X-Uq-User') != None and \
             request.headers.get('X-Uq-User').lower() in explicitly_allowed_users):
