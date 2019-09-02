@@ -10,7 +10,7 @@ ignore_auth = False
 
 @app.before_request
 def check_auth():
-    if ignore_auth or request.path == '/' or \
+    if ignore_auth or request.path == '/' or request.path.startswith('/static/') or \
 	    (request.headers.get('X-Uq-User-Type') != None and \
             'staff' in request.headers.get('X-Uq-User-Type').lower()) or \
             (request.headers.get('X-Uq-User') != None and \
