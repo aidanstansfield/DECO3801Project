@@ -1,0 +1,43 @@
+// heading.scss
+//
+// Contains styling for headings which are at the top
+// of most main pages. There are two main types of
+// headings:
+//      1. A heading containing a back button and
+//         the page name (Course Details / Allocation)
+//      2. A heading containing the page title followed
+//         by a button (My Courses)
+// The page title can be either static, or an input
+// which the user can type into.
+
+.heading {
+
+    @include flexbox;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid $colour__gray--dark;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 1em 0em;
+
+    &__back-button {
+        @include heading;
+        font-size: $heading__font-size;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-right: 0.5em;
+    }
+
+    &__title {
+        @include heading;
+        font-size: $heading__font-size;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    &__button {
+        @include button-base;
+    }
+}

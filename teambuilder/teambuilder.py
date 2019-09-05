@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414', 
     's4432329', 's4436755']
-ignore_auth = False
+ignore_auth = True
 
 @app.before_request
 def check_auth():
@@ -37,6 +37,14 @@ def home():
 @app.route('/allocation')
 def allocation():
     return render_template('allocation.html')
+
+@app.route('/courses')
+def courses():
+    return render_template('courses.html')
+
+@app.route('/course/<id>')
+def course_info(id=None):
+    return render_template('course-details.html', id=id)
 
 @app.route('/logout')
 def logout():
