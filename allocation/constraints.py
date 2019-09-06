@@ -4,11 +4,22 @@ class BXY:
 		self.lower = lower
 		self.upper = upper
 	
-	def test(self, value):
-		return self.lower <= value <= self.upper
-	
 	def distance(self, value):
 		return max(0, self.lower - value, value - self.upper)
+	
+	def __contains__(self, item):
+		return self.lower <= item <= self.upper
+	
+	def __len__(self):
+		return 2
+	
+	def __getitem__(self, key):
+		if key == 0:
+			return self.lower
+		elif key == 1:
+			return self.upper
+		else:
+			raise IndexError
 
 
 # ABC for all constraints
@@ -44,7 +55,7 @@ class IntegerCountConstraint(Constraint):
 		count = 0
 		for student in team:
 			value = student_info[student][self.field]
-			if self.value_bxy.test(value) ^ (not self.with_bool):
+			if (value in self.value_bxy) ^ (not self.with_bool):
 				count += 1
 		
 		if self.should_bool:
