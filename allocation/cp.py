@@ -4,7 +4,7 @@
 
 from ortools.sat.python import cp_model
 from generation.generate_test_data import gen_poc_data
-from allocation.group_size_generator import get_group_sizes
+from group_size_generator import get_group_sizes
 
 fnames = "generation/fnames.txt"
 lnames = "generation/lnames.txt"
