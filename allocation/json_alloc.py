@@ -4,6 +4,11 @@ import allocator
 from constraints import * # useful for anything which imports this module 
 
 
+class InvalidRequestError(Exception):
+	def __init__(self, request, message):
+		self.request = request
+		self.message = message
+
 
 class ConstraintEncoder(json.JSONEncoder):
 	def default(self, obj):
@@ -51,6 +56,14 @@ def encode_teams(teams):
 	return json.dumps({"success":True, "teams":teams})
 
 
+def encode_failure(exception):
+	if isinstance(exception, InvalidRequestError):
+		reason = exception.message
+	else:
+		reason = "Something happened"
+	return json.dumps({"success":False, "reason":reason})
+
+
 def encode_request(min_size, ideal_size, max_size, constraints, students):
 	return json.dumps({
 		"min_size":     min_size,
@@ -62,18 +75,80 @@ def encode_request(min_size, ideal_size, max_size, constraints, students):
 
 
 def decode_request(request):
-	decoded = json.loads(request, object_hook=constraint_hook)
-	min_size = decoded["min_size"]
-	ideal_size = decoded["ideal_size"]
-	max_size = decoded["max_size"]
-	constraints = decoded["constraints"]
-	students = decoded["students"]
-	return min_size, ideal_size, max_size, constraints, students
+	try:
+		decoded = json.loads(request, object_hook=constraint_hook)
+	except json.decoder.JSONDecodeError:
+		raise InvalidRequestError(request, "Invalid JSON")
+	
+	if type(decoded) != dict:
+		raise InvalidRequestError(request, "Invalid request")
+	
+	min_size = decoded.get("min_size")
+	if min_size is None or type(min_size) != int:
+		raise InvalidRequestError(request, "Invalid minimum size")
+	
+	ideal_size = decoded.get("ideal_size")
+	if ideal_size is None or type(ideal_size) != int:
+		raise InvalidRequestError(request, "Invalid ideal size")
+	
+	max_size = decoded.get("max_size")
+	if max_size is None or type(max_size) != int:
+		raise InvalidRequestError(request, "Invalid maximum size")
+	
+	students = decoded.get("students")
+	if students is None or type(students) != dict:
+		raise InvalidRequestError(request, "Invalid student info")
+	
+	constraints = decoded.get("constraints")
+	if constraints is None:
+		constraints = []
+	elif type(constraints) != list:
+		raise InvalidRequestError(request, "Invalid constraint list")
+	
+	return min_size, ideal_size, max_size, students, constraints
+
+
+def validate_constraint(request, student_info, constraint):
+	if not isinstance(constraint, Constraint):
+		raise InvalidRequestError(request, "Invalid constraint")
+	
+	if constraint.field is None:
+		return
+	
+	for info in student_info.values():
+		
+		if constraint.field not in info:
+			raise InvalidRequestError(request, "Constraint ({}) is on a missing student info field ({})".format(constraint.name, constraint.field))
+		
+		ctype = constraint.constraint_type
+		svalue = info[constraint.field]
+		
+		if ((ctype == "integer" and type(svalue) != int) or
+				(ctype == "option" and type(svalue) != str) or
+				(ctype == "subset" and (type(svalue) != list or not all(map(lambda x: type(x)==str, svalue)))) or
+				(ctype == "boolean" and type(svalue) != bool)):
+			raise InvalidRequestError(request, "Constraint ({}) type ({}) doesn't match student info field ({}) type".format(constraint.name, ctype, constraint.field))
+
+
+def validate_request(request, min_size, ideal_size, max_size, student_info, constraints): #TODO
+	if not min_size <= ideal_size <= max_size:
+		raise InvalidRequestError(request, "Invalid group size ordering")
+	
+	for info in student_info.values():
+		if type(info) != dict:
+			raise InvalidRequestError(request, "Invalid student data")
+	
+	for constraint in constraints:
+		validate_constraint(request, student_info, constraint)
 
 
 def allocate(request):
-	min_size, ideal_size, max_size, constraints, student_info = decode_request(request)
-	steps = 10**5 #TODO need to control number of annealing steps
-	team_data = allocator.allocate_teams(min_size, ideal_size, max_size, student_info, constraints, steps=steps, progress=False)
-	teams = {id:team for id, team in enumerate(team_data.keys())}
-	return encode_teams(teams)
+	try:
+		decoded = decode_request(request)
+		validate_request(request, *decoded)
+		steps = 10**5 #TODO need to control number of annealing steps
+		team_data = allocator.allocate_teams(*decoded, steps=steps, progress=False)
+		teams = {id:team for id, team in enumerate(team_data.keys())}
+		return encode_teams(teams)
+	except Exception as e:
+		return encode_failure(e)
