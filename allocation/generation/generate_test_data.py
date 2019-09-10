@@ -41,7 +41,7 @@ def gen_student_name(fn_filename, ln_filename):
 			if line != '\n' and line[0] != '#':
 				last_names.append(line.strip('\n'))
 	while True:
-		yield f"{random.choice(first_names)} {random.choice(last_names)}"
+		yield random.choice(first_names) +" "+ random.choice(last_names)
 
 
 def gen_student_age(lower_bound, upper_bound):
