@@ -75,7 +75,7 @@ class SubsetSimilarityConstraint(Constraint):
 	#                             \--------------- \
 	#                                              V
 	def __init__(self, name, field, priority, similar_bool, candidates):
-		super().__init__(name, field, "integer", priority)
+		super().__init__(name, field, "subset", priority)
 		self.similar_bool = similar_bool
 		self.candidates = candidates
 	

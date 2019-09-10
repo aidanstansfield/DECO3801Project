@@ -42,7 +42,7 @@ students = gendata.gen_students(count, {
 # Allocation constraints
 # Want exactly two people between ages of 20-30 per team
 # Want each team to have shared similar project preferences.
-age_constraint = json_alloc.IntegerCountConstraint("age_constraint", "age", 1, True, json_alloc.BXY(2,2), True, json_alloc.BXY(20,30))
+age_constraint = json_alloc.IntegerCountConstraint("age constraint", "age", 1, True, json_alloc.BXY(2,2), True, json_alloc.BXY(20,30))
 preference_constraint = json_alloc.SubsetSimilarityConstraint("preference constraint", "preferences", 1, True, ("ui", "networking", "graphics", "gameplay"))
 constraints = [age_constraint, preference_constraint]
 
