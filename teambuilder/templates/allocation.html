@@ -4,9 +4,10 @@
     <link rel='stylesheet' type='text/css' href='static/css/style.css'/>
     <link rel="stylesheet" href= 
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">     
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 </head>
 <body>
-    <div class='container'>
+    <div class='container' ng-app="allocator" ng-controller="formCtrl">
         {% include 'header.html' %}
 
         <div class='heading'>
@@ -15,21 +16,31 @@
             </div>
         </div>
         <!-- MVP form-->
-        <form>
+        <form action="/allocator" method='post'>
             <h1 class='heading__title'>Allocation Demo</h1>
 
+            <h3> Min Size </h3>
+            <input type="text" name="min_size">
+
+            <h3> Ideal Size </h3>
+            <input type="text" name="ideal_size">
+
+            <h3> Max Size </h3>
+            <input type="text" name="max_size">
+
             <h3> Add Student Data </h3>
-            <input type="text" name = "studentData">	
+            <input type="text" name="studentData">	
         
             <h3>Input Constraints </h3>
-            <input type="text" name = "constraint">	
+            <input type="text" name="constraint">	
 
             <h3> Run Allocation </h3>
-            <!-- Need to fix button styling. Need href to allocator-->
-            <button type ="submit" class="button" href='#'> Run </button>
+            <button type ="submit" class="button" ng-click="submit()">Run</button>
         </form>
-       
     </div> 
-
+    <script>
+        var app = angular.module('allocator', []);
+        app
+    </script>
 </body>
 </html>

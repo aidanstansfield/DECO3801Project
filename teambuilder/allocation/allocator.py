@@ -3,8 +3,8 @@ import random
 
 import simanneal
 
-from constraints import *
-from group_size_generator import get_group_sizes
+from .constraints import *
+from .group_size_generator import get_group_sizes
 
 
 # Number of annealing steps to perform.

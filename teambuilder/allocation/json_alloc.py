@@ -1,7 +1,7 @@
 import json
 
-import allocator
-from constraints import * # useful for anything which imports this module 
+from . import allocator
+from .constraints import * # useful for anything which imports this module 
 
 
 class InvalidRequestError(Exception):
