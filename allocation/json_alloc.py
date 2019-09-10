@@ -32,24 +32,31 @@ class ConstraintEncoder(json.JSONEncoder):
 
 
 def constraint_hook(obj):
-	#try:
+	try:
+		if obj.get("constr_type") == "IntegerCountConstraint":
+			# name, field, priority, should_bool, count_bxy, with_bool, value_bxy
+			count_bxy = BXY(*obj["count_bxy"])
+			value_bxy = BXY(*obj["value_bxy"])
+			return IntegerCountConstraint(obj["name"], obj["field"],obj["priority"],
+				obj["should_bool"], count_bxy, obj["with_bool"], value_bxy)
 		
-	if obj.get("constr_type") == "IntegerCountConstraint":
-		# name, field, priority, should_bool, count_bxy, with_bool, value_bxy
-		count_bxy = BXY(*obj["count_bxy"])
-		value_bxy = BXY(*obj["value_bxy"])
-		return IntegerCountConstraint(obj["name"], obj["field"],obj["priority"],
-			obj["should_bool"], count_bxy, obj["with_bool"], value_bxy)
-	
-	if obj.get("constr_type") == "SubsetSimilarityConstraint":
-		return SubsetSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
-			obj["similar_bool"], obj["candidates"])
-	
-	else:
-		return obj
-	
-	#except KeyError, TypeError:
-	#	raise ValueError("Invalid constraint JSON")
+		elif obj.get("constr_type") == "SubsetSimilarityConstraint":
+			return SubsetSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
+				obj["similar_bool"], obj["candidates"])
+		
+		elif obj.get("constr_type") is not None:
+			#TODO will break if anything is called "constr_type"
+			raise InvalidRequestError(None, "Invalid constraint JSON")
+		
+		else:
+			return obj
+		
+	except (KeyError, TypeError):
+		name = obj.get("name")
+		if name is not None:
+			raise InvalidRequestError(None, "Invalid JSON for constraint ({})".format(name))
+		else:
+			raise InvalidRequestError(None, "Invalid constraint JSON")
 
 
 def encode_teams(teams):
@@ -79,6 +86,9 @@ def decode_request(request):
 		decoded = json.loads(request, object_hook=constraint_hook)
 	except json.decoder.JSONDecodeError:
 		raise InvalidRequestError(request, "Invalid JSON")
+	except InvalidRequestError as error:
+		error.request = request
+		raise error
 	
 	if type(decoded) != dict:
 		raise InvalidRequestError(request, "Invalid request")

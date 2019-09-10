@@ -244,7 +244,7 @@ class TestDecodeRequest(unittest.TestCase):
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid student info")
 	
-	def test_decode_invalid_constraints(self):
+	def test_decode_invalid_constraint_list(self):
 		request = """{
 			"min_size":    1,
 			"ideal_size":  2,
@@ -254,6 +254,59 @@ class TestDecodeRequest(unittest.TestCase):
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid constraint list")
+	
+	def test_decode_invalid_constraint_type(self):
+		request = """{
+			"min_size":    1,
+			"ideal_size":  2,
+			"max_size":    3,
+			"constraints": [{
+				"constr_type": "NotARealConstraint",
+				"candidates": ["ui","networking","graphics","gameplay"],
+				"field": "preferences",
+				"name": "preference constraint",
+				"priority": 1,
+				"similar_bool": true}],
+			"students":    """+example_students_json+"}"
+		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
+			print(json_alloc.decode_request(request))
+		self.assertEqual(cm.exception.message, "Invalid constraint JSON")
+	
+	def test_decode_invalid_constraint_attr(self):
+		request = """{
+			"min_size":    1,
+			"ideal_size":  2,
+			"max_size":    3,
+			"constraints": [{
+				"constr_type": "SubsetSimilarityConstraint",
+				"candidates": ["ui","networking","graphics","gameplay"],
+				"qwaszx": "preferences",
+				"name": "preference constraint",
+				"priority": 1,
+				"similar_bool": true}],
+			"students":    """+example_students_json+"}"
+		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
+			json_alloc.decode_request(request)
+		self.assertEqual(cm.exception.message, "Invalid JSON for constraint (preference constraint)")
+	
+	def test_decode_invalid_constraint_bxy(self):
+		request = """{
+			"min_size":    1,
+			"ideal_size":  2,
+			"max_size":    3,
+			"constraints": [{
+				"constr_type": "IntegerCountConstraint",
+				"count_bxy": [2,5,2],
+				"field": "age",
+				"name": "age_constraint",
+				"priority": 1,
+				"should_bool": true,
+				"value_bxy": [20,30],
+				"with_bool": true}],
+			"students":    """+example_students_json+"}"
+		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
+			json_alloc.decode_request(request)
+		self.assertEqual(cm.exception.message, "Invalid JSON for constraint (age_constraint)")
 
 
 # Tests for the validate_request function
