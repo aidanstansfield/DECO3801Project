@@ -1,6 +1,14 @@
 import unittest
-from group_size_generator import get_group_sizes
-from group_size_generator import ImpossibleConstraintsError
+import os.path
+import sys
+
+# PEP366 - don't even ask
+if __package__ is None or __package__ == "":
+	__package__ = "allocation"
+	sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+from .group_size_generator import get_group_sizes
+from .group_size_generator import ImpossibleConstraintsError
 
 class TestGroupSizeMethod(unittest.TestCase):
 

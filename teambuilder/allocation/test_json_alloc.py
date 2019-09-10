@@ -1,6 +1,14 @@
 import json 
-import unittest 
-import json_alloc
+import unittest
+import os.path
+import sys
+
+# PEP366 - don't even ask
+if __package__ is None or __package__ == "":
+	__package__ = "allocation"
+	sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+from . import json_alloc
 
 
 # Data for testing
