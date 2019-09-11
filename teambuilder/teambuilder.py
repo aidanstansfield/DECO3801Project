@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-from flask import Flask, request, abort, send_from_directory, render_template, make_response, redirect
+from flask import Flask, request, abort, send_from_directory, render_template, make_response, redirect, jsonify
 import os
+import json
+from allocation.json_alloc import allocate
 
 app = Flask(__name__)
 
@@ -50,6 +52,18 @@ def course_info(id=None):
 def logout():
     return redirect('https://api.uqcloud.net/logout')
 
+@app.route('/allocator', methods=['POST'])
+def allocator():
+    #if not request.is_json:
+        #throw error
+    data = request.json
+    allocation1 = json.loads(allocate(json.dumps(data)))
+    return jsonify(allocation1)
+    
+    #details = request.get_data(as_text=True)
+
+    #return details +'\n'+ allocate(details) #allocate(json.dumps(details))
+    
 if __name__ == "__main__":
 	host = "0.0.0.0"
 	port = 8080
