@@ -13,6 +13,10 @@
     &__logo {
         width: 100%;
         max-width: 200px;
+        
+        @include media('<=small') {
+            max-width: 150px;
+        }
     }
 
     &__logout {
@@ -24,7 +28,6 @@
         border-radius: 50%;
         border: 1px dashed $colour__gray--blue;
         background-color: $colour__gray--white;
-        margin-right: 10px;
         cursor: pointer;
 
         &:hover {

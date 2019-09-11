@@ -3,6 +3,13 @@
 // Contains general styles that are not limited
 // to a particular set of elements.
 
+// The breakpoints where CSS styles will switch for
+// different devices
+$breakpoints: (
+    'small': 400px,
+    'large': 950px,
+);
+
 // Converts pixels to rem units
 //
 // @param   $px :   the pixel value to convert
