@@ -16,67 +16,81 @@
                 <h1 class='heading__title'>Allocation Demo</h1>
             </div>
         </div>
-        <!-- MVP form-->
-        <form>
-            <h2> Min Size </h2>
-            <input type="text" ng-model="min_size">
+        <div class="allocation-container">
+            <div class="allocation-container__constraints">
+                <form>
+                    <h2 class='headings__reduced-margin'>Group Sizes</h2>
+                    <p>Enter your preferred group sizes:</p>
+                    <div class="allocation-container__size-holder">
+                        <div>
+                            <input class="constraint-entry constraint-entry--group-size" name="minSize" type="text" ng-model="minSize">
+                            <label class="constraint-entry-label" for="minSize">Min</label>
+                        </div>
+                        <div>
+                            <input class="constraint-entry constraint-entry--group-size"  name="idealSize" type="text" ng-model="idealSize">
+                            <label class="constraint-entry-label" for="minSize">Ideal</label>
+                        </div>
+                        <div>
+                            <input class="constraint-entry constraint-entry--group-size"  name="maxSize" type="text" ng-model="maxSize">
+                            <label class="constraint-entry-label"  for="minSize">Max</label>
+                        </div>
+                    </div>
+                    <h2>Student Details</h2>
+                    <textarea class='constraint-entry' ng-model="studentData"></textarea>
+                    <h2>Constraint Details</h2>
+                    <textarea class='constraint-entry' ng-model="constraints"></textarea>
+                    <button type ="submit" class="allocation-container__submit" ng-click="submit()">Run</button>
+                </form>
+            </div>
+            <div class="allocation-container__allocation">
+                <ul>
+                    <li ng-repeat="(x, y) in teams">
+                        <div class="allocation-group">
+                            <p class="allocation-group__name"> {% raw %} {{ x }} {% endraw %}</p>
+                            <ul>
+                                <li ng-repeat="z in y">
+                                    <div class="allocation-group__item">
+                                            {% raw %} {{ z }} {% endraw %}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="allocation_group">
 
-            <h2> Ideal Size </h2>
-            <input type="text" ng-model="ideal_size">
-
-            <h2> Max Size </h2>
-            <input type="text" ng-model="max_size">
-
-            <h2> Add Student Data </h2>
-            <input type="text" ng-model="studentData">
-            <h2>Input Constraints </h2>
-            <input type="text" ng-model="constraint">	
-
-            <h2> Run Allocation </h2>
-            <button type ="submit" class="button" ng-click="submit()">Run</button>
-        </form>
-
-        <div>
-        
-            <ul>
-                <li ng-repeat="(x, y) in teams">
-                    {% raw %} {{ x }} {% endraw %}
-                    <ul>
-                        <li ng-repeat="z in y">{% raw %} {{ z }} {% endraw %}</li>
-                    </ul>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
-        <script>
-            var app = angular.module('allocator', []);
-            app.controller("formCtrl", function($scope, $http) {
-                $scope.min_size = 3;
-                $scope.ideal_size = 4;
-                $scope.max_size = 5;
-                $scope.studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"]}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": []}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"]}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"]}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"]}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"]}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"]}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"]}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"]}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"]}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"]}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"]}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"]}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"]}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"]}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"]}}'
-                $scope.constraint = '[{"constr_type": "IntegerCountConstraint", "name": "age constraint", "field": "age", "priority": 1, "should_bool": true, "count_bxy": [2, 2], "with_bool": true, "value_bxy": [20, 30]}, {"constr_type": "SubsetSimilarityConstraint", "name": "preference constraint", "field": "preferences", "priority": 1, "similar_bool": true, "candidates": ["ui", "networking", "graphics", "gameplay"]}]'
-                $scope.submit = function() {
-                    var request = $http({
-                        method: "post",
-                        url: "/allocator",
-                        data: {
-                            min_size: parseInt($scope.min_size, 10),
-                            ideal_size: parseInt($scope.ideal_size, 10),
-                            max_size: parseInt($scope.max_size, 10),
-                            students: JSON.parse($scope.studentData),
-                            constraints: JSON.parse($scope.constraint)
-                        }
-                    }).then(function success(response) {
-                        $scope.teams = response.data['teams'];
-                        console.log(response.data);
-                        console.log(response.data['teams']);
-                    }, function error(response) {
-                        console.log("ERROR");
-                    });
-                }
-            });
-        </script>
     </div> 
-    
+    <script>
+        var app = angular.module('allocator', []);
+        app.controller("formCtrl", function($scope, $http) {
+            $scope.minSize = 3;
+            $scope.idealSize = 4;
+            $scope.maxSize = 5;
+            $scope.studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"]}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": []}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"]}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"]}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"]}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"]}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"]}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"]}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"]}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"]}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"]}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"]}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"]}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"]}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"]}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"]}}'
+            $scope.constraints = '[{"constr_type": "IntegerCountConstraint", "name": "age constraint", "field": "age", "priority": 1, "should_bool": true, "count_bxy": [2, 2], "with_bool": true, "value_bxy": [20, 30]}, {"constr_type": "SubsetSimilarityConstraint", "name": "preference constraint", "field": "preferences", "priority": 1, "similar_bool": true, "candidates": ["ui", "networking", "graphics", "gameplay"]}]'
+            $scope.submit = function() {
+                var request = $http({
+                    method: "post",
+                    url: "/allocator",
+                    data: {
+                        min_size: parseInt($scope.minSize, 10),
+                        ideal_size: parseInt($scope.idealSize, 10),
+                        max_size: parseInt($scope.maxSize, 10),
+                        students: JSON.parse($scope.studentData),
+                        constraints: JSON.parse($scope.constraints)
+                    }
+                }).then(function success(response) {
+                    $scope.teams = response.data['teams'];
+                    console.log(response.data);
+                    console.log(response.data['teams']);
+                }, function error(response) {
+                    console.log("ERROR");
+                });
+            }
+        });
+    </script>
 </body>
 </html>

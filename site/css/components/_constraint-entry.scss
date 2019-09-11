@@ -1,0 +1,14 @@
+.constraint-entry {
+    @include paragraph-font;
+
+    &--group-size {
+        width: 75%;
+        text-align: center;
+    }
+
+    &-label {
+        @include paragraph-font;
+        @include paragraph-colour;
+        display: block;
+    }
+}

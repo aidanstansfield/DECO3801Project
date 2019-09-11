@@ -19,9 +19,6 @@ $button__colour--primary: $colour__white;
         background-color: $button__colour--primary;
         color: $button__background--primary;
         border: 2px solid $button__background--primary;
+        cursor: pointer;
     }
-}
-
-.button {
-    @include button-base;
 }

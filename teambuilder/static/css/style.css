@@ -202,20 +202,8 @@ h6 {
   font-size: 1rem;
   margin-bottom: 0.6em; }
 
-.button {
-  font-family: "Roboto", sans-serif;
-  font-size: 1rem;
-  line-height: 1.5em;
-  padding: 10px;
-  color: #fff;
-  background-color: #6CE6C5;
-  text-decoration: none;
-  display: block;
-  border: 2px solid transparent; }
-  .button:hover {
-    background-color: #fff;
-    color: #6CE6C5;
-    border: 2px solid #6CE6C5; }
+.headings__reduced-margin {
+  margin-top: 0; }
 
 .container {
   margin: 0 auto;
@@ -261,7 +249,8 @@ h6 {
     .landing-info__button:hover {
       background-color: #fff;
       color: #6CE6C5;
-      border: 2px solid #6CE6C5; }
+      border: 2px solid #6CE6C5;
+      cursor: pointer; }
     @media (max-width: 400px) {
       .landing-info__button {
         width: 80%; } }
@@ -362,9 +351,67 @@ h6 {
     .heading__button:hover {
       background-color: #fff;
       color: #6CE6C5;
-      border: 2px solid #6CE6C5; }
+      border: 2px solid #6CE6C5;
+      cursor: pointer; }
     @media (max-width: 400px) {
       .heading__button {
         width: 90%;
         display: block;
         margin: 0 auto; } }
+
+.allocation-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%; }
+  .allocation-container__constraints {
+    width: 40%;
+    border-right: 1px solid #808080; }
+  .allocation-container__allocation {
+    width: 60%;
+    overflow-y: scroll; }
+  .allocation-container__size-holder {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: center; }
+  .allocation-container__submit {
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5em;
+    padding: 10px;
+    color: #fff;
+    background-color: #6CE6C5;
+    text-decoration: none;
+    display: block;
+    border: 2px solid transparent;
+    width: 80%;
+    margin: 5px auto; }
+    .allocation-container__submit:hover {
+      background-color: #fff;
+      color: #6CE6C5;
+      border: 2px solid #6CE6C5;
+      cursor: pointer; }
+
+.constraint-entry {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5em; }
+  .constraint-entry--group-size {
+    width: 75%;
+    text-align: center; }
+  .constraint-entry-label {
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5em;
+    color: #808080;
+    display: block; }

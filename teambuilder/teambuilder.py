@@ -54,15 +54,10 @@ def logout():
 
 @app.route('/allocator', methods=['POST'])
 def allocator():
-    #if not request.is_json:
-        #throw error
-    data = request.json
-    allocation1 = json.loads(allocate(json.dumps(data)))
-    return jsonify(allocation1)
     
-    #details = request.get_data(as_text=True)
-
-    #return details +'\n'+ allocate(details) #allocate(json.dumps(details))
+    data = request.json
+    new_allocation = json.loads(allocate(json.dumps(data)))
+    return jsonify(new_allocation)
     
 if __name__ == "__main__":
 	host = "0.0.0.0"
