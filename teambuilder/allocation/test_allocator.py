@@ -1,6 +1,14 @@
 import unittest
-import allocator
-import constraints
+import os.path
+import sys
+
+# PEP366 - don't even ask
+if __package__ is None or __package__ == "":
+	__package__ = "allocation"
+	sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+from . import allocator
+from . import constraints
 
 
 # Tests if list "a" is a permutation of list "b"

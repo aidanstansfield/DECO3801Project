@@ -2,7 +2,15 @@
 # Simple proof-of -concept allocation.
 # 14 students are placed into teams based on two constraints.
 
-import allocator
+import os.path
+import sys
+
+# PEP366 - don't even ask
+if __package__ is None or __package__ == "":
+	__package__ = "allocation"
+	sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+from . import allocator
 
 
 # Students to allocate

@@ -2,11 +2,16 @@
 # Students are placed into teams based on two constraints.
 
 import json
-import os
+import os.path
 import sys
 
-import json_alloc
-import generation.generate_test_data as gendata
+# PEP366 - don't even ask
+if __package__ is None or __package__ == "":
+	__package__ = "allocation"
+	sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+from . import json_alloc
+from .generation import generate_test_data as gendata
 
 
 def make_pretty(json_data):
