@@ -20,8 +20,6 @@
     margin-bottom: 1em;
     padding: 1em 0em;
 
-    // On small screens, switch the display to allow elements
-    // to be below one another
     @include media('<=small') {
         display: block;
         text-align: center;
@@ -35,7 +33,6 @@
         margin-bottom: 0;
         margin-right: 0.5em;
 
-        // On small screens, the title and button should be above one another
         @include media('<=small') {
             display: block;
             margin: 0;
@@ -49,7 +46,6 @@
         margin-top: 0;
         margin-bottom: 0;
 
-        // On small screens, the title and button should be above one another
         @include media('<=small') {
             text-align: center;
             display: block;
@@ -60,7 +56,6 @@
     &__button {
         @include button-base;
 
-        // On small screens, the title and button should be above one another
         @include media('<=small') {
             width: 90%;
             display: block;
