@@ -2,7 +2,7 @@ import json
 
 from . import allocator
 from .constraints import * # useful for anything which imports this module 
-
+from .group_size_generator import ImpossibleConstraintsError
 
 class InvalidRequestError(Exception):
 	def __init__(self, request, message):
@@ -66,6 +66,8 @@ def encode_teams(teams):
 def encode_failure(exception):
 	if isinstance(exception, InvalidRequestError):
 		reason = exception.message
+	elif isinstance(exception, ImpossibleConstraintsError):
+		reason = str(exception)
 	else:
 		reason = "Something happened"
 	return json.dumps({"success":False, "reason":reason})

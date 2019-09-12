@@ -39,11 +39,11 @@ def validate_entered_group_sizes(min_size, ideal_size, max_size):
         Raises a ValueError if the sizes are invalid
     """
     if min_size < 0:
-        raise ValueError("min size cannot be negative") 
+        raise ImpossibleConstraintsError("Min size cannot be negative") 
     if ideal_size < min_size:
-        raise ValueError("ideal size cannot be less than minimum size")    
+        raise ImpossibleConstraintsError("Ideal size cannot be less than minimum size")    
     if max_size < ideal_size:
-        raise ValueError("max size cannot be less than ideal size")
+        raise ImpossibleConstraintsError("Max size cannot be less than ideal size")
 
 def form_ideal_groups(no_people, ideal_size):
     """
@@ -185,14 +185,14 @@ def determine_group_sizes(no_people, min_size, ideal_size, max_size):
     """
 
     if no_people < 0:
-        raise ValueError("number of people cannot be negative")
+        raise ImpossibleConstraintsError("We can't allocate a negative number of people")
 
     validate_entered_group_sizes(min_size, ideal_size, max_size)
 
     # We fail if there aren't enough people to allocate a minimum sized
     # group.
     if no_people < min_size:
-        raise ValueError("There aren't enough people to allocate")
+        raise ImpossibleConstraintsError("There aren't enough people to meet the minimum size constraint")
 
     formed_groups = []
 
@@ -219,7 +219,7 @@ def determine_group_sizes(no_people, min_size, ideal_size, max_size):
 
     # If we still have people left over, then it's not possible
     if remaining_people > 0:
-        raise ImpossibleConstraintsError("Cannot form groups of the given sizes")
+        raise ImpossibleConstraintsError("It's impossible to form groups of the given sizes")
     
     return collate_formed_groups(formed_groups) 
 
