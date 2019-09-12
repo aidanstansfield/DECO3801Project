@@ -29,6 +29,9 @@ class TeamBuilder(simanneal.Annealer):
 		self.student_info = student_info
 		self.constraints = constraints
 		self.copy_strategy = "slice"  # state is a list
+        # NOTE: This function registers a sigint callback which is fine locally,
+        # but when it is not the main thread it breaks. SOL: Comment out sigint
+        # in anneal.py
 		super().__init__(list(state))
 	
 	# Produce an iterator over the current state of the teams 
