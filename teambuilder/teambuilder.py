@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414', 
     's4432329', 's4436755']
-ignore_auth = True
+ignore_auth = False
 
 @app.before_request
 def check_auth():
@@ -33,7 +33,6 @@ def favicon():
 
 @app.route('/')
 def home():
-    #return str(request.headers)
     return render_template('landing.html')
 
 @app.route('/allocation')
@@ -54,10 +53,14 @@ def logout():
 
 @app.route('/allocator', methods=['POST'])
 def allocator():
-    
-    data = request.json
-    new_allocation = json.loads(allocate(json.dumps(data)))
-    return jsonify(new_allocation)
+    response = app.response_class(
+        response = allocate(json.dumps(request.json)),
+        #response = allocate(request.get_data(cache=False)),
+        status = 200,
+        mimetype = 'application/json'
+    )
+    return response 
+    #return jsonify(json.loads(allocate(json.dumps(request.json))))
     
 if __name__ == "__main__":
 	host = "0.0.0.0"
