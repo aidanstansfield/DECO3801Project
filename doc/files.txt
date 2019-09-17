@@ -1,9 +1,13 @@
 repository                                      Root directory
+├── conf                                        Server configuration files
+│   ├── nginx.conf                              Configuration file for NGINX
+│   ├── teambuilder                             TeamBuilder site configuration for NGINX
+│   └── teambuilder.service                     Configuration file for the TeamBuilder service
 ├── doc                                         Documentation for developers
 │   └── files.txt                               This file
-├── informative-product-website                 ????
-│   ├── informative-product-website.py
-│   └── static
+├── informative-product-website                 Source code for informative product website (IPW)
+│   ├── informative-product-website.py          Flask app for the IPW
+│   └── static                                  Static content for the IPW
 │       ├── css
 │       │   └── style.css
 │       ├── favicon.ico
@@ -56,7 +60,7 @@ repository                                      Root directory
     │   ├── test_group_size_generator.py        Unit tests for group_size_generator.py
     │   └── test_json_alloc.py                  Unit tests for json_alloc.py
     ├── __init__.py
-    ├── static                                  ???
+    ├── static                                  Static content for the TeamBuilder website
     │   ├── css
     │   │   ├── style.css
     │   │   └── style.css.map
@@ -64,7 +68,7 @@ repository                                      Root directory
     │   └── images
     │       ├── logo-purple.png
     │       └── team-builder-logo.png
-    ├── teambuilder.ini                         UWSGI configuration
+    ├── teambuilder.ini                         uWSGI configuration
     ├── teambuilder.py                          Flask functions for the TeamBuilder website
     ├── templates                               Flask HTML templates
     │   ├── allocation.html
@@ -72,4 +76,4 @@ repository                                      Root directory
     │   ├── courses.html
     │   ├── header.html
     │   └── landing.html
-    └── wsgi.py                                 ???
+    └── wsgi.py                                 uWSGI entry point for the TeamBuilder website
