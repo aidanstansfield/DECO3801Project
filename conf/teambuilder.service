@@ -1,0 +1,14 @@
+; define the teambuilder service
+; location: /etc/systemd/system/teambuilder.service
+[Unit]
+Description=uWSGI instance to serve teambuilder
+After=network.target
+
+[Service]
+User=s4434177
+Group=www-data
+WorkingDirectory=/opt/deco3801-allotech/teambuilder
+ExecStart=/opt/uwsgi --ini teambuilder.ini
+
+[Install]
+WantedBy=multi-user.target
