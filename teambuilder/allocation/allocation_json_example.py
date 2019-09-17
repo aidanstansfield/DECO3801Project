@@ -1,5 +1,6 @@
-# Simple proof-of -concept allocation, adapted to load students from a JSON data on stdin. 
-# Students are placed into teams based on two constraints.
+# Simple proof-of-concept allocation, adapted to demonstrate
+# JSON serialisation and deserialisaion. An allocation request is
+# printed, followed by a response generated from that request.
 
 import json
 import os.path
@@ -51,6 +52,7 @@ age_constraint = json_alloc.IntegerCountConstraint("age constraint", "age", 1, T
 preference_constraint = json_alloc.SubsetSimilarityConstraint("preference constraint", "preferences", 1, True, ("ui", "networking", "graphics", "gameplay"))
 constraints = [age_constraint, preference_constraint]
 
+
 # serialise
 request = json_alloc.encode_request(min_size, ideal_size, max_size, constraints, students)
 
@@ -61,6 +63,7 @@ print("Allocation request:")
 print(make_pretty(request))
 print()
 print()
+
 
 # allocate with JSON
 response = json_alloc.allocate(request)
