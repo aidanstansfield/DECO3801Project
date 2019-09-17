@@ -10,55 +10,88 @@
     <div class='container' ng-app="allocator" ng-controller="formCtrl">
         {% include 'header.html' %}
 
-        <div class='heading'>
-            <div>
-                <a href="#"><div class='heading__back-button'><i class='fa fa-arrow-left'></i></div></a>
-                <h1 class='heading__title'>Allocation Demo</h1>
+        <div class='page-heading'>
+            <div class='page-heading__title-holder'>
+                <a href="#" class='page-heading__button'><< Back</a>
+                <h1 class='page-heading__title'>Allocation Demo</h1>
             </div>
         </div>
         <div class="allocation-container">
-            <div class="allocation-container__constraints">
-                <form>
-                    <h2 class='headings__reduced-margin'>Group Sizes</h2>
-                    <p>Enter your preferred group sizes:</p>
-                    <div class="allocation-container__size-holder">
-                        <div>
-                            <input class="constraint-entry constraint-entry--group-size" name="minSize" type="text" ng-model="minSize">
-                            <label class="constraint-entry-label" for="minSize">Min</label>
+            <div class="allocation-controls">
+                <button class="allocation-controls__button" ng-click="submit()">Run Allocation</button>
+                <button class="allocation-controls__button">Export Allocation</button>
+            </div>
+            <div class='allocation-separator'>
+                <div class="allocation-constraints">
+                    <form>
+                        <h2 class="allocation-constraints__heading">Group Sizes</h2>
+                        <p>Enter your preferred group sizes:</p>
+                        <div class="allocation-constraints__size-holder">
+                            <div>
+                                <input class="allocation-constraints__size-input" name="minSize" type="text" ng-model="minSize">
+                                <label class="allocation-constraints__size-label" for="minSize">Min</label>
+                            </div>
+                            <div>
+                                <input class="allocation-constraints__size-input"  name="idealSize" type="text" ng-model="idealSize">
+                                <label class="allocation-constraints__size-label" for="minSize">Ideal</label>
+                            </div>
+                            <div>
+                                <input class="allocation-constraints__size-input"  name="maxSize" type="text" ng-model="maxSize">
+                                <label class="allocation-constraints__size-label"  for="minSize">Max</label>
+                            </div>
                         </div>
-                        <div>
-                            <input class="constraint-entry constraint-entry--group-size"  name="idealSize" type="text" ng-model="idealSize">
-                            <label class="constraint-entry-label" for="minSize">Ideal</label>
+                        <div class='allocation-constraints__title-holder'>
+                            <h2 class="allocation-constraints__heading">Constraints</h2>
+                            <button class='allocation-constraints__title-button'>Add New</button>
                         </div>
-                        <div>
-                            <input class="constraint-entry constraint-entry--group-size"  name="maxSize" type="text" ng-model="maxSize">
-                            <label class="constraint-entry-label"  for="minSize">Max</label>
+                        <div class='allocation-constraints__constraint-container'>
+                            <div class='allocation-constraint'>
+                                <div class='allocation-constraint__status-holder'>
+                                    <div class='allocation-constraint__status'>
+                                        <input class='allocation-constraint__enabled-input' type='checkbox'>
+                                        <label class='allocation-constraint__enabled-label'>Enabled</label>
+                                    </div>
+                                    <button class='allocation-constraint__delete'>Delete</button>
+                                </div>
+                                <div class='allocation-constraint__info-holder'>
+                                    <p>Every group 
+                                        <strong>SHOULD HAVE</strong> 
+                                        <strong>AT MOST</strong>
+                                        <strong>3</strong>
+                                        people with
+                                        <strong>AGE</strong>
+                                        between
+                                        <strong>20</strong>
+                                        and 
+                                        <strong>21</strong>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
+                </div>
+                <div class="allocation-results">
                     <h2>Student Details</h2>
                     <textarea class='constraint-entry' ng-model="studentData"></textarea>
                     <h2>Constraint Details</h2>
                     <textarea class='constraint-entry' ng-model="constraints"></textarea>
-                    <button type ="submit" class="allocation-container__submit" ng-click="submit()">Run</button>
-                </form>
-            </div>
-            <div class="allocation-container__allocation">
-                <ul>
-                    <li ng-repeat="(x, y) in teams">
-                        <div class="allocation-group">
-                            <p class="allocation-group__name"> {% raw %} {{ x }} {% endraw %}</p>
-                            <ul>
-                                <li ng-repeat="z in y">
-                                    <div class="allocation-group__item">
-                                            {% raw %} {{ z }} {% endraw %}
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-                <div class="allocation_group">
+                    <ul>
+                        <li ng-repeat="(x, y) in teams">
+                            <div class="allocation-group">
+                                <p class="allocation-group__name"> {% raw %} {{ x }} {% endraw %}</p>
+                                <ul>
+                                    <li ng-repeat="z in y">
+                                        <div class="allocation-group__item">
+                                                {% raw %} {{ z }} {% endraw %}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="allocation_group">
 
+                    </div>
                 </div>
             </div>
         </div>

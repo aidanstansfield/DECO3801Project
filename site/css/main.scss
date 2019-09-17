@@ -11,6 +11,9 @@
 @import 'components/container';
 @import 'components/landing-info';
 @import 'components/header';
-@import 'components/heading';
+@import 'components/page_heading';
 @import 'components/allocation_container';
-@import 'components/constraint-entry';
+@import 'components/allocation-controls';
+@import 'components/allocation-constraints';
+@import 'components/allocation_results';
+@import 'components/allocation-constraint';

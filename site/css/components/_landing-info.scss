@@ -21,7 +21,7 @@
     }
 
     &__button {
-        @include button-base;
+        @extend %button-green;
         @include centered-block;
         width: 45%;
 

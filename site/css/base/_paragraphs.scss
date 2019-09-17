@@ -7,7 +7,7 @@ $paragraph__font: $font__roboto;
 $paragraph__colour: $colour__gray--dark;
 $paragraph__margin: 1em;
 $paragraph__line-height: 1.5em;
-$paragraph__font-size: px_to_rem(16px, $font__base-font-size);
+$paragraph__font-size: px_to_rem(14px, $font__base-font-size);
 
 @mixin paragraph-font {
     font-family: $paragraph__font;

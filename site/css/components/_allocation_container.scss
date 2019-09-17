@@ -1,49 +1,16 @@
+// Contains styling for the allocation container
+// which houses the allocation controls, constraints
+// and results.
 .allocation-container {
-    @include flexbox();
-    flex-direction: row;
-    justify-content: space-between;
+    @extend %flexbox;
+    flex-direction: column;
+    align-content: flex-start;
+    align-items: stretch;
     width: 100%;
     height: 100%;
 
     @include media('<=small') {
         flex-direction: column;
         height: initial;
-    }
-
-    &__constraints {
-        width: 40%;
-        border-right: 1px solid $colour__gray--dark;
-        height: 100%;
-        overflow-y: scroll;
-
-        @include media('<=small') {
-            width: 100%;
-            height: initial;
-            overflow: initial;
-            border-right: 1px solid transparent;
-        }
-    }
-
-    &__allocation {
-        width: 60%;
-        overflow-y: scroll;
-
-        @include media('<=small') {
-            width: 100%;
-            overflow: initial;
-        }
-    }
-
-    &__size-holder {
-        @include flexbox();
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: center;
-    }
-
-    &__submit {
-        @include button-base;
-        width: 80%;
-        margin: 5px auto;
     }
 }

@@ -1,0 +1,23 @@
+// Contains styling for the allocation controls
+// which sits at the top of the allocation page,
+// above the constraints and results sections.
+.allocation-controls {
+    @extend %flexbox;
+    justify-content: flex-end;
+    padding: 10px 0;
+    
+    @include media('<=small') {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    &__button {
+        @extend %button-green;
+        margin-left: 10px;
+
+        @include media('<=small') {
+            margin-left: 0;
+            margin-bottom: 10px;
+        }
+    }
+}

@@ -3,22 +3,40 @@
 // Contains the base styling for buttons and links
 // used as buttons throughout the application.
 
-$button__background--primary: $colour__teal;
-$button__colour--primary: $colour__white;
-
-@mixin button-base {
-    @include paragraph-font;
+%button-base {
+    @include paragraph-font;   
     padding: 10px;
-    color: $button__colour--primary;
-    background-color: $button__background--primary;
-    text-decoration: none;
     display: block;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    text-decoration: none;
     border: 2px solid transparent;
 
     &:hover {
-        background-color: $button__colour--primary;
-        color: $button__background--primary;
-        border: 2px solid $button__background--primary;
         cursor: pointer;
+        font-weight: 600;
+    }
+}
+
+%button-green {
+    @extend %button-base;
+    color: $colour__white;
+    background-color: $colour__teal;
+
+    &:hover {
+        background-color: $colour__white;
+        color: $colour__teal--dark;
+        border: 2px solid $colour__teal;
+    }
+}
+
+%button-red {
+    @extend %button-base;
+    color: $colour__white;
+    background-color: $colour__red--light;
+
+    &:hover {
+        background-color: $colour__white;
+        color: $colour__red;
+        border: 2px solid $colour__red--light;
     }
 }

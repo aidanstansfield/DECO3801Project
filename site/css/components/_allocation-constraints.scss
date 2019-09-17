@@ -1,0 +1,52 @@
+// Contains styling for the constraints section of
+// the allocation page. This section contains
+// the group size selection as well as the 
+// constraints which already exist.
+.allocation-separator {
+    @extend %flexbox;
+    flex-direction: row;
+    flex-basis: 100%;
+}
+
+.allocation-constraints {
+    flex-basis: 40%;
+    padding-right: 10px;
+    border-right: 1px solid $colour__gray--dark;
+    
+    &__heading {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    &__title-holder {
+        @extend %flexbox;
+        margin-top: 1em;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__title-button {
+        flex-grow: 0;
+        @extend %button-green;
+    }
+
+    &__size-holder {
+        @extend %flexbox;
+    }
+
+    &__size-input {
+        width: 60%;
+        margin: 0 auto;
+        display: block;
+        text-align: center;
+        @include paragraph-font;
+        @include paragraph-colour;
+    }
+
+    &__size-label {
+        display: block;
+        @include paragraph-font;
+        @include paragraph-colour;
+        text-align: center;
+    }
+}

@@ -6,7 +6,7 @@
 
 .container {
     @include centered-block;
-    @include flexbox();
+    @extend %flexbox;
 
     flex-direction: column;
     width: 100%;

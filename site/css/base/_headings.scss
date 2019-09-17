@@ -5,7 +5,7 @@
 
 $heading__font: $font__roboto;
 $heading__colour: $colour__gray--dark;
-$heading__font-size: px_to_rem(32px, $font__base-font-size);
+$heading__font-size: px_to_rem(28px, $font__base-font-size);
 $heading__margin: $paragraph__margin * 1.2;
 $heading__line-height: 1.25em;
 
@@ -48,8 +48,4 @@ h5 {
 h6 {
     font-size: $heading__font-size / 2;
     margin-bottom: $heading__margin / 2;
-}
-
-.headings__reduced-margin {
-    margin-top: 0;
 }
