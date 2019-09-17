@@ -1,5 +1,4 @@
-#    109
-# Simple proof-of -concept allocation.
+# Simple proof-of-concept allocation.
 # 14 students are placed into teams based on two constraints.
 
 import os.path
@@ -34,6 +33,7 @@ student_preferences = [
 ]
 student_info = {sid:{"age":student_ages[sid], "preferences":student_preferences[sid]} for sid in students}
 
+
 # Allocation constraints
 # Want exactly one person between ages of 20-30 per team
 # Want each team to have shared similar project preferences.
@@ -41,8 +41,10 @@ age_constraint = allocator.IntegerCountConstraint("age_constraint", "age", 1, Tr
 preference_constraint = allocator.SubsetSimilarityConstraint("preference constraint", "preferences", 1, True, ("ui", "networking", "graphics", "gameplay"))
 constraints = [age_constraint, preference_constraint]
 
+
 # Allocate
 teams = allocator.allocate_teams(2, 3, 4, student_info, constraints, progress=True)
+
 
 # Print results
 print()
@@ -53,4 +55,3 @@ for team_no, (team, team_cost) in enumerate(teams.items()):
 		print(f"sid: {member:3}   age: {student_info[member]['age']:3}   preferences: {', '.join(student_info[member]['preferences'])}")
 	print(f"cost:  {team_cost}")
 	print()
-

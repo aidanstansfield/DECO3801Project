@@ -4,12 +4,17 @@ from . import allocator
 from .constraints import * # useful for anything which imports this module 
 from .group_size_generator import ImpossibleConstraintsError
 
+
+# General exception to describe any issues which may arise from
+# deserialising a JSON-encoded allocation request.
 class InvalidRequestError(Exception):
 	def __init__(self, request, message):
 		self.request = request
 		self.message = message
 
 
+# Extension to JSONEncoder in order to correctly serialise allocation constraints.
+# Not needed for the website, but useful as documentation.
 class ConstraintEncoder(json.JSONEncoder):
 	def default(self, obj):
 		if isinstance(obj, BXY):
@@ -31,6 +36,8 @@ class ConstraintEncoder(json.JSONEncoder):
 			return json.JSONEncoder.default(self, obj)
 
 
+# Capture and build constraints from the result of deserialising a
+# JSON-encoded allocation request.
 def constraint_hook(obj):
 	try:
 		if obj.get("constr_type") == "IntegerCountConstraint":
@@ -59,10 +66,12 @@ def constraint_hook(obj):
 			raise InvalidRequestError(None, "Invalid constraint JSON")
 
 
+# Produce the JSON-encoded result of a successful allocation.
 def encode_teams(teams):
 	return json.dumps({"success":True, "teams":teams})
 
 
+# Produce the JSON-encoded result of an unsuccessful allocation.
 def encode_failure(exception):
 	if isinstance(exception, InvalidRequestError):
 		reason = exception.message
@@ -73,6 +82,8 @@ def encode_failure(exception):
 	return json.dumps({"success":False, "reason":reason})
 
 
+# Build a valid request 
+# Not needed for the website, but useful as documentation.
 def encode_request(min_size, ideal_size, max_size, constraints, students):
 	return json.dumps({
 		"min_size":     min_size,
@@ -83,6 +94,9 @@ def encode_request(min_size, ideal_size, max_size, constraints, students):
 		cls=ConstraintEncoder)
 
 
+# Decode an allocation request from a user. This function will validate
+# That the request has a valid structure and types, though it won't
+# attempt to validate the individual constraints.
 def decode_request(request):
 	try:
 		decoded = json.loads(request, object_hook=constraint_hook)
@@ -120,6 +134,8 @@ def decode_request(request):
 	return min_size, ideal_size, max_size, students, constraints
 
 
+# Validate a single constraint from an allocation, including whether it
+# is applicable to the given student data.
 def validate_constraint(request, student_info, constraint):
 	if not isinstance(constraint, Constraint):
 		raise InvalidRequestError(request, "Invalid constraint")
@@ -142,6 +158,7 @@ def validate_constraint(request, student_info, constraint):
 			raise InvalidRequestError(request, "Constraint ({}) type ({}) doesn't match student info field ({}) type".format(constraint.name, ctype, constraint.field))
 
 
+# Validate an allocation request from the user, including constraints and student information
 def validate_request(request, min_size, ideal_size, max_size, student_info, constraints): #TODO
 	if not min_size <= ideal_size <= max_size:
 		raise InvalidRequestError(request, "Invalid group size ordering")
@@ -154,6 +171,7 @@ def validate_request(request, min_size, ideal_size, max_size, student_info, cons
 		validate_constraint(request, student_info, constraint)
 
 
+# Perform the complete deserialise->allocate->serialise process.
 def allocate(request):
 	try:
 		decoded = decode_request(request)
