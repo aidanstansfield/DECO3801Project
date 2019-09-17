@@ -1,3 +1,7 @@
+# This file defines classes for representing constraints
+# (besides group size) in an allocation.
+
+
 # Simple class for working with ranges in constraints
 class BXY:
 	def __init__(self, lower, upper):

@@ -1,0 +1,79 @@
+repository                                      Root directory
+├── conf                                        Server configuration files
+│   ├── nginx.conf                              Configuration file for NGINX
+│   ├── teambuilder                             TeamBuilder site configuration for NGINX
+│   └── teambuilder.service                     Configuration file for the TeamBuilder service
+├── doc                                         Documentation for developers
+│   └── files.txt                               This file
+├── informative-product-website                 Source code for informative product website (IPW)
+│   ├── informative-product-website.py          Flask app for the IPW
+│   └── static                                  Static content for the IPW
+│       ├── css
+│       │   └── style.css
+│       ├── favicon.ico
+│       └── images
+│           ├── logo-purple.png
+│           └── team-builder-logo.png
+├── README.md                                   Documentation for users
+├── site                                        Static content for the TeamBuilder website
+│   ├── css                                     ???
+│   │   ├── base
+│   │   │   ├── _buttons.scss
+│   │   │   ├── _colours.scss
+│   │   │   ├── _fonts.scss
+│   │   │   ├── _general.scss
+│   │   │   ├── _headings.scss
+│   │   │   └── _paragraphs.scss
+│   │   ├── components
+│   │   │   ├── _allocation_container.scss
+│   │   │   ├── _constraint-entry.scss
+│   │   │   ├── _container.scss
+│   │   │   ├── _header.scss
+│   │   │   ├── _heading.scss
+│   │   │   └── _landing-info.scss
+│   │   ├── external
+│   │   │   ├── _include-media.scss
+│   │   │   └── _normalize.scss
+│   │   ├── main.scss
+│   │   ├── style.css
+│   │   └── style.css.map
+│   ├── images
+│   │   ├── logo-purple.png
+│   │   └── team-builder-logo.png
+│   └── testing.html
+└── teambuilder                                 Flask content for the TeamBuilder website
+    ├── allocation                              Python package for performing allocations
+    │   ├── allocation_example.py               Example of allocating students
+    │   ├── allocation_json_example.py          Example of JSON de/serialisation of requests and responses
+    │   ├── allocator.py                        Performs an allocation of students to teams
+    │   ├── constraints.py                      Constraints for allocations
+    │   ├── cp.py                               Example of a Constraint-Programming approach
+    │   ├── generation                          Data generation for allocation examples              
+    │   │   ├── csv_gen_demo.py                 Produce CSV-formatted example student data
+    │   │   ├── fnames.txt                      Example first names
+    │   │   ├── generate_test_data.py           Generates information for example students - student IDs are not valid
+    │   │   ├── lnames.txt                      Example last names
+    │   ├── group_size_generator.py             Selects the sizes of teams to make
+    │   ├── __init__.py
+    │   ├── json_alloc.py                       Wraps and unwraps JSON-encoded requests and responses
+    │   ├── test_allocator.py                   Unit tests for allocator.py
+    │   ├── test_group_size_generator.py        Unit tests for group_size_generator.py
+    │   └── test_json_alloc.py                  Unit tests for json_alloc.py
+    ├── __init__.py
+    ├── static                                  Static content for the TeamBuilder website
+    │   ├── css
+    │   │   ├── style.css
+    │   │   └── style.css.map
+    │   ├── favicon.ico
+    │   └── images
+    │       ├── logo-purple.png
+    │       └── team-builder-logo.png
+    ├── teambuilder.ini                         uWSGI configuration
+    ├── teambuilder.py                          Flask functions for the TeamBuilder website
+    ├── templates                               Flask HTML templates
+    │   ├── allocation.html
+    │   ├── course-details.html
+    │   ├── courses.html
+    │   ├── header.html
+    │   └── landing.html
+    └── wsgi.py                                 uWSGI entry point for the TeamBuilder website
