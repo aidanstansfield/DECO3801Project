@@ -25,12 +25,15 @@ repository                                      Root directory
 │   │   │   ├── _headings.scss
 │   │   │   └── _paragraphs.scss
 │   │   ├── components
+│   │   │   ├── _allocation-constraint.scss
+│   │   │   ├── _allocation-constraints.scss
 │   │   │   ├── _allocation_container.scss
-│   │   │   ├── _constraint-entry.scss
+│   │   │   ├── _allocation-controls.scss
+│   │   │   ├── _allocation_results.scss
 │   │   │   ├── _container.scss
 │   │   │   ├── _header.scss
-│   │   │   ├── _heading.scss
-│   │   │   └── _landing-info.scss
+│   │   │   ├── _landing-info.scss
+│   │   │   └── _page_heading.scss
 │   │   ├── external
 │   │   │   ├── _include-media.scss
 │   │   │   └── _normalize.scss
@@ -71,9 +74,9 @@ repository                                      Root directory
     ├── teambuilder.ini                         uWSGI configuration
     ├── teambuilder.py                          Flask functions for the TeamBuilder website
     ├── templates                               Flask HTML templates
-    │   ├── allocation.html
-    │   ├── course-details.html
-    │   ├── courses.html
-    │   ├── header.html
-    │   └── landing.html
+    │   ├── allocation.html                     Template for /allocation page
+    │   ├── course-details.html                 Template for /course/<id> pages
+    │   ├── courses.html                        Template for /courses page
+    │   ├── header.html                         Template for header included in other pages
+    │   └── landing.html                        Template for / page
     └── wsgi.py                                 uWSGI entry point for the TeamBuilder website
