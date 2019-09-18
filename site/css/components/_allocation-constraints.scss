@@ -6,27 +6,68 @@
     @extend %flexbox;
     flex-direction: row;
     flex-basis: 100%;
+
+    @include media('<=medium') {
+        flex-direction: column;
+    }
+}
+
+.allocation-constraints-wrapper {
+    @extend %flexbox;
+    flex-basis: 40%;
+    position: relative;
+    flex-direction: column;
+    align-content: flex-start;
+    padding-right: 10px;
+    border-right: 1px solid $colour__gray--dark;
+
+    @include media("<=medium") {
+        flex-basis: 100%;
+        border-right: 1px solid transparent;
+        padding-right: initial;
+    }
 }
 
 .allocation-constraints {
-    flex-basis: 40%;
-    padding-right: 10px;
-    border-right: 1px solid $colour__gray--dark;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 1em;
+    overflow-y: auto;
+    height: 100%;
+
+    @include media('<=medium') {
+        position: initial;
+        top: initial;
+        bottom: initial;
+        right: initial;
+        left: initial;
+        overflow: auto;
+        height: inherit;
+        padding: 0;
+    }
     
     &__heading {
         margin-top: 0;
-        margin-bottom: 0;
+        margin-bottom: 0.5em;
+
+        @include media('<=medium') {
+            margin-bottom: 0.5em;
+        }
     }
 
     &__title-holder {
         @extend %flexbox;
         margin-top: 1em;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;   
     }
 
     &__title-button {
         flex-grow: 0;
+        flex-basis: 50%;
         @extend %button-green;
     }
 
@@ -48,5 +89,13 @@
         @include paragraph-font;
         @include paragraph-colour;
         text-align: center;
+        font-weight: bold;
+    }
+
+    &__constraint-container {
+        @extend %flexbox;
+        position: relative;
+        flex-direction: column;
+        align-content: flex-start;
     }
 }

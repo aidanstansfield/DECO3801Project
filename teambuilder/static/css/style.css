@@ -150,7 +150,7 @@ template {
 [hidden] {
   display: none; }
 
-.container, .header, .page-heading, .page-heading__title-holder, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraint__status-holder {
+.container, .header, .page-heading, .page-heading__title-holder, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -217,15 +217,17 @@ h6 {
   display: block;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   text-decoration: none;
-  border: 2px solid transparent; }
-  .landing-info__button:hover, .page-heading__button:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .allocation-constraint__delete:hover {
+  border: 2px solid transparent;
+  outline: 0;
+  border-radius: 3px; }
+  .landing-info__button:hover, .page-heading__button:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .allocation-constraint__delete:hover, .landing-info__button:focus, .page-heading__button:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .allocation-constraint__delete:focus {
     cursor: pointer;
     font-weight: 600; }
 
 .landing-info__button, .page-heading__button, .allocation-controls__button, .allocation-constraints__title-button {
   color: #fff;
   background-color: #6CE6C5; }
-  .landing-info__button:hover, .page-heading__button:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover {
+  .landing-info__button:hover, .page-heading__button:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .landing-info__button:focus, .page-heading__button:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus {
     background-color: #fff;
     color: #36af8f;
     border: 2px solid #6CE6C5; }
@@ -233,7 +235,7 @@ h6 {
 .allocation-constraint__delete {
   color: #fff;
   background-color: #ff9399; }
-  .allocation-constraint__delete:hover {
+  .allocation-constraint__delete:hover, .allocation-constraint__delete:focus {
     background-color: #fff;
     color: #d8000c;
     border: 2px solid #ff9399; }
@@ -309,7 +311,8 @@ h6 {
       .page-heading__title {
         display: block;
         text-align: center;
-        margin-bottom: 10px; } }
+        margin-bottom: 10px;
+        margin-left: 0; } }
 
 .allocation-container {
   flex-direction: column;
@@ -317,7 +320,7 @@ h6 {
   align-items: stretch;
   width: 100%;
   height: 100%; }
-  @media (max-width: 400px) {
+  @media (max-width: 600px) {
     .allocation-container {
       flex-direction: column;
       height: initial; } }
@@ -339,20 +342,55 @@ h6 {
 .allocation-separator {
   flex-direction: row;
   flex-basis: 100%; }
+  @media (max-width: 600px) {
+    .allocation-separator {
+      flex-direction: column; } }
 
-.allocation-constraints {
+.allocation-constraints-wrapper {
   flex-basis: 40%;
+  position: relative;
+  flex-direction: column;
+  align-content: flex-start;
   padding-right: 10px;
   border-right: 1px solid #808080; }
+  @media (max-width: 600px) {
+    .allocation-constraints-wrapper {
+      flex-basis: 100%;
+      border-right: 1px solid transparent;
+      padding-right: initial; } }
+
+.allocation-constraints {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: 1em;
+  overflow-y: auto;
+  height: 100%; }
+  @media (max-width: 600px) {
+    .allocation-constraints {
+      position: initial;
+      top: initial;
+      bottom: initial;
+      right: initial;
+      left: initial;
+      overflow: auto;
+      height: inherit;
+      padding: 0; } }
   .allocation-constraints__heading {
     margin-top: 0;
-    margin-bottom: 0; }
+    margin-bottom: 0.5em; }
+    @media (max-width: 600px) {
+      .allocation-constraints__heading {
+        margin-bottom: 0.5em; } }
   .allocation-constraints__title-holder {
     margin-top: 1em;
-    justify-content: space-between;
-    align-items: center; }
+    flex-direction: column;
+    justify-content: space-between; }
   .allocation-constraints__title-button {
-    flex-grow: 0; }
+    flex-grow: 0;
+    flex-basis: 50%; }
   .allocation-constraints__size-input {
     width: 60%;
     margin: 0 auto;
@@ -368,10 +406,61 @@ h6 {
     font-size: 1rem;
     line-height: 1.5em;
     color: #808080;
-    text-align: center; }
+    text-align: center;
+    font-weight: bold; }
+  .allocation-constraints__constraint-container {
+    position: relative;
+    flex-direction: column;
+    align-content: flex-start; }
+
+.allocation-results-wrapper {
+  flex-basis: 60%;
+  position: relative;
+  flex-direction: column;
+  align-content: flex-start; }
+  @media (max-width: 600px) {
+    .allocation-results-wrapper {
+      flex-basis: 100%; } }
 
 .allocation-results {
-  flex-basis: 60%; }
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: 1em;
+  overflow-y: auto;
+  height: 100%; }
+  @media (max-width: 600px) {
+    .allocation-results {
+      position: initial;
+      top: initial;
+      bottom: initial;
+      right: initial;
+      left: initial;
+      overflow: auto;
+      height: inherit; } }
+
+.allocation-group {
+  margin: 1em auto;
+  padding: 1em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  flex-wrap: wrap;
+  justify-content: space-around; }
+  .allocation-group__name {
+    flex-basis: 100%;
+    text-align: center;
+    margin: 0; }
+  .allocation-group__item {
+    display: inline-block;
+    flex-basis: 40%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    padding: 0 0.5em;
+    margin: 0.5em 0;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .allocation-group__item:hover {
+      box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+      cursor: pointer; }
 
 .allocation-constraint {
   border-radius: 10px;
@@ -385,10 +474,52 @@ h6 {
   .allocation-constraint__status-holder {
     justify-content: space-between;
     align-items: center; }
+  .allocation-constraint__status {
+    position: relative; }
+  .allocation-constraint__enabled-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 20px;
+    opacity: 0;
+    z-index: 0; }
   .allocation-constraint__enabled-label {
     font-family: "Roboto", sans-serif;
     font-size: 1rem;
-    line-height: 1.5em; }
+    line-height: 1.5em;
+    display: block;
+    padding: 0 0 0 44px;
+    cursor: pointer; }
+    .allocation-constraint__enabled-label:before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 0;
+      width: 36px;
+      height: 14px;
+      background-color: #ececec;
+      border-radius: 14px;
+      z-index: 1;
+      transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+    .allocation-constraint__enabled-label:after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background-color: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+      z-index: 2;
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      transition-property: left, background-color; }
+  .allocation-constraint__enabled-input:checked + .allocation-constraint__enabled-label:before {
+    background-color: #36af8f; }
+  .allocation-constraint__enabled-input:checked + .allocation-constraint__enabled-label:after {
+    left: 16px;
+    background-color: #6CE6C5; }
   .allocation-constraint__delete {
     background-color: #ff9399;
     align-self: flex-end;

@@ -12,7 +12,7 @@ explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414',
     's4432329', 's4436755'] 
 
 # set to True when testing locally to avoid permission denied
-ignore_auth = False
+ignore_auth = True
 
 # Before every request, run this function.
 # This will return a 403 permission denied if the user is trying to access 
