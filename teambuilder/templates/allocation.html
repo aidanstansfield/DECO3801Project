@@ -71,12 +71,7 @@
                     </div>
                 </div>
                 <div class="allocation-results-wrapper">
-                    <div class="allocation-results">
-                        <!-- <h2>Student Details</h2>
-                        <textarea class='constraint-entry' ng-model="studentData"></textarea>
-                        <h2>Constraint Details</h2>
-                        <textarea class='constraint-entry' ng-model="constraints"></textarea> -->
-                        
+                    <div class="allocation-results">                        
                         <div class="allocation-group" ng-repeat="(x, y) in teams">
                             <p class="allocation-group__name"> {% raw %} {{ x }} {% endraw %}</p>
                             <div class="allocation-group__item" ng-repeat="z in y">
@@ -87,6 +82,10 @@
                 </div>
             </div>
         </div>
+        <h2>Student Details</h2>
+        <textarea class='constraint-entry' ng-model="studentData"></textarea>
+        <h2>Constraint Details</h2>
+        <textarea class='constraint-entry' ng-model="constraints"></textarea>
     </div> 
     <script type='text/javascript' src='/static/js/allocate.js'/></script>
 </body>
