@@ -5,6 +5,7 @@ repository                                      Root directory
 │   └── teambuilder.service                     Configuration file for the TeamBuilder service
 ├── doc                                         Documentation for developers
 │   └── files.txt                               This file
+│   └── references.txt                          Information about third-party resources used in this project
 ├── informative-product-website                 Source code for informative product website (IPW)
 │   ├── informative-product-website.py          Flask app for the IPW
 │   └── static                                  Static content for the IPW
@@ -16,15 +17,15 @@ repository                                      Root directory
 │           └── team-builder-logo.png
 ├── README.md                                   Documentation for users
 ├── site                                        Static content for the TeamBuilder website
-│   ├── css                                     ???
-│   │   ├── base
+│   ├── css
+│   │   ├── base                                Generic styles which are used in other components
 │   │   │   ├── _buttons.scss
 │   │   │   ├── _colours.scss
 │   │   │   ├── _fonts.scss
 │   │   │   ├── _general.scss
 │   │   │   ├── _headings.scss
 │   │   │   └── _paragraphs.scss
-│   │   ├── components
+│   │   ├── components                          Styles for individual components on the website
 │   │   │   ├── _allocation-constraint.scss
 │   │   │   ├── _allocation-constraints.scss
 │   │   │   ├── _allocation_container.scss
@@ -34,16 +35,16 @@ repository                                      Root directory
 │   │   │   ├── _header.scss
 │   │   │   ├── _landing-info.scss
 │   │   │   └── _page_heading.scss
-│   │   ├── external
+│   │   ├── external                            Styles drawn from external sources
 │   │   │   ├── _include-media.scss
 │   │   │   └── _normalize.scss
 │   │   ├── main.scss
 │   │   ├── style.css
 │   │   └── style.css.map
-│   ├── images
+│   ├── images                                  Images for use in testing
 │   │   ├── logo-purple.png
 │   │   └── team-builder-logo.png
-│   └── testing.html
+│   └── testing.html                            Pre-testing CSS styles
 └── teambuilder                                 Flask content for the TeamBuilder website
     ├── allocation                              Python package for performing allocations
     │   ├── allocation_example.py               Example of allocating students
@@ -51,7 +52,7 @@ repository                                      Root directory
     │   ├── allocator.py                        Performs an allocation of students to teams
     │   ├── constraints.py                      Constraints for allocations
     │   ├── cp.py                               Example of a Constraint-Programming approach
-    │   ├── generation                          Data generation for allocation examples              
+    │   ├── generation                          Data generation for allocation examples
     │   │   ├── csv_gen_demo.py                 Produce CSV-formatted example student data
     │   │   ├── fnames.txt                      Example first names
     │   │   ├── generate_test_data.py           Generates information for example students - student IDs are not valid
