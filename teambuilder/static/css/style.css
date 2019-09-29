@@ -150,7 +150,7 @@ template {
 [hidden] {
   display: none; }
 
-.container, .header, .page-heading, .page-heading__title-holder, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder {
+.container, .header, .header__title-holder, .header__nav, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -209,7 +209,7 @@ h6 {
   font-size: 1rem;
   margin-bottom: 0.6em; }
 
-.landing-info__button, .page-heading__button, .allocation-controls__button, .allocation-constraints__title-button, .allocation-constraint__delete {
+.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .allocation-constraint__delete {
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
   line-height: 1.5em;
@@ -220,14 +220,14 @@ h6 {
   border: 2px solid transparent;
   outline: 0;
   border-radius: 3px; }
-  .landing-info__button:hover, .page-heading__button:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .allocation-constraint__delete:hover, .landing-info__button:focus, .page-heading__button:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .allocation-constraint__delete:focus {
+  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .allocation-constraint__delete:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .allocation-constraint__delete:focus {
     cursor: pointer;
     font-weight: 600; }
 
-.landing-info__button, .page-heading__button, .allocation-controls__button, .allocation-constraints__title-button {
+.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button {
   color: #fff;
   background-color: #6CE6C5; }
-  .landing-info__button:hover, .page-heading__button:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .landing-info__button:focus, .page-heading__button:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus {
+  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus {
     background-color: #fff;
     color: #36af8f;
     border: 2px solid #6CE6C5; }
@@ -274,45 +274,49 @@ h6 {
 .header {
   align-items: center;
   justify-content: space-between;
-  width: 100%; }
+  width: 100%;
+  border-bottom: 2px solid #808080; }
+  @media (max-width: 600px) {
+    .header {
+      flex-direction: column;
+      padding-bottom: 0.5em; } }
   .header__logo {
     width: 100%;
     max-width: 125px; }
-    @media (max-width: 400px) {
+    @media (max-width: 600px) {
       .header__logo {
         max-width: 100px; } }
-
-.page-heading {
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #808080;
-  padding: 1em 0; }
-  @media (max-width: 400px) {
-    .page-heading {
-      display: block;
-      text-align: center; } }
-  .page-heading__title-holder {
-    align-items: center; }
-    @media (max-width: 400px) {
-      .page-heading__title-holder {
-        flex-direction: column-reverse;
-        margin-bottom: 1em; } }
-  .page-heading__button {
-    display: inline-block; }
-    @media (max-width: 400px) {
-      .page-heading__button {
+  .header__title-holder {
+    align-items: center;
+    padding: 1em auto; }
+  .header__title {
+    margin: 0.5em auto;
+    padding: 0; }
+  .header__nav {
+    padding: 0.5em 0;
+    justify-content: space-around;
+    flex-direction: row; }
+    @media (max-width: 600px) {
+      .header__nav {
         width: 100%; } }
-  .page-heading__title {
-    display: inline-block;
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-left: 1rem; }
     @media (max-width: 400px) {
-      .page-heading__title {
-        display: block;
-        text-align: center;
+      .header__nav {
+        flex-direction: column; } }
+  .header__nav-btn {
+    text-align: center;
+    margin-right: 10px; }
+    .header__nav-btn:last-of-type {
+      margin-right: 0; }
+@media (min-width: 401px) and (max-width: 600px) {
+  .header__nav-btn {
+    width: 50%; } }
+
+    @media (max-width: 400px) {
+      .header__nav-btn {
         margin-bottom: 10px;
-        margin-left: 0; } }
+        margin-right: initial; }
+        .header__nav-btn:last-of-type {
+          margin-bottom: 0px; } }
 
 .allocation-container {
   flex-direction: column;
@@ -328,12 +332,22 @@ h6 {
 .allocation-controls {
   justify-content: flex-end;
   padding: 10px 0; }
+@media (min-width: 401px) and (max-width: 600px) {
+  .allocation-controls {
+    justify-content: space-around; } }
+
   @media (max-width: 400px) {
     .allocation-controls {
       justify-content: center;
       flex-direction: column; } }
   .allocation-controls__button {
     margin-left: 10px; }
+    .allocation-controls__button:first-of-type {
+      margin-left: 0; }
+@media (min-width: 401px) and (max-width: 600px) {
+  .allocation-controls__button {
+    width: 50%; } }
+
     @media (max-width: 400px) {
       .allocation-controls__button {
         margin-left: 0;

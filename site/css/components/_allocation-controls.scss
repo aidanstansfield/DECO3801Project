@@ -5,7 +5,11 @@
     @extend %flexbox;
     justify-content: flex-end;
     padding: 10px 0;
-    
+
+    @include media(">small", "<=medium") {
+        justify-content: space-around;
+    }
+
     @include media('<=small') {
         justify-content: center;
         flex-direction: column;
@@ -14,6 +18,14 @@
     &__button {
         @extend %button-green;
         margin-left: 10px;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+
+        @include media(">small", "<=medium") {
+            width: 50%;
+        }
 
         @include media('<=small') {
             margin-left: 0;

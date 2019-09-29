@@ -9,13 +9,68 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    border-bottom: 2px solid $colour__gray--dark;
+
+    @include media('<=medium') {
+        flex-direction: column;
+        padding-bottom: 0.5em;
+    }    
 
     &__logo {
         width: 100%;
         max-width: 125px;
         
-        @include media('<=small') {
+        @include media('<=medium') {
             max-width: 100px;
+        }
+    }
+
+    &__title-holder {
+        @extend %flexbox;
+        align-items: center;
+        padding: 1em auto;
+    }
+
+    &__title {
+        margin: 0.5em auto;
+        padding: 0;
+    }
+
+    &__nav {
+        @extend %flexbox;
+        padding: 0.5em 0;
+        justify-content: space-around;
+        flex-direction: row;
+        
+        @include media('<=medium') {
+            width: 100%;
+        }
+
+        @include media("<=small") {
+            flex-direction: column;
+        }
+    }
+
+    &__nav-btn {
+        @extend %button-green;
+        text-align: center;
+        margin-right: 10px;
+        
+        &:last-of-type {
+            margin-right: 0;
+        }
+
+        @include media(">small", "<=medium") {
+            width: 50%;
+        }
+
+        @include media('<=small') {
+            margin-bottom: 10px;
+            margin-right: initial;
+            
+            &:last-of-type {
+                margin-bottom: 0px;
+            }
         }
     }
 }
