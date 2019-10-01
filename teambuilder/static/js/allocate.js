@@ -18,6 +18,8 @@ app.filter('to_trusted', ['$sce', function($sce) {
 app.factory('DataHolder', function($rootScope) {
 
     var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"]}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": []}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"]}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"]}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"]}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"]}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"]}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"]}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"]}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"]}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"]}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"]}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"]}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"]}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"]}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"]}}';
+    var studentParams = '{"age" : "integer" , "preferences" : "multi-select"}';
+
     // var constraintData = '[{"constr_type": "IntegerCountConstraint", "name": "age constraint", "field": "age", "priority": 1, "should_bool": true, "count_bxy": [2, 2], "with_bool": true, "value_bxy": [20, 30]}, {"constr_type": "SubsetSimilarityConstraint", "name": "preference constraint", "field": "preferences", "priority": 1, "similar_bool": true, "candidates": ["ui", "networking", "graphics", "gameplay"]}]'; 
 
     function notify() {
@@ -32,6 +34,15 @@ app.factory('DataHolder', function($rootScope) {
 
         getStudentData : function() {
             return studentData;
+        },
+
+        setStudentParams : function(dataString) {
+            studentParams = dataString;
+            notify();
+        },
+
+        getStudentParams : function() {
+            return studentParams;
         },
 
         subscribe : function(scope, callback) {
@@ -130,6 +141,7 @@ app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder',
         // Initialise the student data and set it to update
         // whenever the input is changed
         $scope.studentData = DataHolder.getStudentData();
+        $scope.studentParams = DataHolder.getStudentParams();
         $scope.minSize = ConstraintHolder.getMinSize();
         $scope.idealSize = ConstraintHolder.getIdealSize();
         $scope.maxSize = ConstraintHolder.getMaxSize();
@@ -137,6 +149,11 @@ app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder',
         $scope.$watch('studentData', function(newValue, oldValue) {
             if (newValue != oldValue) {
                 DataHolder.setStudentData(newValue);
+            }
+        });
+        $scope.$watch('studentParams', function(newValue, oldValue) {
+            if (newValue != oldValue) {
+                DataHolder.setStudentParams(newValue);
             }
         });
         $scope.$watch('minSize', function(newValue, oldValue) {
@@ -153,9 +170,6 @@ app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder',
             if (newValue != oldValue) {
                 ConstraintHolder.setMaxSize(newValue);
             }
-        });
-        DataHolder.subscribe($scope, function(){
-            console.log("A change occurred");
         });
 
         // Initialise the constraint list and set it to update
@@ -210,10 +224,125 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
                     constraints: JSON.parse(JSON.stringify(ConstraintHolder.getEnabledConstraints()))
                 }
             }).then(function success(response) {
+                $rootScope.teams = response.data['teams'];
                 console.log(response.data);
             }, function error(response) {
                 console.log("Error with response");
             });
+        }
+}]);
+
+app.directive('constraintformatselect', function() {
+    return {
+        template: '<select ng-model="constraintType" ng-options="constraint.val as constraint.msg for constraint in getConstraintForms(selectedParam)"></select>',
+        restrict: 'E',
+        scope: false
+    };
+});
+
+app.directive('integercountform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/integerCount.html'
+    }
+});
+
+app.directive('subsetsimilarityform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/subsetSimilarity.html'
+    }
+});
+
+app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile', 'ConstraintHolder', 'DataHolder',
+    function($rootScope, $scope, $compile, ConstraintHolder, DataHolder){
+
+        $scope.paramData = JSON.parse(DataHolder.getStudentParams())
+        $scope.availableParams = Object.keys($scope.paramData);
+        $scope.selectedParam = "";
+        $scope.constraintType = "";
+
+        DataHolder.subscribe($scope, function(){
+            $scope.availableParams = Object.keys(JSON.parse(DataHolder.getStudentParams()));
+        })
+
+        $scope.getConstraintForms = function(param) {
+            if ($scope.paramData[param] === "integer") {
+                var integerCount = "Each team <should/shouldn't> have between <min> and <max> members <with/without> " + param + " between <min> and <max>";
+                return [{msg: integerCount, val: "integerCount"}];
+            } else if ($scope.paramData[param] === "multi-select") {
+                var subsetSimilarity = "Each team <should/shouldn't> have similar " + param;
+                return [{msg: subsetSimilarity, val: "subsetSimilarity"}];
+            }
+            return ["???"];
+        }
+
+        // We need to create the selection element when a non-empty parameter is selected
+        $scope.$watch('selectedParam', function(newValue, oldValue) {
+            if (newValue == "") {
+                return;
+            }
+            var selectContainer = document.getElementById('entryConstraintSelect');
+            var inputContainer = document.getElementById('entryConstraintInput');
+
+            if (selectContainer) {
+                // We need to remove any previous select elements and
+                // subsequent form inputs
+                while (selectContainer.firstChild) {
+                    selectContainer.removeChild(selectContainer.firstChild);
+                }
+                if (inputContainer) {
+                    while (inputContainer.firstChild) {
+                        inputContainer.removeChild(inputContainer.firstChild);
+                    }
+                }
+            
+                // Then we create a new select element
+                var newParagraph = document.createElement("p");
+                newParagraph.innerHTML = "Step 2: Select the form of constraint to apply";
+                var newNode = document.createElement("constraintformatselect");
+            
+                selectContainer.appendChild(newParagraph);
+                selectContainer.appendChild(newNode);
+            
+                // Once it's added, we re-compile it
+                $compile(newNode)($scope);
+            }
+        });
+
+        $scope.$watch('constraintType', function(newValue, oldValue) {
+            if (newValue == oldValue || newValue == null) {
+                return
+            }
+            var inputContainer = document.getElementById('entryConstraintInput');
+            if (inputContainer) {
+                while (inputContainer.firstChild) {
+                    inputContainer.removeChild(selectContainer.firstChild);
+                }
+                console.log($scope.constraintType);
+                var newNode = document.createElement($scope.constraintType + "Form");
+                inputContainer.appendChild(newNode);
+                $compile(inputContainer)($scope);   
+            }
+        });
+
+        $scope.submitConstraint = function() {
+            if ($scope.constraintType == "integerCount") {
+                var shouldBool = $scope.constr.shouldBool;
+                var countMin = parseInt($scope.constr.countMin, 10);
+                var countMax = parseInt($scope.constr.countMax, 10);
+                var withBool = $scope.constr.withBool;
+                var field = $scope.selectedParam;
+                var fieldMin = parseInt($scope.constr.fieldMin, 10);
+                var fieldMax = parseInt($scope.constr.fieldMax, 10);
+                var constraint = IntegerCountConstraint(shouldBool, countMin, countMax, withBool, field, fieldMin, fieldMax);
+                ConstraintHolder.addConstraint(constraint);
+            } else if ($scope.constraintType == "subsetSimilarity") {
+                var shouldBool = $scope.constr.shouldBool;
+                var field = $scope.selectedParam;
+                var constraint = SubsetSimilarityConstraint(shouldBool, field);
+                ConstraintHolder.addConstraint(constraint);
+            }
         }
 }]);
 

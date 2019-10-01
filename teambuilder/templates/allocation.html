@@ -58,8 +58,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="allocation-results-wrapper">
-                    <div class="allocation-results allocation-results--hidden">                        
+                <div class="allocation-results-wrapper">
+                    <div class="allocation-results">                        
                         <div class="allocation-group" ng-repeat="(x, y) in teams">
                             <p class="allocation-group__name"> {% raw %} {{ x }} {% endraw %}</p>
                             <div class="allocation-group__item" ng-repeat="z in y">
@@ -67,13 +67,25 @@
                             </div>      
                         </div> 
                     </div>    
-                </div> -->
+                </div>
             </div>
         </div>
         <h2>Student Details</h2>
         <textarea ng-model="studentData"></textarea>
         <textarea ng-model="studentParams"></textarea>
         
+        <div ng-controller="constraintEntryController">
+            <p>Step 1: Select your constraint parameter</p>
+            <select ng-model="selectedParam" ng-options="param for param in availableParams">
+            </select>
+            <!-- <constrformsel></constrformsel> -->
+            <div id='entryConstraintSelect'></div>
+            <div id='entryConstraintInput'></div>
+            <!-- The parameter will be a dropdown list -->
+            <!-- <p>Step 2: Select the form of constraint to apply</p> -->
+            <!-- The new form inputs will be made here -->
+            <!-- Once the inputs are filled, a button will be created -->
+        </div>
         <!-- <h2>Add Constraint</h2>
         <p><strong>Step 1:</strong> Select the parameter to use:</p>
         <select ng-model="selectedParam" ng-options="x for x in studentParams.split(',')">

@@ -1,0 +1,23 @@
+<div>
+    <p>Each team 
+    <select ng-model='constr.shouldBool'>
+        <option value='true'>SHOULD</option>
+        <option value='false'>SHOULDN'T</option>
+    </select>"
+    have between 
+    <input type='number' ng-model='constr.countMin'>
+    and
+    <input type='number' ng-model='constr.countMax'> 
+    members
+    <select ng-model='constr.withBool'>
+        <option value='true'>WITH</option>
+        <option value='false'>WITHOUT</option>
+    </select>"
+    {{selectedParam}}
+    between
+    <input type='number' ng-model='constr.fieldMin'>
+    and
+    <input type='number' ng-model='constr.fieldMax'>
+    </p>
+    <button ng-click='submitConstraint()'>Add Constraint</button>
+</div>
