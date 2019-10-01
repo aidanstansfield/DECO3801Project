@@ -6,3 +6,6 @@ In order to collect the information needed for an allocation, TeamBuilder allows
 
 ##Allocation
 In order to perform allocation, TeamBuilder makes use of the [simulated annealing](https://en.wikipedia.org/wiki/Simulated_annealing) optimisation strategy, via the required [simanneal](https://pypi.org/project/simanneal/) library.
+
+##Informative Product Website
+Resources for the informative product website are held in the the "/informative-product-website" directory.
