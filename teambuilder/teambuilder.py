@@ -73,6 +73,7 @@ def logout():
 # allocation.
 @app.route('/allocator', methods=['POST'])
 def allocator():
+    print(request.json)
     response = app.response_class(
         response = allocate(json.dumps(request.json)),
         status = 200,

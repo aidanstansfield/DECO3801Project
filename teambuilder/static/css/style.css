@@ -454,6 +454,8 @@ h6 {
       left: initial;
       overflow: auto;
       height: inherit; } }
+  .allocation-results--hidden {
+    display: none; }
 
 .allocation-group {
   margin: 1em auto;

@@ -5,14 +5,15 @@
     <link rel="stylesheet" href= 
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
 </head>
-<body>
-    <div class='container' ng-app="allocator" ng-controller="allocationController">
+<body ng-app="allocator">
+    <div class='container' ng-controller="rootController">
         {% include 'header.html' %}
         
         <div class="allocation-container">
-            <div class="allocation-controls">
-                <button class="allocation-controls__button" ng-click="submit()">Run Allocation</button>
+            <div class="allocation-controls" ng-controller='controlsController'>
+                <button class="allocation-controls__button" ng-click="runAllocation()">Run Allocation</button>
                 <button class="allocation-controls__button">Export Allocation</button>
             </div>
             <div class='allocation-separator'>
@@ -36,36 +37,29 @@
                         </div>
                         <div class='allocation-constraints__title-holder'>
                             <h2 class="allocation-constraints__heading">Constraints</h2>
-                            <button class='allocation-constraints__title-button'>Add New</button>
+                            <button class='allocation-constraints__title-button' ng-click="openConstraintModal()">Add New</button>
                         </div>
                         <div class='allocation-constraints__constraint-container'>
-                            <!--<div class='allocation-constraint'>
+                            <div class='allocation-constraint' ng-repeat="constraint in constraintList" id='{% raw %}{{$index}}{% endraw %}'>
                                 <div class='allocation-constraint__status-holder'>
                                     <div class='allocation-constraint__status'>
-                                        <input class='allocation-constraint__enabled-input' type='checkbox' id="constraint1">
-                                        <label class='allocation-constraint__enabled-label' for="constraint1">Enabled</label>
+                                        <input class='allocation-constraint__enabled-input' type='checkbox' 
+                                            ng-checked="{% raw %}{{constraint.enabled}}{% endraw %}" 
+                                            id="check-{% raw %}{{$index}}{% endraw %}"
+                                            ng-click="toggleConstraint($index)">
+                                        <label class='allocation-constraint__enabled-label' 
+                                            for="check-{% raw %}{{$index}}{% endraw %}">Enabled</label>
                                     </div>
-                                    <button class='allocation-constraint__delete'>Delete</button>
+                                    <button class='allocation-constraint__delete' ng-click='removeConstraint($index)'>Delete</button>
                                 </div>
-                                <div class='allocation-constraint__info-holder'>
-                                    <p>Every group 
-                                        <strong>SHOULD HAVE</strong> 
-                                        <strong>AT MOST</strong>
-                                        <strong>3</strong>
-                                        people with
-                                        <strong>AGE</strong>
-                                        between
-                                        <strong>20</strong>
-                                        and 
-                                        <strong>21</strong>
-                                    </p>
+                                <div class='allocation-constraint__info-holder' ng-bind-html="constraint.val.toHTML() | to_trusted">
                                 </div>
-                            </div>-->
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="allocation-results-wrapper">
-                    <div class="allocation-results">                        
+                <!-- <div class="allocation-results-wrapper">
+                    <div class="allocation-results allocation-results--hidden">                        
                         <div class="allocation-group" ng-repeat="(x, y) in teams">
                             <p class="allocation-group__name"> {% raw %} {{ x }} {% endraw %}</p>
                             <div class="allocation-group__item" ng-repeat="z in y">
@@ -73,14 +67,26 @@
                             </div>      
                         </div> 
                     </div>    
-                </div>
+                </div> -->
             </div>
         </div>
         <h2>Student Details</h2>
-        <textarea class='constraint-entry' ng-model="studentData"></textarea>
-        <h2>Constraint Details</h2>
-        <textarea class='constraint-entry' ng-model="constraints"></textarea>
+        <textarea ng-model="studentData"></textarea>
+        <textarea ng-model="studentParams"></textarea>
+        
+        <!-- <h2>Add Constraint</h2>
+        <p><strong>Step 1:</strong> Select the parameter to use:</p>
+        <select ng-model="selectedParam" ng-options="x for x in studentParams.split(',')">
+        </select>
+        <p><strong>Step 2:</strong> Select a constraint:</p>
+        <select ng-model='selectedConstType' ng-options="key as value for (key, value) in getConstraintTypes(selectedParam)">
+        </select>
+        <div ng-bind-html="getConstraintHTML(selectedConstType, selectedParam) | trustAsHtml">
+            
+        </div> -->
+        <!-- <div [innerHTML]="getConstraintHTML(selectedConstType, selectedParam)"></div> -->
     </div> 
+    <script type='text/javascript' src='/static/js/constraints.js'/></script>
     <script type='text/javascript' src='/static/js/allocate.js'/></script>
 </body>
 </html>
