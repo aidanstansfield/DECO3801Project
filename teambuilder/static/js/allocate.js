@@ -23,6 +23,7 @@ app.factory('DataHolder', function($rootScope) {
     // var constraintData = '[{"constr_type": "IntegerCountConstraint", "name": "age constraint", "field": "age", "priority": 1, "should_bool": true, "count_bxy": [2, 2], "with_bool": true, "value_bxy": [20, 30]}, {"constr_type": "SubsetSimilarityConstraint", "name": "preference constraint", "field": "preferences", "priority": 1, "similar_bool": true, "candidates": ["ui", "networking", "graphics", "gameplay"]}]'; 
 
     function notify() {
+        console.log("emitting data holder event");
         $rootScope.$emit('data-holder-event');
     }
 
@@ -64,6 +65,7 @@ app.factory('ConstraintHolder', function($rootScope){
     var maxSize = 5;
     
     function notify() {
+        console.log("emitting constraint holder event");
         $rootScope.$emit('constraint-holder-event');
     }
 
@@ -188,8 +190,8 @@ app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder',
             ConstraintHolder.toggleConstraint(index);
         }
 
-        ConstraintHolder.addConstraint(IntegerCountConstraint(true, 3, 3, true, "age", 20, 30));
-        ConstraintHolder.addConstraint(SubsetSimilarityConstraint(true, "preferences"));
+        //ConstraintHolder.addConstraint(IntegerCountConstraint(true, 3, 3, true, "age", 20, 30));
+        //ConstraintHolder.addConstraint(SubsetSimilarityConstraint(true, "preferences"));
 }]);
 
 // The controls controller handles sending allocation
@@ -234,7 +236,7 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
 
 app.directive('constraintformatselect', function() {
     return {
-        template: '<select ng-model="constraintType" ng-options="constraint.val as constraint.msg for constraint in getConstraintForms(selectedParam)"></select>',
+        template: '<select ng-change="updateConstraintType()" ng-model="constraintType" ng-options="constraint.val as formatMsg(constraint.msg) for constraint in getConstraintForms(selectedParam)"></select>',
         restrict: 'E',
         scope: false
     };
@@ -262,26 +264,32 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
         $scope.selectedParam = "";
         $scope.constraintType = "";
 
+        var integerConstraintForms = [{msg: "Each team <should/shouldn't> have between <min> and <max> members <with/without> <param> between <min> and <max>", val: "integerCount"}];
+        var subsetSimilarityConstraintForms = [{msg: "Each team <should/shouldn't> have similar <param>", val: "subsetSimilarity"}];
+
         DataHolder.subscribe($scope, function(){
             $scope.availableParams = Object.keys(JSON.parse(DataHolder.getStudentParams()));
         })
 
+        $scope.formatMsg = function(message) {
+            return message.replace("<param>", $scope.selectedParam);
+        }
+
         $scope.getConstraintForms = function(param) {
             if ($scope.paramData[param] === "integer") {
-                var integerCount = "Each team <should/shouldn't> have between <min> and <max> members <with/without> " + param + " between <min> and <max>";
-                return [{msg: integerCount, val: "integerCount"}];
+                //var integerCount = "Each team <should/shouldn't> have between <min> and <max> members <with/without> " + param + " between <min> and <max>";
+                //return [{msg: integerCount, val: "integerCount"}];
+                return integerConstraintForms;
             } else if ($scope.paramData[param] === "multi-select") {
-                var subsetSimilarity = "Each team <should/shouldn't> have similar " + param;
-                return [{msg: subsetSimilarity, val: "subsetSimilarity"}];
+                //var subsetSimilarity = "Each team <should/shouldn't> have similar " + param;
+                //return [{msg: subsetSimilarity, val: "subsetSimilarity"}];
+                return subsetSimilarityConstraintForms;
             }
             return ["???"];
         }
 
-        // We need to create the selection element when a non-empty parameter is selected
-        $scope.$watch('selectedParam', function(newValue, oldValue) {
-            if (newValue == "") {
-                return;
-            }
+        $scope.updateSelectedParam = function() {
+            console.log("selected param changed");
             var selectContainer = document.getElementById('entryConstraintSelect');
             var inputContainer = document.getElementById('entryConstraintInput');
 
@@ -308,23 +316,21 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 // Once it's added, we re-compile it
                 $compile(newNode)($scope);
             }
-        });
+        }
 
-        $scope.$watch('constraintType', function(newValue, oldValue) {
-            if (newValue == oldValue || newValue == null) {
-                return
-            }
+        $scope.updateConstraintType = function() {
+            console.log("constraint type changed");
             var inputContainer = document.getElementById('entryConstraintInput');
             if (inputContainer) {
                 while (inputContainer.firstChild) {
-                    inputContainer.removeChild(selectContainer.firstChild);
+                    inputContainer.removeChild(inputContainer.firstChild);
                 }
                 console.log($scope.constraintType);
                 var newNode = document.createElement($scope.constraintType + "Form");
                 inputContainer.appendChild(newNode);
                 $compile(inputContainer)($scope);   
             }
-        });
+        };
 
         $scope.submitConstraint = function() {
             if ($scope.constraintType == "integerCount") {

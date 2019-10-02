@@ -76,7 +76,7 @@
         
         <div ng-controller="constraintEntryController">
             <p>Step 1: Select your constraint parameter</p>
-            <select ng-model="selectedParam" ng-options="param for param in availableParams">
+            <select ng-change="updateSelectedParam()" ng-model="selectedParam" ng-options="param for param in availableParams">
             </select>
             <!-- <constrformsel></constrformsel> -->
             <div id='entryConstraintSelect'></div>
