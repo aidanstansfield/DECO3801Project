@@ -8,8 +8,17 @@ class BXY:
 		self.lower = lower
 		self.upper = upper
 	
+	# returns the width of the interval represented by the BCXY
+	def width(self):
+		return self.upper - self.lower
+	
+	# returns how far outside the BXY a value is, or 0 if the value is inside
 	def distance(self, value):
 		return max(0, self.lower - value, value - self.upper)
+	
+	# returns how many widths outside of the BXY a value is
+	def scaled_distance(self, value):
+		return self.distance(value) / self.width()
 	
 	def __contains__(self, item):
 		return self.lower <= item <= self.upper
@@ -63,9 +72,9 @@ class IntegerCountConstraint(Constraint):
 				count += 1
 		
 		if self.should_bool:
-			return self.should_tune * self.priority * self.count_bxy.distance(count)
+			return self.should_tune * self.priority * self.count_bxy.scaled_distance(count)
 		else:
-			return self.shouldnt_tune * self.priority * (len(team) - self.count_bxy.distance(count))
+			return self.shouldnt_tune * self.priority * (len(team) - self.count_bxy.distance(count)) / self.count_bxy.width()
 
 
 # A constraint requires members of a team to be more/less similar to each other
@@ -76,7 +85,7 @@ class SubsetSimilarityConstraint(Constraint):
 	
 	# Each team should have <similar/diverse> [interests].
 	#                             |                
-	#                             \--------------- \
+	#                             \----------------\
 	#                                              V
 	def __init__(self, name, field, priority, similar_bool, candidates):
 		super().__init__(name, field, "subset", priority)
