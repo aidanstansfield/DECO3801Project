@@ -1,0 +1,37 @@
+// Contains styling for modals in the application
+
+%modal-base {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 4;
+    overflow: auto;
+}
+
+.constraint-modal {
+    @extend %modal-base;
+
+    &__body {
+        padding: 1em;
+        background: $colour__white;
+        margin: 2em;
+        //z-index: 2;
+    }
+
+    &__background {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.75);
+        z-index: 3;
+    }
+}
+
+.modal-controls {
+    @extend %flexbox;
+    justify-content: flex-end;
+}

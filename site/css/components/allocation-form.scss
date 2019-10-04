@@ -1,0 +1,22 @@
+// Contains styling for the allocation input form
+.constraint-input-field {
+    @include paragraph-font;
+    text-align: center;
+    max-width: 100%;
+    padding: 0.5em;
+
+    &--inline {
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+        margin-bottom: 0.5em;
+    }
+}
+
+.constraint-add-button {
+    @extend %button-green;
+}
+
+.constraint-cancel-button {
+    @extend %button-red;
+    margin-right: 10px;
+}

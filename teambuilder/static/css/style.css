@@ -150,7 +150,7 @@ template {
 [hidden] {
   display: none; }
 
-.container, .header, .header__title-holder, .header__nav, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder {
+.container, .header, .header__title-holder, .header__nav, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder, .modal-controls {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -209,7 +209,7 @@ h6 {
   font-size: 1rem;
   margin-bottom: 0.6em; }
 
-.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .allocation-constraint__delete {
+.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .constraint-add-button, .allocation-constraint__delete, .constraint-cancel-button {
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
   line-height: 1.5em;
@@ -220,22 +220,22 @@ h6 {
   border: 2px solid transparent;
   outline: 0;
   border-radius: 3px; }
-  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .allocation-constraint__delete:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .allocation-constraint__delete:focus {
+  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .constraint-add-button:hover, .allocation-constraint__delete:hover, .constraint-cancel-button:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .constraint-add-button:focus, .allocation-constraint__delete:focus, .constraint-cancel-button:focus {
     cursor: pointer;
     font-weight: 600; }
 
-.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button {
+.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .constraint-add-button {
   color: #fff;
   background-color: #6CE6C5; }
-  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus {
+  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .constraint-add-button:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .constraint-add-button:focus {
     background-color: #fff;
     color: #36af8f;
     border: 2px solid #6CE6C5; }
 
-.allocation-constraint__delete {
+.allocation-constraint__delete, .constraint-cancel-button {
   color: #fff;
   background-color: #ff9399; }
-  .allocation-constraint__delete:hover, .allocation-constraint__delete:focus {
+  .allocation-constraint__delete:hover, .constraint-cancel-button:hover, .allocation-constraint__delete:focus, .constraint-cancel-button:focus {
     background-color: #fff;
     color: #d8000c;
     border: 2px solid #ff9399; }
@@ -543,3 +543,43 @@ h6 {
     .allocation-constraint__delete:hover {
       border-color: #ff9399;
       color: #d8000c; }
+
+.constraint-input-field {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5em;
+  text-align: center;
+  max-width: 100%;
+  padding: 0.5em; }
+  .constraint-input-field--inline {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em; }
+
+.constraint-cancel-button {
+  margin-right: 10px; }
+
+.constraint-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 4;
+  overflow: auto; }
+
+.constraint-modal__body {
+  padding: 1em;
+  background: #fff;
+  margin: 2em; }
+.constraint-modal__background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 3; }
+
+.modal-controls {
+  justify-content: flex-end; }

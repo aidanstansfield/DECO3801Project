@@ -56,13 +56,17 @@
         <textarea ng-model="studentData"></textarea>
         <textarea ng-model="studentParams"></textarea>
         
-        <div ng-controller="constraintEntryController">
-            <p>Step 1: Select your constraint parameter</p>
-            <select ng-change="updateSelectedParam()" ng-model="selectedParam" ng-options="param for param in availableParams">
-            </select>
-            <div id='entryConstraintSelect'></div>
-            <div id='entryConstraintInput'></div>
+        <!-- <div class='constraint-modal' ng-controller="constraintEntryController">
+            <div class='constraint-modal__body'>
+                <h2>Add a New Constraint</h2>
+                <h3>Step 1: Select your constraint parameter</h3>
+                <select class='constraint-input-field' ng-change="updateSelectedParam()" ng-model="selectedParam" ng-options="param for param in availableParams">
+                </select>
+                <div id='entryConstraintSelect'></div>
+                <div id='entryConstraintInput'></div>
+            </div>
         </div>
+        <div class='constraint-modal__background'></div> -->
     </div> 
     <script type='text/javascript' src='/static/js/constraints.js'/></script>
     <script type='text/javascript' src='/static/js/allocate.js'/></script>

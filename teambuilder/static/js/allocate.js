@@ -80,6 +80,15 @@ app.directive('subsetsimilarityform', function() {
     }
 });
 
+app.directive('constraintmodal', function() {
+    console.log("Running");
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/constraint-modal.html'
+    }
+});
+
+
 // FACTORIES ------------------------------------------------------------------
 
 // The DataHolder factory manages the student information and makes it
@@ -278,9 +287,10 @@ function initialiseWatchers($scope, DataHolder) {
 
 // The root controller is responsible for controlling data changes
 // between the factories
-app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder', 
-    function($scope, DataHolder, ConstraintHolder) {
+app.controller('rootController', ['$scope', '$compile', 'DataHolder', 'ConstraintHolder', 
+    function($scope, $compile, DataHolder, ConstraintHolder) {
 
+        var modalOpen = false;
         initialiseData($scope, DataHolder, ConstraintHolder);
         initialiseWatchers($scope, DataHolder);
 
@@ -298,6 +308,29 @@ app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder',
         }
         $scope.toggleConstraint = function(index) {
             ConstraintHolder.toggleConstraint(index);
+        }
+
+        $scope.openConstraintModal = function() {
+            if (modalOpen) {
+                return;
+            }
+
+            var modal = document.createElement('constraintmodal');
+            var body = document.getElementsByTagName('body')[0];
+            body.appendChild(modal);
+            $compile(modal)($scope);
+            modalOpen = true;
+        }
+
+        $scope.closeConstraintModal = function() {
+            if (!modalOpen) {
+                return;
+            }
+            var modal = document.getElementsByTagName('constraintmodal')[0];
+            var body = document.getElementsByTagName('body')[0];
+            
+            body.removeChild(modal);
+            modalOpen = false;
         }
 }]);
 
@@ -387,11 +420,11 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 }
             
                 // Then we create a new select element
-                var newParagraph = document.createElement("p");
-                newParagraph.innerHTML = "Step 2: Select the form of constraint to apply";
+                var newHeading = document.createElement("h3");
+                newHeading.innerHTML = "Step 2: Select the form of constraint to apply";
                 var newNode = document.createElement("constraintformatselect");
             
-                selectContainer.appendChild(newParagraph);
+                selectContainer.appendChild(newHeading);
                 selectContainer.appendChild(newNode);
             
                 // Once it's added, we re-compile it
@@ -422,11 +455,13 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 var fieldMax = parseInt($scope.constr.fieldMax, 10);
                 var constraint = IntegerCountConstraint(shouldBool, countMin, countMax, withBool, field, fieldMin, fieldMax);
                 ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
             } else if ($scope.constraintType == "subsetSimilarity") {
                 var shouldBool = $scope.constr.shouldBool;
                 var field = $scope.selectedParam;
                 var constraint = SubsetSimilarityConstraint(shouldBool, field);
                 ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
             }
         }
 }]);
