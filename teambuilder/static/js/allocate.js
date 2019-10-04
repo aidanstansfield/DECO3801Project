@@ -257,7 +257,7 @@ function initialiseData($scope, DataHolder, ConstraintHolder) {
 
 // Initialises watchers in order to update the data holder
 // as the UI is updated via user input 
-function initialiseWatchers($scope, DataHolder) {
+function initialiseWatchers($scope, DataHolder, ConstraintHolder) {
     $scope.$watch('studentData', function(newValue, oldValue) {
         if (newValue != oldValue) {
             DataHolder.setStudentData(newValue);
@@ -292,7 +292,7 @@ app.controller('rootController', ['$scope', '$compile', 'DataHolder', 'Constrain
 
         var modalOpen = false;
         initialiseData($scope, DataHolder, ConstraintHolder);
-        initialiseWatchers($scope, DataHolder);
+        initialiseWatchers($scope, DataHolder, ConstraintHolder);
 
         // Initialise the constraint list and set it to update
         // whenever the constraint list changes.
@@ -383,6 +383,7 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
         $scope.availableParams = Object.keys($scope.paramData);
         $scope.selectedParam = "";
         $scope.constraintType = "";
+        var addConstraintBtnVisible = false;
 
         // We need to update the parameters whenever the input field changes
         // This will be removed once the data comes from the database
@@ -429,6 +430,7 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
             
                 // Once it's added, we re-compile it
                 $compile(newNode)($scope);
+                addConstraintBtnVisible = false;
             }
         }
 
@@ -441,8 +443,13 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 var newNode = document.createElement($scope.constraintType + "Form");
                 inputContainer.appendChild(newNode);
                 $compile(inputContainer)($scope);   
+                addConstraintBtnVisible = true;
             }
         };
+
+        $scope.addConstraintVisible = function() {
+            return addConstraintBtnVisible;
+        }
 
         $scope.submitConstraint = function() {
             if ($scope.constraintType == "integerCount") {

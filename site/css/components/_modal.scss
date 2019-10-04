@@ -29,9 +29,28 @@
         background-color: rgba(0, 0, 0, 0.75);
         z-index: 3;
     }
+
+    &__button {
+        @extend %button-base;
+
+        margin-right: 10px;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+
+        &--cancel {
+            @extend %button-red;
+        }
+
+        &--add {
+            @extend %button-green;
+        }
+    }
 }
 
 .modal-controls {
     @extend %flexbox;
     justify-content: flex-end;
+    padding-top: 1em;
 }
