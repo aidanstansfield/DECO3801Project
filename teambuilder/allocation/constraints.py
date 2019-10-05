@@ -1,6 +1,7 @@
 # This file defines classes for representing constraints
 # (besides group size) in an allocation.
 
+import math
 
 # Simple class for working with ranges in constraints
 class BXY:
@@ -8,9 +9,9 @@ class BXY:
 		self.lower = lower
 		self.upper = upper
 	
-	# returns the width of the interval represented by the BCXY
+	# returns the width of the interval represented by the BXY
 	def width(self):
-		return self.upper - self.lower
+		return self.upper - self.lower + 1
 	
 	# returns how far outside the BXY a value is, or 0 if the value is inside
 	def distance(self, value):
@@ -19,6 +20,15 @@ class BXY:
 	# returns how many widths outside of the BXY a value is
 	def scaled_distance(self, value):
 		return self.distance(value) / self.width()
+	
+	# returns how far inside the BXY a value is, or 0 if the value is outside
+	def inclusion(self, value):
+		return max(0, min(value - self.lower + 1, self.upper - value + 1))
+	
+	# returns what fraction of a radii inside of the BXY a value is
+	def scaled_inclusion(self, value):
+		radius = math.ceil(self.width() / 2)
+		return self.inclusion(value) / radius
 	
 	def __contains__(self, item):
 		return self.lower <= item <= self.upper
@@ -48,7 +58,7 @@ class Constraint:
 		raise NotImplementedError
 
 
-# A constraint that controls the number of members per-team which match an integer-based condition 
+# A constraint that controls the number of members per-team which match an integer-based condition.
 class IntegerCountConstraint(Constraint):
 	should_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
 	shouldnt_tune = 1.0
@@ -74,11 +84,11 @@ class IntegerCountConstraint(Constraint):
 		if self.should_bool:
 			return self.should_tune * self.priority * self.count_bxy.scaled_distance(count)
 		else:
-			return self.shouldnt_tune * self.priority * (len(team) - self.count_bxy.distance(count)) / self.count_bxy.width()
+			return self.shouldnt_tune * self.priority * self.count_bxy.scaled_inclusion(count)
 
 
 # A constraint requires members of a team to be more/less similar to each other
-# in their answers to a "subset" (select multiple values) question 
+# in their answers to a "subset" (select multiple values) question
 class SubsetSimilarityConstraint(Constraint):
 	similar_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
 	diverse_tune = 1.0
@@ -107,6 +117,6 @@ class SubsetSimilarityConstraint(Constraint):
 		if self.similar_bool:
 			return self.similar_tune * self.priority * (voter_count - max(votes.values()))
 		else:
-			return self.diverse_tune * self.priority * (voter_count/len(candidates) - min(votes.values()))
+			return self.diverse_tune * self.priority * (voter_count/len(self.candidates) - min(votes.values()))
 
 
