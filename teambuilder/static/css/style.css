@@ -185,7 +185,7 @@ template {
   display: none;
 }
 
-.allocation-constraint__status-holder, .allocation-group, .allocation-results-wrapper, .allocation-constraints__constraint-container, .allocation-constraints__size-holder, .allocation-constraints__title-holder, .allocation-constraints-wrapper, .allocation-separator, .allocation-controls, .allocation-container, .header__nav, .header__title-holder, .header, .container {
+.container, .header, .header__title-holder, .header__nav, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder, .modal-controls {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -255,7 +255,7 @@ h6 {
   margin-bottom: 0.6em;
 }
 
-.allocation-constraint__delete, .allocation-constraints__title-button, .allocation-controls__button, .header__nav-btn, .landing-info__button {
+.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .constraint-add-button, .constraint-modal__button--add, .allocation-constraint__delete, .constraint-cancel-button, .constraint-modal__button--cancel, .constraint-modal__button {
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
   line-height: 1.5em;
@@ -265,32 +265,26 @@ h6 {
   text-decoration: none;
   border: 2px solid transparent;
   outline: 0;
-  border-radius: 3px;
-}
-.allocation-constraint__delete:hover, .allocation-constraints__title-button:hover, .allocation-controls__button:hover, .header__nav-btn:hover, .landing-info__button:hover, .allocation-constraint__delete:focus, .allocation-constraints__title-button:focus, .allocation-controls__button:focus, .header__nav-btn:focus, .landing-info__button:focus {
-  cursor: pointer;
-  font-weight: 600;
-}
+  border-radius: 3px; }
+  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .constraint-add-button:hover, .constraint-modal__button--add:hover, .allocation-constraint__delete:hover, .constraint-cancel-button:hover, .constraint-modal__button--cancel:hover, .constraint-modal__button:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .constraint-add-button:focus, .constraint-modal__button--add:focus, .allocation-constraint__delete:focus, .constraint-cancel-button:focus, .constraint-modal__button--cancel:focus, .constraint-modal__button:focus {
+    cursor: pointer;
+    font-weight: 600; }
 
-.allocation-constraints__title-button, .allocation-controls__button, .header__nav-btn, .landing-info__button {
+.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .constraint-add-button, .constraint-modal__button--add {
   color: #fff;
-  background-color: #6CE6C5;
-}
-.allocation-constraints__title-button:hover, .allocation-controls__button:hover, .header__nav-btn:hover, .landing-info__button:hover, .allocation-constraints__title-button:focus, .allocation-controls__button:focus, .header__nav-btn:focus, .landing-info__button:focus {
-  background-color: #fff;
-  color: #36af8f;
-  border: 2px solid #6CE6C5;
-}
+  background-color: #6CE6C5; }
+  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .constraint-add-button:hover, .constraint-modal__button--add:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .constraint-add-button:focus, .constraint-modal__button--add:focus {
+    background-color: #fff;
+    color: #36af8f;
+    border: 2px solid #6CE6C5; }
 
-.allocation-constraint__delete {
+.allocation-constraint__delete, .constraint-cancel-button, .constraint-modal__button--cancel {
   color: #fff;
-  background-color: #ff9399;
-}
-.allocation-constraint__delete:hover, .allocation-constraint__delete:focus {
-  background-color: #fff;
-  color: #d8000c;
-  border: 2px solid #ff9399;
-}
+  background-color: #ff9399; }
+  .allocation-constraint__delete:hover, .constraint-cancel-button:hover, .constraint-modal__button--cancel:hover, .allocation-constraint__delete:focus, .constraint-cancel-button:focus, .constraint-modal__button--cancel:focus {
+    background-color: #fff;
+    color: #d8000c;
+    border: 2px solid #ff9399; }
 
 .container {
   margin: 0 auto;
@@ -606,95 +600,127 @@ h6 {
   padding: 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  cursor: pointer;
-}
-.allocation-constraint:hover {
-  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-}
-.allocation-constraint__status-holder {
-  justify-content: space-between;
-  align-items: center;
-}
-.allocation-constraint__status {
-  position: relative;
-}
-.allocation-constraint__enabled-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 36px;
-  height: 20px;
-  opacity: 0;
-  z-index: 0;
-}
-.allocation-constraint__enabled-label {
+  cursor: pointer; }
+  .allocation-constraint:hover {
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
+  .allocation-constraint__status-holder {
+    justify-content: space-between;
+    align-items: center; }
+  .allocation-constraint__status {
+    position: relative; }
+  .allocation-constraint__enabled-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 20px;
+    opacity: 0;
+    z-index: 0; }
+  .allocation-constraint__enabled-label {
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5em;
+    display: block;
+    padding: 0 0 0 44px;
+    cursor: pointer; }
+    .allocation-constraint__enabled-label:before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 0;
+      width: 36px;
+      height: 14px;
+      background-color: #ececec;
+      border-radius: 14px;
+      z-index: 1;
+      transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+    .allocation-constraint__enabled-label:after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background-color: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+      z-index: 2;
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      transition-property: left, background-color; }
+  .allocation-constraint__enabled-input:checked + .allocation-constraint__enabled-label:before {
+    background-color: #36af8f; }
+  .allocation-constraint__enabled-input:checked + .allocation-constraint__enabled-label:after {
+    left: 16px;
+    background-color: #6CE6C5; }
+  .allocation-constraint__delete {
+    background-color: #ff9399;
+    align-self: flex-end;
+    padding: 5px 20px; }
+    .allocation-constraint__delete:hover {
+      border-color: #ff9399;
+      color: #d8000c; }
+
+.constraint-input-field {
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
   line-height: 1.5em;
-  display: block;
-  padding: 0 0 0 44px;
-  cursor: pointer;
-}
-.allocation-constraint__enabled-label:before {
-  content: "";
-  position: absolute;
-  top: 5px;
-  left: 0;
-  width: 36px;
-  height: 14px;
-  background-color: #ececec;
-  border-radius: 14px;
-  z-index: 1;
-  transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.allocation-constraint__enabled-label:after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  background-color: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  z-index: 2;
-  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  transition-property: left, background-color;
-}
-.allocation-constraint__enabled-input:checked + .allocation-constraint__enabled-label:before {
-  background-color: #36af8f;
-}
-.allocation-constraint__enabled-input:checked + .allocation-constraint__enabled-label:after {
-  left: 16px;
-  background-color: #6CE6C5;
-}
-.allocation-constraint__delete {
-  background-color: #ff9399;
-  align-self: flex-end;
-  padding: 5px 20px;
-}
-.allocation-constraint__delete:hover {
-  border-color: #ff9399;
-  color: #d8000c;
-}
-.spinner {
-  border: 16px solid #f3f3f3;
-  /* Light grey */
-  border-top: 16px solid #3498db;
-  /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-}
+  text-align: center;
+  max-width: 100%;
+  padding: 0.5em; }
+  .constraint-input-field--inline {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em; }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+.constraint-cancel-button {
+  margin-right: 10px; }
 
-/*# sourceMappingURL=style.css.map */
+.constraint-modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 4;
+  overflow: auto; }
+
+.constraint-modal__body {
+  padding: 1em;
+  background: #fff;
+  margin: 2em; }
+.constraint-modal__background {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 3; }
+.constraint-modal__button {
+  margin-right: 10px; }
+  .constraint-modal__button:last-of-type {
+    margin-right: 0; }
+
+.modal-controls {
+  justify-content: flex-end;
+  padding-top: 1em; }
+
+  .spinner {
+    border: 16px solid #f3f3f3;
+    /* Light grey */
+    border-top: 16px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
