@@ -40,32 +40,14 @@
                             <button class='allocation-constraints__title-button' ng-click="openConstraintModal()">Add New</button>
                         </div>
                         <div class='allocation-constraints__constraint-container'>
-                            <div class='allocation-constraint' ng-repeat="constraint in constraintList" id='{% raw %}{{$index}}{% endraw %}'>
-                                <div class='allocation-constraint__status-holder'>
-                                    <div class='allocation-constraint__status'>
-                                        <input class='allocation-constraint__enabled-input' type='checkbox' 
-                                            ng-checked="{% raw %}{{constraint.enabled}}{% endraw %}" 
-                                            id="check-{% raw %}{{$index}}{% endraw %}"
-                                            ng-click="toggleConstraint($index)">
-                                        <label class='allocation-constraint__enabled-label' 
-                                            for="check-{% raw %}{{$index}}{% endraw %}">Enabled</label>
-                                    </div>
-                                    <button class='allocation-constraint__delete' ng-click='removeConstraint($index)'>Delete</button>
-                                </div>
-                                <div class='allocation-constraint__info-holder' ng-bind-html="constraint.val.toHTML() | to_trusted">
-                                </div>
-                            </div>
+                            <constraint class='allocation-constraint' ng-repeat="constraint in constraintList"></constraint>
                         </div>
                     </div>
                 </div>
                 <div class="allocation-results-wrapper">
                     <div class="allocation-results">                        
-                        <div class="allocation-group" ng-repeat="(x, y) in teams">
-                            <p class="allocation-group__name"> {% raw %} {{ x }} {% endraw %}</p>
-                            <div class="allocation-group__item" ng-repeat="z in y">
-                                <p>{% raw %} {{ z }} {% endraw %}</p>
-                            </div>      
-                        </div> 
+                        <group class="allocation-group" ng-repeat="(entry, group) in teams">  
+                        </group> 
                     </div>    
                 </div>
             </div>
@@ -74,29 +56,17 @@
         <textarea ng-model="studentData"></textarea>
         <textarea ng-model="studentParams"></textarea>
         
-        <div ng-controller="constraintEntryController">
-            <p>Step 1: Select your constraint parameter</p>
-            <select ng-change="updateSelectedParam()" ng-model="selectedParam" ng-options="param for param in availableParams">
-            </select>
-            <!-- <constrformsel></constrformsel> -->
-            <div id='entryConstraintSelect'></div>
-            <div id='entryConstraintInput'></div>
-            <!-- The parameter will be a dropdown list -->
-            <!-- <p>Step 2: Select the form of constraint to apply</p> -->
-            <!-- The new form inputs will be made here -->
-            <!-- Once the inputs are filled, a button will be created -->
+        <!-- <div class='constraint-modal' ng-controller="constraintEntryController">
+            <div class='constraint-modal__body'>
+                <h2>Add a New Constraint</h2>
+                <h3>Step 1: Select your constraint parameter</h3>
+                <select class='constraint-input-field' ng-change="updateSelectedParam()" ng-model="selectedParam" ng-options="param for param in availableParams">
+                </select>
+                <div id='entryConstraintSelect'></div>
+                <div id='entryConstraintInput'></div>
+            </div>
         </div>
-        <!-- <h2>Add Constraint</h2>
-        <p><strong>Step 1:</strong> Select the parameter to use:</p>
-        <select ng-model="selectedParam" ng-options="x for x in studentParams.split(',')">
-        </select>
-        <p><strong>Step 2:</strong> Select a constraint:</p>
-        <select ng-model='selectedConstType' ng-options="key as value for (key, value) in getConstraintTypes(selectedParam)">
-        </select>
-        <div ng-bind-html="getConstraintHTML(selectedConstType, selectedParam) | trustAsHtml">
-            
-        </div> -->
-        <!-- <div [innerHTML]="getConstraintHTML(selectedConstType, selectedParam)"></div> -->
+        <div class='constraint-modal__background'></div> -->
     </div> 
     <script type='text/javascript' src='/static/js/constraints.js'/></script>
     <script type='text/javascript' src='/static/js/allocate.js'/></script>
