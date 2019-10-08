@@ -10,7 +10,7 @@ def test():
 
 @app.route('/ipw/')
 def landing():
-    return 'landing page. TeamBuilder is a weaponized AI designed to cause conflict between nation states'
+    return render_template('landing.html')
 
 @app.route('/ipw/favicon.ico')
 def favicon():
