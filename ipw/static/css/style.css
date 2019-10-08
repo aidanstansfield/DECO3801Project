@@ -1,0 +1,17 @@
+.img-holder {
+    text-align: center;
+    
+}
+.img-holder img {
+    height: 150px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.vid-holder {
+    text-align: center
+}
