@@ -1,0 +1,60 @@
+# nginx configuration file for deco3801-allotech.uqcloud.net
+# if we had control over DNS we could setup different virtual servers for each site
+# but alas here we are.
+# location: /etc/nginx/sites-available/allotech
+# NOTE: /etc/nginx/sites-enabled/allotech is a symlink to the above location
+
+server {
+	listen 80 default_server;
+	server_name _;
+
+	# redirect to https
+	location / {
+		rewrite ^ https://$http_host$request_uri? permanent;
+	}
+}
+
+server {
+	listen 443 default_server;
+	server_name _;
+
+	# pretend we got the request over https
+	set $ssl on;
+	
+	############# teambuilder site
+	# landing page doesn't require auth
+	location = / {
+		include uwsgi_params;
+		uwsgi_pass unix:/opt/deco3801-allotech/teambuilder/teambuilder.sock;
+	}
+
+	# static stuff doesn't require auth
+	location /static {
+		include uwsgi_params;
+		uwsgi_pass unix:/opt/deco3801-allotech/teambuilder/teambuilder.sock;
+	}
+
+	# default location for anything that doesn't match the above locations.
+	# requires authentication
+	location / {
+		include "set_cookie.conf";
+		rewrite_by_lua_file "lua/auth_filter.lua";
+		include uwsgi_params;
+		uwsgi_pass unix:/opt/deco3801-allotech/teambuilder/teambuilder.sock;
+	}
+	
+	############# informative product website
+	# landing page doesn't require auth
+        location /ipw {
+                include uwsgi_params;
+                uwsgi_pass unix:/opt/deco3801-allotech/ipw/ipw.sock;
+        }
+
+        # statistics page requires authentication
+        location /ipw/statistics {
+                include "set_cookie.conf";
+                rewrite_by_lua_file "lua/auth_filter.lua";
+                include uwsgi_params;
+                uwsgi_pass unix:/opt/deco3801-allotech/ipw/ipw.sock;
+        }	
+}
