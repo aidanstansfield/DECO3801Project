@@ -1,0 +1,37 @@
+Integer field (age)
+	Each team <should/shouldn’t> have <BXY> members <with/without> [age] <BXY>.
+		IntegerCountConstraint
+		
+	Each team <should/shouldn’t> have an average [age] <BXY>.
+		IntegerAverageConstraint
+		
+	Each team should have <similar/diverse> [age].
+		IntegerSimilarityConstraint
+	
+	All teams should have similar average [age].
+		IntegerGlobalAverageConstraint
+	
+	
+Option field (degree)
+	Each team <should/shouldn’t> have <BXY> members <with/without> [degree] <VALUE>.
+		OptionCountConstraint
+	
+	Each team should have <similar/diverse> [degree].
+		OptionSimilarityConstraint
+		
+	
+Subset field (interests)
+	Each team <should/shouldn’t> have <BXY> members <with/without> [interests] <VALUE>.
+		SubsetCountConstraint
+
+	Each team should have <similar/diverse> [interests].
+		SubsetSimilarityConstraint
+	
+	
+Boolean field (postgraduate)
+	Each team <should/shouldn’t> have <BXY> members <with/without> [postgraduate].
+		IntegerCountConstraint
+	
+	
+Comment field (questionnaire feedback)
+	(Not a criteria)
