@@ -4,7 +4,8 @@ repository                                      Root directory
 │   ├── teambuilder                             TeamBuilder site configuration for NGINX
 │   └── teambuilder.service                     Configuration file for the TeamBuilder service
 ├── doc                                         Documentation for developers
-│   └── files.txt                               This file
+│   ├── constraints.txt                         A list of the constraints which may be used in allocations
+│   ├── files.txt                               This file
 │   └── references.txt                          Information about third-party resources used in this project
 ├── informative-product-website                 Source code for informative product website (IPW)
 │   ├── informative-product-website.py          Flask app for the IPW
@@ -61,6 +62,7 @@ repository                                      Root directory
     │   ├── __init__.py
     │   ├── json_alloc.py                       Wraps and unwraps JSON-encoded requests and responses
     │   ├── test_allocator.py                   Unit tests for allocator.py
+    │   ├── test_constraints.py                 Unit tests for constraints.py
     │   ├── test_group_size_generator.py        Unit tests for group_size_generator.py
     │   └── test_json_alloc.py                  Unit tests for json_alloc.py
     ├── __init__.py
