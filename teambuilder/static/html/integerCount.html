@@ -1,23 +1,23 @@
-<div>
+<div ng-form name='integerCountForm'>
     <p>Each team 
-    <select ng-model='constr.shouldBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
         <option value='true'>SHOULD</option>
         <option value='false'>SHOULDN'T</option>
-    </select>"
+    </select>
     have between 
-    <input type='number' ng-model='constr.countMin'>
+    <span ng-show="countMin > countMax">What??</span>
+    <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='constr.countMin' min="1">
     and
-    <input type='number' ng-model='constr.countMax'> 
+    <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='constr.countMax' min="1"> 
     members
-    <select ng-model='constr.withBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.withBool'>
         <option value='true'>WITH</option>
         <option value='false'>WITHOUT</option>
-    </select>"
+    </select>
     {{selectedParam}}
     between
-    <input type='number' ng-model='constr.fieldMin'>
+    <input class='constraint-input-field constraint-input-field--inline' name='fieldMin' type='number' ng-model='constr.fieldMin'>
     and
-    <input type='number' ng-model='constr.fieldMax'>
+    <input class='constraint-input-field constraint-input-field--inline' name='fieldMax' type='number' ng-model='constr.fieldMax'>
     </p>
-    <button ng-click='submitConstraint()'>Add Constraint</button>
 </div>

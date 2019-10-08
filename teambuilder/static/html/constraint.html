@@ -1,0 +1,13 @@
+<div class='allocation-constraint__status-holder'>
+    <div class='allocation-constraint__status'>
+        <input class='allocation-constraint__enabled-input' type='checkbox' 
+            ng-checked="{{constraint.enabled}}" 
+            id="check-{{$index}}"
+            ng-click="toggleConstraint($index)">
+        <label class='allocation-constraint__enabled-label' 
+            for="check-{{$index}}">Enabled</label>
+    </div>
+    <button class='allocation-constraint__delete' ng-click='removeConstraint($index)'>Delete</button>
+</div>
+<div class='allocation-constraint__info-holder' ng-bind-html="constraint.val.toHTML() | to_trusted">
+</div>

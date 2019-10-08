@@ -1,11 +1,10 @@
 <div>
     <p>Each team
-        <select ng-model='constr.shouldBool'>
+        <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
             <option value='true'>SHOULD</option>
             <option value='false'>SHOULDN'T</option>
         </select>
         have similar
         {{selectedParam}}
     </p>
-    <button ng-click='submitConstraint()'>Add Constraint</button>
 </div>

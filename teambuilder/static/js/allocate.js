@@ -2,50 +2,140 @@
 // including setting up the angular.js application and sending
 // data to the server process.
 
+(function(){
+
 var app = angular.module('allocator', []);
 
-// A filter to sanitize HTML output before it is
-// added to the DOM
+// CONSTRAINT MESSAGE FORMATS -------------------------------------------------
+
+var constraintFormats = {
+    "integer" : [
+        {val: "integerCount", msg: "Each team <should/shouldn't> have between <min> and <max> members <with/without> <param> between <min> and <max>"},
+        //{val: "integerAvg", msg: "Each team <should/shouldn't> have an average <param> betweem <min> and <max>"},
+        //{val: "integerSim", msg: "Each team should have <similar/diverse> <param>"},
+        //{val: "integerSimGlob", msg: "All teams should have similar <param>"}
+    ],
+    "multi-select" : [
+        {val: "subsetSimilarity", msg: "Each team <should/shouldn't> have similar <param>"},
+        //{val: "subsetRange", msg: "Each team <should/shouldn't> have between <min> and <max> members <with/without> <param> equal to <value>"}
+    ],
+    "bool" : [
+        {val: "boolRange", msg: "Each team <should/shouldn’t> have between <min> and <max> members <with/without> <param>"}
+    ],
+    "option" : [
+        {val: "optRange", msg: "Each team <should/shouldn’t> have between <min> and <max> members <with/without> <param> equal to <value>"},
+        {val: "optSimilarity", msg: "Each team <should/shouldn't> have <similar/diverse> <param>"}
+    ]
+};
+
+// FILTERS --------------------------------------------------------------------
+
+// Sanitizes thr given HTML output before it is added to the DOM
 app.filter('to_trusted', ['$sce', function($sce) {
     return function(data) {
         return $sce.trustAsHtml(data); 
     };
 }]);
 
-// The DataHolder factory manages the student 
-// information and makes it accessible to other
-// components.
+// DIRECTIVES -----------------------------------------------------------------
+
+// A constraint that in the constraint list
+app.directive('constraint', function() {
+    return {
+        templateUrl: '/static/html/constraint.html',
+        restrict: 'E'
+    }
+});
+
+// A group in the list of results
+app.directive('group', function() {
+    return {
+        templateUrl: '/static/html/alloc-group.html',
+        restrict: 'E'
+    }
+});
+
+// The select input for selecting a constraint format
+app.directive('constraintformatselect', function() {
+    return {
+        templateUrl: '/static/html/constraintSelect.html', 
+        restrict: 'E',
+        scope: false
+    };
+});
+
+// The form input for specifying an integer count constraint
+app.directive('integercountform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/integerCount.html'
+    }
+});
+
+// The form input for specifying a subset simlarity constraint
+app.directive('subsetsimilarityform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/subsetSimilarity.html'
+    }
+});
+
+app.directive('constraintmodal', function() {
+    console.log("Running");
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/constraint-modal.html'
+    }
+});
+
+
+// FACTORIES ------------------------------------------------------------------
+
+// The DataHolder factory manages the student information and makes it
+// accessible to other components. 
+//
+// Note:Initially this data will be statically specified and retrieved, 
+// but later this will come from the database
 app.factory('DataHolder', function($rootScope) {
 
     var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"]}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": []}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"]}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"]}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"]}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"]}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"]}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"]}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"]}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"]}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"]}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"]}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"]}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"]}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"]}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"]}}';
     var studentParams = '{"age" : "integer" , "preferences" : "multi-select"}';
 
-    // var constraintData = '[{"constr_type": "IntegerCountConstraint", "name": "age constraint", "field": "age", "priority": 1, "should_bool": true, "count_bxy": [2, 2], "with_bool": true, "value_bxy": [20, 30]}, {"constr_type": "SubsetSimilarityConstraint", "name": "preference constraint", "field": "preferences", "priority": 1, "similar_bool": true, "candidates": ["ui", "networking", "graphics", "gameplay"]}]'; 
-
+    // Emits an event to tell listening parties that the internal state
+    // has changed.
     function notify() {
-        console.log("emitting data holder event");
         $rootScope.$emit('data-holder-event');
     }
 
     return {
+        // Updates the student data stored in the factory
+        // This should be removed later once database access is complete
         setStudentData : function(dataString) {
             studentData = dataString;
             notify();
         },
 
+        // Returns the student data which is stored
         getStudentData : function() {
             return studentData;
         },
 
+        // Sets the parameters that can be specified in constraints
+        // This will be removed later since this should come from the 
+        // database
         setStudentParams : function(dataString) {
             studentParams = dataString;
             notify();
         },
 
+        // Returns the parameters which can be specified in constraints
         getStudentParams : function() {
             return studentParams;
         },
 
+        // Allows the provided callback to be run when the notify()
+        // method is invoked - this allows changes to be detected and
+        // acted on
         subscribe : function(scope, callback) {
             var handler = $rootScope.$on('data-holder-event', callback);
             scope.$on('$destroy', handler);
@@ -53,9 +143,8 @@ app.factory('DataHolder', function($rootScope) {
     }
 });
 
-// The ConstraintHolder factory is responsible
-// for managing the list of constraints which
-// have been specified by the user. This also
+// The ConstraintHolder factory is responsible for managing the list
+// of constraints which have been specified by the user. This also
 // includes the group size constraints.
 app.factory('ConstraintHolder', function($rootScope){
 
@@ -64,32 +153,42 @@ app.factory('ConstraintHolder', function($rootScope){
     var idealSize = 4;
     var maxSize = 5;
     
+    // Emits an event to tell listening parties that the internal state
+    // has changed.
     function notify() {
-        console.log("emitting constraint holder event");
         $rootScope.$emit('constraint-holder-event');
     }
 
     return {
+
+        // Adds a new constraint into the constraint list
+        // Note that no validation is done here
         addConstraint : function(constraint) {
             constraintList.push({val : constraint, enabled: false});
             notify();
         },
 
+        // Enables/Disables the constraint at the given index
+        // in the constraint list
         toggleConstraint : function(index) {
             var enabled = constraintList[index].enabled;
             constraintList[index].enabled = !enabled;
             notify();
         },
 
+        // Removes the constraint at the given index in the
+        // constraint list
         removeConstraint : function(index) {
             constraintList.splice(index, 1);
             notify();
         },
 
+        // Returns a copy of the constraint list
         getConstraintDetails : function() {
             return [...constraintList];
         },
 
+        // Returns a list of enabled constraints 
         getEnabledConstraints : function() {
             result = [];
 
@@ -102,33 +201,42 @@ app.factory('ConstraintHolder', function($rootScope){
             return result;
         },
 
+        // Sets the minimum group size constraint
         setMinSize : function(size) {
             minSize = size;
             notify();
         },
 
+        // Sets the ideal group size constraint
         setIdealSize : function(size) {
             idealSize = size;
             notify();
         },
 
+        // Sets the maximum group size constraint
         setMaxSize : function(size) {
             maxSize = size;
             notify();
         },
 
+        // Returns the currently set minimum group size
         getMinSize : function() {
             return minSize;
         },
 
+        // Returns the currently set ideal group size
         getIdealSize : function() {
             return idealSize;
         },
 
+        // Returns the currently set maximum group size
         getMaxSize : function() {
             return maxSize;
         },
 
+        // Allows the provided callback to be run when the notify()
+        // method is invoked - this allows changes to be detected and
+        // acted on
         subscribe : function(scope, callback) {
             var handler = $rootScope.$on('constraint-holder-event', callback);
             scope.$on('$destroy', handler);
@@ -136,43 +244,55 @@ app.factory('ConstraintHolder', function($rootScope){
     }
 });
 
-// The root controller is responsible for delegating
-// the work between the factories
-app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder', 
-    function($scope, DataHolder, ConstraintHolder) {
-        // Initialise the student data and set it to update
-        // whenever the input is changed
-        $scope.studentData = DataHolder.getStudentData();
-        $scope.studentParams = DataHolder.getStudentParams();
-        $scope.minSize = ConstraintHolder.getMinSize();
-        $scope.idealSize = ConstraintHolder.getIdealSize();
-        $scope.maxSize = ConstraintHolder.getMaxSize();
+// CONTROLLERS ----------------------------------------------------------------
 
-        $scope.$watch('studentData', function(newValue, oldValue) {
-            if (newValue != oldValue) {
-                DataHolder.setStudentData(newValue);
-            }
-        });
-        $scope.$watch('studentParams', function(newValue, oldValue) {
-            if (newValue != oldValue) {
-                DataHolder.setStudentParams(newValue);
-            }
-        });
-        $scope.$watch('minSize', function(newValue, oldValue) {
-            if (newValue != oldValue) {
-                ConstraintHolder.setMinSize(newValue);
-            }
-        });
-        $scope.$watch('idealSize', function(newValue, oldValue) {
-            if (newValue != oldValue) {
-                ConstraintHolder.setIdealSize(newValue);
-            }
-        });
-        $scope.$watch('maxSize', function(newValue, oldValue) {
-            if (newValue != oldValue) {
-                ConstraintHolder.setMaxSize(newValue);
-            }
-        });
+// Initialises the scope to constain the initial data values
+function initialiseData($scope, DataHolder, ConstraintHolder) {
+    $scope.studentData = DataHolder.getStudentData();
+    $scope.studentParams = DataHolder.getStudentParams();
+    $scope.minSize = ConstraintHolder.getMinSize();
+    $scope.idealSize = ConstraintHolder.getIdealSize();
+    $scope.maxSize = ConstraintHolder.getMaxSize();
+} 
+
+// Initialises watchers in order to update the data holder
+// as the UI is updated via user input 
+function initialiseWatchers($scope, DataHolder, ConstraintHolder) {
+    $scope.$watch('studentData', function(newValue, oldValue) {
+        if (newValue != oldValue) {
+            DataHolder.setStudentData(newValue);
+        }
+    });
+    $scope.$watch('studentParams', function(newValue, oldValue) {
+        if (newValue != oldValue) {
+            DataHolder.setStudentParams(newValue);
+        }
+    });
+    $scope.$watch('minSize', function(newValue, oldValue) {
+        if (newValue != oldValue) {
+            ConstraintHolder.setMinSize(newValue);
+        }
+    });
+    $scope.$watch('idealSize', function(newValue, oldValue) {
+        if (newValue != oldValue) {
+            ConstraintHolder.setIdealSize(newValue);
+        }
+    });
+    $scope.$watch('maxSize', function(newValue, oldValue) {
+        if (newValue != oldValue) {
+            ConstraintHolder.setMaxSize(newValue);
+        }
+    });
+}
+
+// The root controller is responsible for controlling data changes
+// between the factories
+app.controller('rootController', ['$scope', '$compile', 'DataHolder', 'ConstraintHolder', 
+    function($scope, $compile, DataHolder, ConstraintHolder) {
+
+        var modalOpen = false;
+        initialiseData($scope, DataHolder, ConstraintHolder);
+        initialiseWatchers($scope, DataHolder, ConstraintHolder);
 
         // Initialise the constraint list and set it to update
         // whenever the constraint list changes.
@@ -190,12 +310,32 @@ app.controller('rootController', ['$scope', 'DataHolder', 'ConstraintHolder',
             ConstraintHolder.toggleConstraint(index);
         }
 
-        //ConstraintHolder.addConstraint(IntegerCountConstraint(true, 3, 3, true, "age", 20, 30));
-        //ConstraintHolder.addConstraint(SubsetSimilarityConstraint(true, "preferences"));
+        $scope.openConstraintModal = function() {
+            if (modalOpen) {
+                return;
+            }
+
+            var modal = document.createElement('constraintmodal');
+            var body = document.getElementsByTagName('body')[0];
+            body.appendChild(modal);
+            $compile(modal)($scope);
+            modalOpen = true;
+        }
+
+        $scope.closeConstraintModal = function() {
+            if (!modalOpen) {
+                return;
+            }
+            var modal = document.getElementsByTagName('constraintmodal')[0];
+            var body = document.getElementsByTagName('body')[0];
+            
+            body.removeChild(modal);
+            modalOpen = false;
+        }
 }]);
 
-// The controls controller handles sending allocation
-// requests to the server and exporting allocations
+// The controls controller handles sending allocation requests to the server
+// and exporting allocations
 app.controller('controlsController', ['$rootScope', '$scope', '$http', 'ConstraintHolder', 'DataHolder',
     function($rootScope, $scope, $http, ConstraintHolder, DataHolder) {
 
@@ -234,28 +374,8 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
         }
 }]);
 
-app.directive('constraintformatselect', function() {
-    return {
-        template: '<select ng-change="updateConstraintType()" ng-model="constraintType" ng-options="constraint.val as formatMsg(constraint.msg) for constraint in getConstraintForms(selectedParam)"></select>',
-        restrict: 'E',
-        scope: false
-    };
-});
-
-app.directive('integercountform', function() {
-    return {
-        restrict: 'E',
-        templateUrl: '/static/html/integerCount.html'
-    }
-});
-
-app.directive('subsetsimilarityform', function() {
-    return {
-        restrict: 'E',
-        templateUrl: '/static/html/subsetSimilarity.html'
-    }
-});
-
+// The constraint entry controller is responsible for handling
+// input pertaining to creating constraints.
 app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile', 'ConstraintHolder', 'DataHolder',
     function($rootScope, $scope, $compile, ConstraintHolder, DataHolder){
 
@@ -263,33 +383,28 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
         $scope.availableParams = Object.keys($scope.paramData);
         $scope.selectedParam = "";
         $scope.constraintType = "";
+        var addConstraintBtnVisible = false;
 
-        var integerConstraintForms = [{msg: "Each team <should/shouldn't> have between <min> and <max> members <with/without> <param> between <min> and <max>", val: "integerCount"}];
-        var subsetSimilarityConstraintForms = [{msg: "Each team <should/shouldn't> have similar <param>", val: "subsetSimilarity"}];
-
+        // We need to update the parameters whenever the input field changes
+        // This will be removed once the data comes from the database
         DataHolder.subscribe($scope, function(){
             $scope.availableParams = Object.keys(JSON.parse(DataHolder.getStudentParams()));
         })
 
+        // This method is used to correctly format the constraint format values.
+        // We need to do this to prevent infinite loops when generating the
+        // input fields dynamically.
         $scope.formatMsg = function(message) {
             return message.replace("<param>", $scope.selectedParam);
         }
 
+        // Returns the list of constraint formats which can be used for
+        // the given parameter. 
         $scope.getConstraintForms = function(param) {
-            if ($scope.paramData[param] === "integer") {
-                //var integerCount = "Each team <should/shouldn't> have between <min> and <max> members <with/without> " + param + " between <min> and <max>";
-                //return [{msg: integerCount, val: "integerCount"}];
-                return integerConstraintForms;
-            } else if ($scope.paramData[param] === "multi-select") {
-                //var subsetSimilarity = "Each team <should/shouldn't> have similar " + param;
-                //return [{msg: subsetSimilarity, val: "subsetSimilarity"}];
-                return subsetSimilarityConstraintForms;
-            }
-            return ["???"];
+            return constraintFormats[$scope.paramData[param]]
         }
 
         $scope.updateSelectedParam = function() {
-            console.log("selected param changed");
             var selectContainer = document.getElementById('entryConstraintSelect');
             var inputContainer = document.getElementById('entryConstraintInput');
 
@@ -306,31 +421,35 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 }
             
                 // Then we create a new select element
-                var newParagraph = document.createElement("p");
-                newParagraph.innerHTML = "Step 2: Select the form of constraint to apply";
+                var newHeading = document.createElement("h3");
+                newHeading.innerHTML = "Step 2: Select the form of constraint to apply";
                 var newNode = document.createElement("constraintformatselect");
             
-                selectContainer.appendChild(newParagraph);
+                selectContainer.appendChild(newHeading);
                 selectContainer.appendChild(newNode);
             
                 // Once it's added, we re-compile it
                 $compile(newNode)($scope);
+                addConstraintBtnVisible = false;
             }
         }
 
         $scope.updateConstraintType = function() {
-            console.log("constraint type changed");
             var inputContainer = document.getElementById('entryConstraintInput');
             if (inputContainer) {
                 while (inputContainer.firstChild) {
                     inputContainer.removeChild(inputContainer.firstChild);
                 }
-                console.log($scope.constraintType);
                 var newNode = document.createElement($scope.constraintType + "Form");
                 inputContainer.appendChild(newNode);
                 $compile(inputContainer)($scope);   
+                addConstraintBtnVisible = true;
             }
         };
+
+        $scope.addConstraintVisible = function() {
+            return addConstraintBtnVisible;
+        }
 
         $scope.submitConstraint = function() {
             if ($scope.constraintType == "integerCount") {
@@ -343,176 +462,15 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 var fieldMax = parseInt($scope.constr.fieldMax, 10);
                 var constraint = IntegerCountConstraint(shouldBool, countMin, countMax, withBool, field, fieldMin, fieldMax);
                 ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
             } else if ($scope.constraintType == "subsetSimilarity") {
                 var shouldBool = $scope.constr.shouldBool;
                 var field = $scope.selectedParam;
                 var constraint = SubsetSimilarityConstraint(shouldBool, field);
                 ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
             }
         }
 }]);
 
-// (function(){
-//     'use strict';
-    
-//     // CONSTRAINT INPUTS -------------------------------------------
-//     function getConstraintMessage(type, fieldname) {
-//         if (type === "integerCount") {
-//             return "Each team <should/shouldn't> have between <min> and <max> members <with/without> " + fieldname + " between <min> and <max>.";
-//         } else if (type === "subsetSimilarity") {
-//             return "Each team <should/shouldn't> have similar " + fieldname + ".";
-//         }
-//         return "";
-//     }
-
-//     function getConstraintMarkup(type, fieldname) {
-//         if (type === "integerCount") {
-//             return "Each team " 
-//                 + "<select ng-model='constr.shouldBool'><option value='true'>SHOULD</option><option value='false'>SHOULDN'T</option></select>"
-//                 + "have between " 
-//                 + "<input type='number' ng-model='constr.countMin'>" 
-//                 + " and " 
-//                 + "<input type='number' ng-model='constr.countMax'>" 
-//                 + " members " 
-//                 + "<select ng-model='constr.withBool'><option value='true'>WITH</option><option value='false'>WITHOUT</option></select>"
-//                 + " " + fieldname + " between " 
-//                 + "<input type='number' ng-model='constr.fieldMin'>" + " and " 
-//                 + "<input type='number' ng-model='constr.fieldMax'>";  
-//         } else if (type === "subsetSimilarity") {
-//             return "Each team " 
-//                 + "<select ng-model='constr.shouldBool'><option value='true'>SHOULD</option><option value='false'>SHOULDN'T</option></select>"
-//                 + " have similar " + fieldname;
-//         }
-//         return "";
-//     }    
-
-//     // APPLICATION SETUP -------------------------------------------
-//     var app = angular.module('allocator', ['ngSanitize']);
-
-//     // Set up a filter to allow HTML element creation
-//     app.filter('trustAsHtml', function($sce) {
-//         return function(html) {
-//             return $sce.trustAsHtml(html);
-//         };
-//     });
-
-//     // Set up the angular controller
-//     app.controller("allocationController", function($scope, $http, $sce, $compile){
-
-//         // Controller State
-//         $scope.minSize = 3;
-//         $scope.idealSize = 4;
-//         $scope.maxSize = 5;
-//         $scope.studentParams = "age,preferences";
-//         $scope.studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"]}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": []}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"]}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"]}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"]}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"]}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"]}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"]}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"]}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"]}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"]}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"]}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"]}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"]}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"]}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"]}}'
-//         $scope.constraintData = '[{"constr_type": "IntegerCountConstraint", "name": "age constraint", "field": "age", "priority": 1, "should_bool": true, "count_bxy": [2, 2], "with_bool": true, "value_bxy": [20, 30]}, {"constr_type": "SubsetSimilarityConstraint", "name": "preference constraint", "field": "preferences", "priority": 1, "similar_bool": true, "candidates": ["ui", "networking", "graphics", "gameplay"]}]'        
-//         $scope.constraintList = [];
-//         $scope.availableFields = {"age" : "integer", "preferences" : "multi-select"};
-        
-//         // Returns the dictionary of possible constraint types which can
-//         // be created for the given attribute
-//         $scope.getConstraintTypes = function(attribute) {
-//             var result = {};
-//             if (!(attribute in $scope.availableFields)) {
-//                 return {};
-//             }
-//             if ($scope.availableFields[attribute] === "integer") {
-//                 result["integerCount"] = getConstraintMessage("integerCount", attribute);
-//                 return result;
-//             }
-//             if ($scope.availableFields[attribute] === "multi-select") {
-//                 result["subsetSimilarity"] = getConstraintMessage("subsetSimilarity", attribute);
-//                 return result;
-//             }
-//             return result;
-//         }
-        
-//         $scope.openConstraintModal = function() {
-//             var modalHTML = "<div id='constraint-modal'></div>";
-//             // modalHTML += "<h2>Add Constraint</h2>"
-//             // modalHTML += "<p><strong>Step 1:</strong> Select the parameter to use:</p>";
-//             // modalHTML += "<select ng-model='selectedParam' ng-options='x for x in studentParams.split(',')'></select>";
-//             // modalHTML += "</div>";
-
-//             var template = angular.element(modalHTML);
-//             var linkFn = $compile(template);
-//             var result = linkFn($scope);
-//             $scope.$apply();
-
-//             console.log(template.html());
-//         }
-
-//         // Returns the HTML markup for the form in which users 
-//         // will specify the constraint details.
-//         $scope.getConstraintHTML = function(constraintType, attribute) {
-//             var markup = getConstraintMarkup(constraintType, attribute);
-//             //markup += "<button ng-click='works()'>Click Me!</button>";
-//             //var compiled = $compile(angular.element(markup))($scope);
-
-//             return markup;
-//         }
-
-//         // Adds a new constraint into the constraint list
-//         $scope.addConstraint = function(constraint) {
-//             var isConstraint = true;
-        
-//             if (constraint instanceof IntegerCountConstraint) {
-//                 // TODO: Add other checks if necessary
-//             } else if (constraint instanceof SubsetSimilarityConstraint) {
-//                 // TODO: Add other checks if necessary
-//             } else {
-//                 isConstraint = false;
-//             }
-//             if (!isConstraint || !(constraint.getField() in $scope.availableFields)) {
-//                 return;
-//             }
-            
-//             $scope.constraintList.push(constraint);
-//         }
-
-//         // Removes an added constraint from the constraint list
-//         $scope.removeConstraint = function(index) {
-//             if (index > 0 && index < $scope.constraintList.length) {
-//                 $scope.constraintList.splice(index, 1);
-//             }
-//         }
-
-//         // Set the action to run when the 'Run allocation' button is clicked.
-//         $scope.runAllocation = function() {
-
-//             // We need to populate the subset similarity constraints' candidates
-//             $scope.constraintList.forEach(function(constraint){
-//                 if (constraint instanceof SubsetSimilarityConstraint) {
-//                     var field = constraint.getField();
-//                     var candidates = new Set();
-//                     var students = JSON.parse($scope.studentData);
-//                     for (var student in students) {
-//                         students[student][field].forEach(item => candidates.add(item));
-//                     }
-//                     constraint.setCandidates(Array.from(candidates));
-//                 }
-//             });
-            
-//             var request = $http({
-//                 method: "post",
-//                 url: "/allocator",
-//                 data: {
-//                     min_size: parseInt($scope.minSize, 10),
-//                     ideal_size: parseInt($scope.idealSize, 10),
-//                     max_size: parseInt($scope.maxSize, 10),
-//                     students: JSON.parse($scope.studentData),   // This will be come from the database
-//                     constraints: JSON.parse(JSON.stringify($scope.constraintList))//JSON.parse($scope.constraints) // This will be a call to the constraint container
-//                 }
-//             }).then(function success(response) {
-//                 $scope.teams = response.data['teams'];
-//                 console.log(response.data);
-//                 console.log(response.data['teams']);
-//             }, function error(response) {
-//                 console.log("ERROR");
-//             });
-//         }
-
-//         //$scope.addConstraint(IntegerCountConstraint(true, 3, 3, true, "age", 20, 30));
-//         $scope.constraintList.push(SubsetSimilarityConstraint(true, "preferences"));
-//     });
-// })();
+})();
