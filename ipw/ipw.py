@@ -2,7 +2,7 @@
 from flask import Flask, request, render_template, redirect, send_from_directory
 import os
 from flask_sqlalchemy import SQLAlchemy
-from models import Interested
+from .models import Interested
 from datetime import datetime as dt
 
 app = Flask(__name__)

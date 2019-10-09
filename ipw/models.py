@@ -1,4 +1,4 @@
-from ipw import db
+from .ipw import db
 
 class Interested(db.Model):
     __tablename__ = 'interested'
