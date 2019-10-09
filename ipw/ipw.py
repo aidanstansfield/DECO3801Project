@@ -2,7 +2,7 @@
 from flask import Flask, request, render_template, redirect, send_from_directory
 import os
 from flask_sqlalchemy import SQLAlchemy
-from .models import Interested
+from models import Interested
 from datetime import datetime as dt
 
 app = Flask(__name__)
@@ -24,7 +24,7 @@ def statistics():
     # do fancy dbms stats and plots
     return render_template('stats.html', rows=rows)
 
-@app.route('/ipw/interested')
+@app.route('/ipw/interested', methods=['POST'])
 def interested():
     row = Interested(time=dt.now())
     db.session.add(row)
