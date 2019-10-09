@@ -386,6 +386,63 @@ class TestValidateConstraint(unittest.TestCase):
 		self.assertEqual(cm.exception.message, "Constraint (preference constraint) type (subset) doesn't match student info field (preferences) type")
 
 
+class TestDecodeIntegerCountConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "IntegerCountConstraint",
+			"name":         "age count",
+			"field":        "age",
+			"priority":     1,
+			"should_bool":  true,
+			"count_bxy":    [1,3],
+			"with_bool":    true,
+			"value_bxy":    [20,22]
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "age count")
+
+
+class TestDecodeIntegerAverageConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "IntegerAverageConstraint",
+			"name":         "average age",
+			"field":        "age",
+			"priority":     1,
+			"should_bool":  true,
+			"average_bxy":  [20,22]
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "average age")
+
+
+class TestDecodeIntegerSimilarityConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "IntegerSimilarityConstraint",
+			"name":         "age similarity",
+			"field":        "age",
+			"priority":     1,
+			"similar_bool": true
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "age similarity")
+
+
+class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "SubsetSimilarityConstraint",
+			"name":         "preference similarity",
+			"field":        "preferences",
+			"priority":     1,
+			"similar_bool": true,
+			"candidates":   ["ui","networking","graphics","gameplay"]
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "preference similarity")
+
+
 # Tests for the allocate function
 class TestAllocate(unittest.TestCase):
 	def test_success(self):

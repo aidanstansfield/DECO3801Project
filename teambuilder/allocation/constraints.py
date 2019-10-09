@@ -3,6 +3,16 @@
 
 import math
 
+
+def team_mean(team, student_info, field):
+	return sum(student_info[student][field] for student in team) / len(team)
+
+def team_stdev(team, student_info, field):
+	team_average = team_mean(team, student_info, field)
+	sqdiffs = sum((student_info[student][field] - team_average)**2 for student in team)
+	return math.sqrt(sqdiffs / (len(team)-1))
+
+
 # Simple class for working with ranges in constraints
 class BXY:
 	def __init__(self, lower, upper):
@@ -85,6 +95,51 @@ class IntegerCountConstraint(Constraint):
 			return self.should_tune * self.priority * self.count_bxy.scaled_distance(count)
 		else:
 			return self.shouldnt_tune * self.priority * self.count_bxy.scaled_inclusion(count)
+
+
+# A constraint that controls the team-wide average of some property.
+class IntegerAverageConstraint(Constraint):
+	should_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
+	shouldnt_tune = 1.0
+	
+	# Each team <should/shouldn’t> have an average [age] <BXY>.
+	#                   |                                  |
+	#                   \--------------------------\       \----\
+	#                                              V            V
+	def __init__(self, name, field, priority, should_bool, average_bxy):
+		super().__init__(name, field, "integer", priority)
+		self.should_bool = should_bool
+		self.average_bxy = average_bxy
+	
+	def evaluate(self, team, student_info):
+		mean = team_mean(team, student_info, self.field)
+		if self.should_bool:
+			return self.should_tune * self.priority * self.average_bxy.scaled_distance(mean)
+		else:
+			return self.shouldnt_tune * self.priority * self.average_bxy.scaled_inclusion(mean)
+
+
+# A constraint that controls the team-wide average of some property.
+class IntegerSimilarityConstraint(Constraint):
+	tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
+	
+	# Each team should have <similar/diverse> [age].
+	#                               |
+	#                               \--------------\
+	#                                              V
+	def __init__(self, name, field, priority, similar_bool):
+		super().__init__(name, field, "integer", priority)
+		self.similar_bool = similar_bool
+	
+	def evaluate(self, team, student_info):
+		stddev = team_stdev(team, student_info, self.field)
+		if self.similar_bool:
+			return self.tune * self.priority * stddev
+		else:
+			min_val = min(student_info[student][self.field] for student in student_info)
+			max_val = max(student_info[student][self.field] for student in student_info)
+			max_std = (max_val - min_val) / math.sqrt(2)
+			return self.tune * self.priority * (max_std - stddev)
 
 
 # A constraint requires members of a team to be more/less similar to each other
