@@ -10,7 +10,7 @@ def test():
 
 @app.route('/ipw/')
 def landing():
-    return 'landing page. TeamBuilder is a weaponized AI designed to cause conflict between nation states'
+    return render_template('landing.html')
 
 @app.route('/ipw/favicon.ico')
 def favicon():
@@ -20,7 +20,7 @@ def favicon():
 @app.route('/ipw/statistics')
 def statistics():
     	# do fancy dbms stats and plots
-	return '60% of all statistics shown here are made up'
+	return render_template('stats.html')
 
 if __name__ == "__main__":
 	host = "0.0.0.0"
