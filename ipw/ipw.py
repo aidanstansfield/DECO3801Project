@@ -4,7 +4,7 @@ import os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime as dt
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/ipw/static/')
 #app.config.from_object('config.Config')
 
 app.config['SECRET_KEY'] = '\xb7)\xa8\x9d\xd3\xa1\xeaG[+\xe3\xfa\xe0\xb2\xe2j'
