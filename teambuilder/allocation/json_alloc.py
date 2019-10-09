@@ -25,7 +25,19 @@ class ConstraintEncoder(json.JSONEncoder):
 			for attr in ("name","field","priority","should_bool","count_bxy","with_bool","value_bxy"):
 				obj_dict[attr] = getattr(obj, attr)
 			return obj_dict
-			
+		
+		elif isinstance(obj, IntegerAverageConstraint):
+			obj_dict = {"constr_type": "IntegerAverageConstraint"}
+			for attr in ("name","field","priority","should_bool","average_bxy"):
+				obj_dict[attr] = getattr(obj, attr)
+			return obj_dict
+		
+		elif isinstance(obj, IntegerSimilarityConstraint):
+			obj_dict = {"constr_type": "IntegerSimilarityConstraint"}
+			for attr in ("name","field","priority","similar_bool"):
+				obj_dict[attr] = getattr(obj, attr)
+			return obj_dict
+		
 		elif isinstance(obj, SubsetSimilarityConstraint):
 			obj_dict = {"constr_type": "SubsetSimilarityConstraint"}
 			for attr in ("name","field","priority","similar_bool", "candidates"):
@@ -47,7 +59,19 @@ def constraint_hook(obj):
 			return IntegerCountConstraint(obj["name"], obj["field"],obj["priority"],
 				obj["should_bool"], count_bxy, obj["with_bool"], value_bxy)
 		
+		elif obj.get("constr_type") == "IntegerAverageConstraint":
+			# name, field, priority, should_bool, average_bxy
+			average_bxy = BXY(*obj["average_bxy"])
+			return IntegerAverageConstraint(obj["name"], obj["field"],obj["priority"],
+				obj["should_bool"], average_bxy)
+		
+		elif obj.get("constr_type") == "IntegerSimilarityConstraint":
+			# name, field, priority, similar_bool
+			return IntegerSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
+				obj["similar_bool"])
+		
 		elif obj.get("constr_type") == "SubsetSimilarityConstraint":
+			# name, field, priority, similar_bool, candidates
 			return SubsetSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
 				obj["similar_bool"], obj["candidates"])
 		
