@@ -2,12 +2,12 @@
 from flask import Flask, request, render_template, redirect, send_from_directory
 import os
 from flask_sqlalchemy import SQLAlchemy
-from .models import Interested
 from datetime import datetime as dt
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
 db = SQLAlchemy(app)
+from models import Interested
 
 @app.route('/ipw/')
 def landing():
