@@ -24,7 +24,7 @@ def statistics():
     # do fancy dbms stats and plots
     return render_template('stats.html', rows=rows)
 
-@app.route('/ipw/interested')
+@app.route('/ipw/interested', methods=['POST'])
 def interested():
     row = Interested(time=dt.now())
     db.session.add(row)
