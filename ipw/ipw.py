@@ -20,7 +20,7 @@ def favicon():
 @app.route('/ipw/statistics')
 def statistics():
     	# do fancy dbms stats and plots
-	return '60% of all statistics shown here are made up'
+	return render_template('stats.html')
 
 if __name__ == "__main__":
 	host = "0.0.0.0"
