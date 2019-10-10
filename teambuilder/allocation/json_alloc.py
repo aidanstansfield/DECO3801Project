@@ -44,6 +44,24 @@ class ConstraintEncoder(json.JSONEncoder):
 				obj_dict[attr] = getattr(obj, attr)
 			return obj_dict
 		
+		elif isinstance(obj, OptionCountConstraint):
+			obj_dict = {"constr_type": "IntegerCountConstraint"}
+			for attr in ("name","field","priority","should_bool","count_bxy","with_bool","selection",candidates):
+				obj_dict[attr] = getattr(obj, attr)
+			return obj_dict
+		
+		elif isinstance(obj, OptionSimilarityConstraint):
+			obj_dict = {"constr_type": "SubsetSimilarityConstraint"}
+			for attr in ("name","field","priority","similar_bool", "candidates"):
+				obj_dict[attr] = getattr(obj, attr)
+			return obj_dict
+		
+		elif isinstance(obj, SubsetCountConstraint):
+			obj_dict = {"constr_type": "IntegerCountConstraint"}
+			for attr in ("name","field","priority","should_bool","count_bxy","with_bool","selection",candidates):
+				obj_dict[attr] = getattr(obj, attr)
+			return obj_dict
+		
 		elif isinstance(obj, SubsetSimilarityConstraint):
 			obj_dict = {"constr_type": "SubsetSimilarityConstraint"}
 			for attr in ("name","field","priority","similar_bool", "candidates"):
@@ -90,6 +108,12 @@ def constraint_hook(obj):
 			# name, field, priority, similar_bool, candidates
 			return OptionSimilarityConstraint(obj["name"], obj["field"], obj["priority"],
 				obj["similar_bool"], obj["candidates"])
+		
+		elif obj.get("constr_type") == "SubsetCountConstraint":
+			# name, field, priority, should_bool, count_bxy, with_bool, selection, candidates
+			count_bxy = BXY(*obj["count_bxy"])
+			return SubsetCountConstraint(obj["name"], obj["field"], obj["priority"],
+				obj["should_bool"], count_bxy, obj["with_bool"], obj["selection"], obj["candidates"])
 		
 		elif obj.get("constr_type") == "SubsetSimilarityConstraint":
 			# name, field, priority, similar_bool, candidates

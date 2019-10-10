@@ -211,6 +211,31 @@ class OptionSimilarityConstraint(Constraint):
 			return self.diverse_tune * self.priority * (len(team)/len(self.candidates) - min(votes.values()))
 
 
+# A constraint that controls the number of members per-team which selected a particular choice
+# "candidates" is a list of valid answers to the question
+class SubsetCountConstraint(Constraint):
+	should_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
+	shouldnt_tune = 1.0
+	
+	# Each team <should/shouldn’t> have <BXY> members <with/without> [interests] <VALUE>.
+	#                   |                 \-----------------\   |                   |
+	#                   \------------------------- \        |   \--------\          |
+	#                                              V        V            V          V
+	def __init__(self, name, field, priority, should_bool, count_bxy, with_bool, selection, candidates):
+		super().__init__(name, field, "subset", priority)
+		self.should_bool = should_bool
+		self.count_bxy = count_bxy
+		self.with_bool = with_bool
+		self.selection = selection
+	
+	def evaluate(self, team, student_info):
+		count = len([student for student in team if self.selection in student_info[student][self.field]])
+		if self.should_bool:
+			return self.should_tune * self.priority * self.count_bxy.scaled_distance(count)
+		else:
+			return self.shouldnt_tune * self.priority * self.count_bxy.scaled_inclusion(count)
+
+
 # A constraint requires members of a team to be more/less similar to each other
 # in their answers to a "subset" (select multiple values) question
 class SubsetSimilarityConstraint(Constraint):

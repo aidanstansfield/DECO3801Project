@@ -483,6 +483,39 @@ class TestDecodeOptionCountConstraint(unittest.TestCase):
 		json_alloc.validate_constraint("TestDecodeOptionCountConstraint", example_students, result)
 
 
+class TestDecodeOptionSimilarityConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "OptionSimilarityConstraint",
+			"name":         "degree similar",
+			"field":        "degree",
+			"priority":     1,
+			"similar_bool": true,
+			"candidates":   ["IT", "CS", "SE"]
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "degree similar")
+		json_alloc.validate_constraint("TestDecodeOptionSimilarityConstraint", example_students, result)
+
+
+class TestDecodeSubsetCountConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "SubsetCountConstraint",
+			"name":         "preference count",
+			"field":        "preferences",
+			"priority":     1,
+			"should_bool":  true,
+			"count_bxy":    [2,2],
+			"with_bool":    true,
+			"selection":    "IT",
+			"candidates":   ["ui","networking","graphics","gameplay"]
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "preference count")
+		json_alloc.validate_constraint("TestDecodeSubsetCountConstraint", example_students, result)
+
+
 class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
 	def test_decode_valid(self):
 		constraint = """{

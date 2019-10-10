@@ -180,6 +180,32 @@ class TestOptionSimilarityConstraint(unittest.TestCase):
 		self.assertEqual(cost, 1)
 
 
+class TestSubsetCountConstraint(unittest.TestCase):
+	def setUp(self):
+		self.should_constraint = constraints.SubsetCountConstraint(
+			"preference constraint", "preferences", 1, True,
+			constraints.BXY(2,3), True, "networking", degrees)
+		self.shouldnt_constraint = constraints.SubsetCountConstraint(
+			"preference constraint", "preferences", 1, False,
+			constraints.BXY(2,3), True, "networking", degrees)
+	
+	def test_should_met(self):
+		cost = self.should_constraint.evaluate(all_students, student_info)
+		self.assertEqual(cost, 0)
+	
+	def test_should_unmet(self):
+		cost = self.should_constraint.evaluate(older_students, student_info)
+		self.assertEqual(cost, 1)
+	
+	def test_shouldnt_met(self):
+		cost = self.shouldnt_constraint.evaluate(older_students, student_info)
+		self.assertEqual(cost, 0)
+	
+	def test_shouldnt_unmet(self):
+		cost = self.shouldnt_constraint.evaluate(all_students, student_info)
+		self.assertEqual(cost, 1)
+
+
 class TestSubsetSimilarityConstraint(unittest.TestCase):
 	def setUp(self):
 		self.similarity_constraint = constraints.SubsetSimilarityConstraint(
