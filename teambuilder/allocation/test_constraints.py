@@ -94,6 +94,20 @@ class TestIntegerSimilarityConstraint(unittest.TestCase):
 		self.assertEqual(cost, 2.251076855556564)
 
 
+class TestIntegerGlobalAverageConstraint(unittest.TestCase):
+	def setUp(self):
+		self.constraint = constraints.IntegerGlobalAverageConstraint(
+			"global age constraint", "age", 1)
+	
+	def test_are_similar(self):
+		cost = self.constraint.evaluate(all_students, student_info)
+		self.assertEqual(cost, 0)
+	
+	def test_not_similar(self):
+		cost = self.constraint.evaluate(older_students, student_info)
+		self.assertEqual(cost, 1.6999999999999993)
+
+
 class TestSubsetSimilarityConstraint(unittest.TestCase):
 	def setUp(self):
 		self.similarity_constraint = constraints.SubsetSimilarityConstraint(

@@ -142,6 +142,20 @@ class IntegerSimilarityConstraint(Constraint):
 			return self.tune * self.priority * (max_std - stddev)
 
 
+# A constraint that controls how close teams are to the global average of some property.
+class IntegerGlobalAverageConstraint(Constraint):
+	tune = 1.0	# tuning value to match influence of different constraints (with the same priority).
+	
+	# All teams should have similar average [age].
+	def __init__(self, name, field, priority):
+		super().__init__(name, field, "integer", priority)
+	
+	def evaluate(self, team, student_info):
+		global_mean = team_mean(student_info.keys(), student_info, self.field)
+		mean = team_mean(team, student_info, self.field)
+		return self.tune * self.priority * abs(global_mean - mean)
+
+
 # A constraint requires members of a team to be more/less similar to each other
 # in their answers to a "subset" (select multiple values) question
 class SubsetSimilarityConstraint(Constraint):

@@ -38,6 +38,12 @@ class ConstraintEncoder(json.JSONEncoder):
 				obj_dict[attr] = getattr(obj, attr)
 			return obj_dict
 		
+		elif isinstance(obj, IntegerGlobalAverageConstraint):
+			obj_dict = {"constr_type": "IntegerGlobalAverageConstraint"}
+			for attr in ("name","field","priority"):
+				obj_dict[attr] = getattr(obj, attr)
+			return obj_dict
+		
 		elif isinstance(obj, SubsetSimilarityConstraint):
 			obj_dict = {"constr_type": "SubsetSimilarityConstraint"}
 			for attr in ("name","field","priority","similar_bool", "candidates"):
@@ -69,6 +75,10 @@ def constraint_hook(obj):
 			# name, field, priority, similar_bool
 			return IntegerSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
 				obj["similar_bool"])
+		
+		elif obj.get("constr_type") == "IntegerGlobalAverageConstraint":
+			# name, field, priority
+			return IntegerGlobalAverageConstraint(obj["name"], obj["field"], obj["priority"])
 		
 		elif obj.get("constr_type") == "SubsetSimilarityConstraint":
 			# name, field, priority, similar_bool, candidates
