@@ -6,12 +6,12 @@
 </head>
 <body>
     <div class='container'>
-        <h1 class='centered'>Statistics</h1>
+        <h1 class='centered section--shaded'>Statistics</h1>
         <h2 class='centered'>Click Count</h2>
         <p class='centered' id="click-count"></p>
         <h2 class='centered'>Signed Up Users</h2>
         <p class='centered' id="user-count"></p>
-        <table id="users">
+        <table class='bordered highlight' id="users">
         </table>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -28,11 +28,14 @@
 
         function updateUserTable(users) {
             $("#users").empty()
-            $("#users").append("<th>Name</th>" + 
+            $("#users").append("<thead><tr>" +
+                "<th>Name</th>" + 
                 "<th>Email Address</th>" + 
-                "<th>Type of User</th>");
+                "<th>Type of User</th>" +
+                "</tr></thead>");
+            $("#users").append("<tbody>");
             users.forEach(user => {
-                $("#users").append("<tr>" + 
+                $("#users tbody").append("<tr>" + 
                 "<td>" + user.name + "</td>" +
                 "<td>" + user.email + "</td>" +
                 "<td>" + user.type + "</td>" +
@@ -79,5 +82,6 @@
             {% endfor %}
         </ul>
     {% endif %} -->
+    
 </body>
 </html>
