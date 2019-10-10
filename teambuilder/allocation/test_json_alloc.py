@@ -429,6 +429,18 @@ class TestDecodeIntegerSimilarityConstraint(unittest.TestCase):
 		self.assertEqual(result.name, "age similarity")
 
 
+class TestDecodeIntegerGlobalAverageConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "IntegerGlobalAverageConstraint",
+			"name":         "age global similarity",
+			"field":        "age",
+			"priority":     1
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "age global similarity")
+
+
 class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
 	def test_decode_valid(self):
 		constraint = """{
