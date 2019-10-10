@@ -38,11 +38,31 @@ preference_constraint_flat = {
 	"candidates":   ["ui", "networking", "graphics", "gameplay"]}
 
 example_students = {
-	"0": {"name":"Alice",   "age":18, "preferences":["ui", "networking", "graphics", "gameplay"]},
-	"1": {"name":"Bob",     "age":19, "preferences":["ui", "networking"]},
-	"2": {"name":"Charlie", "age":21, "preferences":["ui", "gameplay"]},
-	"3": {"name":"Daniel",  "age":22, "preferences":[]},
-	"4": {"name":"Eric",    "age":19, "preferences":["networking", "graphics"]}}
+	"0": {
+		"name":        "Alice",
+		"age":         18,
+		"degree":      "IT",
+		"preferences": ["ui", "networking", "graphics", "gameplay"]},
+	"1": {
+		"name":        "Bob",
+		"age":         19,
+		"degree":      "CS",
+		"preferences": ["ui", "networking"]},
+	"2": {
+		"name":        "Charlie",
+		"age":         21,
+		"degree":      "CS",
+		"preferences": ["ui", "gameplay"]},
+	"3": {
+		"name":        "Daniel",
+		"age":         22,
+		"degree":      "SE",
+		"preferences": []},
+	"4": {
+		"name":        "Eric",
+		"age":         19,
+		"degree":      "IT",
+		"preferences": ["networking", "graphics"]}}
 
 example_students_json = json.dumps(example_students)
 
@@ -400,6 +420,7 @@ class TestDecodeIntegerCountConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "age count")
+		json_alloc.validate_constraint("TestDecodeIntegerCountConstraint", example_students, result)
 
 
 class TestDecodeIntegerAverageConstraint(unittest.TestCase):
@@ -414,6 +435,7 @@ class TestDecodeIntegerAverageConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "average age")
+		json_alloc.validate_constraint("TestDecodeIntegerAverageConstraint", example_students, result)
 
 
 class TestDecodeIntegerSimilarityConstraint(unittest.TestCase):
@@ -427,6 +449,7 @@ class TestDecodeIntegerSimilarityConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "age similarity")
+		json_alloc.validate_constraint("TestDecodeIntegerSimilarityConstraint", example_students, result)
 
 
 class TestDecodeIntegerGlobalAverageConstraint(unittest.TestCase):
@@ -439,6 +462,25 @@ class TestDecodeIntegerGlobalAverageConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "age global similarity")
+		json_alloc.validate_constraint("TestDecodeIntegerGlobalAverageConstraint", example_students, result)
+
+
+class TestDecodeOptionCountConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "OptionCountConstraint",
+			"name":         "degree count",
+			"field":        "degree",
+			"priority":     1,
+			"should_bool":  true,
+			"count_bxy":    [2,2],
+			"with_bool":    true,
+			"selection":    "IT",
+			"candidates":   ["IT", "CS", "SE"]
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "degree count")
+		json_alloc.validate_constraint("TestDecodeOptionCountConstraint", example_students, result)
 
 
 class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
@@ -453,6 +495,7 @@ class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "preference similarity")
+		json_alloc.validate_constraint("TestDecodeSubsetSimilarityConstraint", example_students, result)
 
 
 # Tests for the allocate function
