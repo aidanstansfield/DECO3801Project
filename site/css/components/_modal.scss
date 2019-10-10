@@ -16,8 +16,13 @@
     &__body {
         padding: 1em;
         background: $colour__white;
-        margin: 2em;
-        //z-index: 2;
+        margin: 2em auto;
+        width: 60%;
+        max-width: 600px;
+
+        @include media('<=medium') {
+            width: 85%;
+        }
     }
 
     &__background {
