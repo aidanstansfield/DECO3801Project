@@ -63,6 +63,7 @@ repository                                      Root directory
     │   ├── json_alloc.py                       Wraps and unwraps JSON-encoded requests and responses
     │   ├── test_allocator.py                   Unit tests for allocator.py
     │   ├── test_constraints.py                 Unit tests for constraints.py
+    │   ├── test_data.py                        Example data for use in unit tests
     │   ├── test_group_size_generator.py        Unit tests for group_size_generator.py
     │   └── test_json_alloc.py                  Unit tests for json_alloc.py
     ├── __init__.py

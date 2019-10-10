@@ -30,7 +30,7 @@ Subset field (interests)
 	
 Boolean field (postgraduate)
 	Each team <should/shouldn’t> have <BXY> members <with/without> [postgraduate].
-		IntegerCountConstraint
+		BooleanCountConstraint
 	
 	
 Comment field (questionnaire feedback)

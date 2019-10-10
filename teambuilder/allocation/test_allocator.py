@@ -1,3 +1,5 @@
+# Unit tests for the allocator.
+
 import unittest
 import os.path
 import sys
