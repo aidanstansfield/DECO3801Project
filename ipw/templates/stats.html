@@ -10,8 +10,8 @@
         <h2 class='centered'>Click Count</h2>
         <p class='centered' id="click-count"></p>
         <h2 class='centered'>Signed Up Users</h2>
+        <p class='centered' id="user-count"></p>
         <table id="users">
-
         </table>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -22,11 +22,21 @@
             $("#click-count").html('The "I\'m Interested" button has been clicked <strong>' + count + "</strong> times");
         }
 
-        function updateUserTable(rows) {
+        function updateUserCount(count) {
+            $("#user-count").html('<strong>' + count + "</strong> users have signed up for the application");
+        }
+
+        function updateUserTable(users) {
             $("#users").empty()
-            $("#users").append("<th>Name</th><th>Email Address<th>");
-            rows.forEach(element => {
-                $("#users").append("<tr><td>" + element + "</td><td></td></tr>");
+            $("#users").append("<th>Name</th>" + 
+                "<th>Email Address</th>" + 
+                "<th>Type of User</th>");
+            users.forEach(user => {
+                $("#users").append("<tr>" + 
+                "<td>" + user.name + "</td>" +
+                "<td>" + user.email + "</td>" +
+                "<td>" + user.type + "</td>" +
+                "</tr>");
             });            
         }
 
@@ -35,8 +45,10 @@
                 url: '/ipw/get-stats',
                 method: 'POST'
             }).done(function(response) {
+                console.log(response)
                 updateClickCount(response.no_clicks);
-                updateUserTable(response.rows);
+                updateUserCount(response.no_users);
+                updateUserTable(response.users);
             });
         });
 
@@ -46,10 +58,26 @@
                 method: 'POST'
             }).done(function(response) {
                 updateClickCount(response.no_clicks);
-                updateUserTable(response.rows);
+                updateUserTable(response.users);
             })
         }, 5000);  
       </script>
+    <!-- <h1> This is the stats page</h1> -->
+    <!-- Make a graph for avg clicks/day -->
+    <!-- {% if rows %}
+        <ul>
+            {% for row in rows %}
+                <li>Time: {{ row.time }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %} -->
+    <!-- Make a bar graph for count of who registers -->
+    <!-- {% if whos %}
+        <ul>
+            {% for row in whos %}
+                <li>Who: {{ row.who }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %} -->
 </body>
-
 </html>

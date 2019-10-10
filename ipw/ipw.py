@@ -5,23 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime as dt
 
 app = Flask(__name__, static_url_path='/ipw/static/')
-# app.config.from_object('config.Config')
-
-app.config['SECRET_KEY'] = '\xb7)\xa8\x9d\xd3\xa1\xeaG[+\xe3\xfa\xe0\xb2\xe2j'
-# Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://allotech:allotech@localhost/ipw'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object('config.Config')
 db = SQLAlchemy(app)
-# from models import Interested
-
-class Interested(db.Model):
-   __tablename__ = 'interested'
-   #__table_args__ = {'extend_existing': True}
-   id = db.Column(db.Integer, primary_key=True)
-   time = db.Column(db.DateTime, index=False, unique=False, nullable=False)
-
-   def __repr__(self):
-       return '<Interested {}>'.format(self.time)
+from models import *
 db.create_all()
 
 @app.route('/ipw/')
@@ -35,25 +21,31 @@ def favicon():
 
 @app.route('/ipw/statistics')
 def statistics():
-    # rows = Interested.query.all()
-    
+    rows = Interested.query.all()
+    whos = User.query.with_entities(User.who)
     # response = {
     #     "rows" : [row.time for row in rows],
     #     "no_clicks" : len(rows)
     # }
-
+    print(whos)
     return render_template('stats.html')
 
 @app.route('/ipw/get-stats', methods=['POST'])
 def get_stats():
-    rows = Interested.query.all()
+    interested = Interested.query.all()
+    users = User.query.with_entities(User.name, User.email, User.who).all()
     
     response = {
-        "rows" : [[row.time] for row in rows],
-        "no_clicks" : len(rows)
+        "users" : [{"name" : user[0], "email" : user[1], "type" : user[2]} for user in users],
+        "no_clicks" : len(interested),
+        'no_users' : len(users)
     }
 
     return jsonify(response)
+    # whos = User.query.with_entities(User.who)
+    # # do fancy dbms stats and plots
+    
+    # return response
 
 @app.route('/ipw/interested', methods=['POST'])
 def interested():
@@ -61,6 +53,23 @@ def interested():
     db.session.add(row)
     db.session.commit()
     return ('', 204);
+
+@app.route('/ipw/register', methods=['POST'])
+def register():
+    response = {'error': 0, 'message': ''}
+    name = request.form['name']
+    email = request.form['email']
+    who = request.form['who']
+    existing_user = User.query.filter(User.email == email).first()
+    if existing_user:
+        response['error'] = 1
+        response['message'] = 'This email has already signed up'
+        return jsonify(response)
+    user = User(name=name, email=email,
+            who=who)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(response)
 
 if __name__ == "__main__":
 	host = "0.0.0.0"
