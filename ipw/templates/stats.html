@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 
 <head>
-    <link rel='stylesheet' type='text/css' href = '/static/css/style.css'>
+    <link rel='stylesheet' type='text/css' href = '/ipw/static/css/style.css'>
 </head>
 <body>
     <h1> This is the stats page</h1>
+    {% if rows %}
+        <ul>
+            {% for row in rows %}
+                <li>Time: {{ row.time }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 
 </html>

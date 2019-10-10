@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 
 <head>
-    <link rel='stylesheet' type='text/css' href = '/static/css/style.css'>
+    <link rel='stylesheet' type='text/css' href = '/ipw/static/css/style.css'>
 </head>
 <body>
     <div class= 'container'>
 
         <div class = 'img-holder'>
-            <img src='/static/images/team-builder-logo.png'/>
+            <img src='/ipw/static/images/team-builder-logo.png'/>
         </div>
         <div class= 'blurb'> 
                 <p>
@@ -34,8 +34,10 @@
 
         <h2> Export </h2>
             <!-- Insert gifs--> 
-
-        <button> I'm Interested!</button>
+        <form action="/ipw/interested" method="post">
+            <button type="submit">I'm Interested!</button>
+        </form>
+        
 </div>
 </body>
 
