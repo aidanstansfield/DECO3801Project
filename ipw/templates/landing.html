@@ -90,7 +90,7 @@
         <form id="interested-form" class='form-basis' action="/ipw/interested" method="post">
             <button class='waves-effect waves-light btn-large' type="submit"><span>I'm Interested!</span></button>
         </form>
-        <form id="submit-form" class='form-basis form-basis--shaded'>
+        <form id="submit-form" class='form-basis form-basis--shaded' action="/ipw/register" method="post">
             <div class='main-blurb'>
                 <p>If you want to be notified of updates to the application, you can
                 use the sign up form below.</p>
@@ -105,6 +105,15 @@
                     <input id='email' type="email" class="validate" required>
                     <label for="email">Email</label>
                     <span for="email"></span>
+                </div>
+                <div class="input-field">
+                    <select id='who' name="who">
+                        <option value="staff">Staff Member</option>
+                        <option value="student">Student</option>
+                        <option value="group">Other</option>
+                    </select>
+                    <label for="who">Who are you?</label>
+                    <span for="who"></span>
                 </div>
             </div>
             <button class='waves-effect waves-light btn-large' type='submit'><span>Sign Me Up!</span></button>
@@ -130,6 +139,28 @@
             });
             $("#submit-form").validate({
                 errorElement: "span"
+            });
+            $("#submit-form").submit(function(e){
+                e.preventDefault();
+                var formData = {
+                    'name': $('#name').val(),
+                    'email': $('#email').val(),
+                    'who': $('#who').val()
+                };
+                $.ajax({
+                    url: "/ipw/register",
+                    method: "POST",
+                    data: formData,
+                    success: function(data) {
+                        if (data.error) {
+                            // display error to user
+                            console.log(parsed_data.message);
+                        } else {
+                            // can we make a lil box appear that says 'Thanks!'
+                            console.log('Thanks!');
+                        }
+                    }
+                })
             });
         </script>
     </div>

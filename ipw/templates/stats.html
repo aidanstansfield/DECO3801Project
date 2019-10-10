@@ -5,6 +5,7 @@
 </head>
 <body>
     <h1> This is the stats page</h1>
+    <!-- Make a graph for avg clicks/day -->
     {% if rows %}
         <ul>
             {% for row in rows %}
@@ -12,6 +13,15 @@
             {% endfor %}
         </ul>
     {% endif %}
+    <!-- Make a bar graph for count of who registers -->
+    {% if whos %}
+        <ul>
+            {% for row in whos %}
+                <li>Who: {{ row.who }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
 </body>
 
 </html>
