@@ -80,6 +80,17 @@ def constraint_hook(obj):
 			# name, field, priority
 			return IntegerGlobalAverageConstraint(obj["name"], obj["field"], obj["priority"])
 		
+		elif obj.get("constr_type") == "OptionCountConstraint":
+			# name, field, priority, should_bool, count_bxy, with_bool, selection, candidates
+			count_bxy = BXY(*obj["count_bxy"])
+			return OptionCountConstraint(obj["name"], obj["field"], obj["priority"],
+				obj["should_bool"], count_bxy, obj["with_bool"], obj["selection"], obj["candidates"])
+		
+		elif obj.get("constr_type") == "OptionSimilarityConstraint":
+			# name, field, priority, similar_bool, candidates
+			return OptionSimilarityConstraint(obj["name"], obj["field"], obj["priority"],
+				obj["similar_bool"], obj["candidates"])
+		
 		elif obj.get("constr_type") == "SubsetSimilarityConstraint":
 			# name, field, priority, similar_bool, candidates
 			return SubsetSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
@@ -192,6 +203,21 @@ def validate_constraint(request, student_info, constraint):
 			raise InvalidRequestError(request, "Constraint ({}) type ({}) doesn't match student info field ({}) type".format(constraint.name, ctype, constraint.field))
 
 
+# Validate a single row of student data,
+# such as whether answers are in the list of valid candidates
+def validate_data(request, constraints, student):
+	for constraint in constraints:
+		if constraint.constraint_type == "option":
+			responses = [student[constraint.field]]
+		elif constraint.constraint_type == "subset":
+			responses = student[constraint.field]
+		else:
+			continue
+		for response in responses:
+			if response not in constraint.candidates:
+				raise InvalidRequestError(request, "Student response ({}) is not a valid choice for constraint ({})".format(response, constraint.name))
+
+
 # Validate an allocation request from the user, including constraints and student information
 def validate_request(request, min_size, ideal_size, max_size, student_info, constraints): #TODO
 	if not min_size <= ideal_size <= max_size:
@@ -203,6 +229,9 @@ def validate_request(request, min_size, ideal_size, max_size, student_info, cons
 	
 	for constraint in constraints:
 		validate_constraint(request, student_info, constraint)
+	
+	for info in student_info.values():
+		validate_data(request, constraints, info)
 
 
 # Perform the complete deserialise->allocate->serialise process.

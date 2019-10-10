@@ -156,6 +156,61 @@ class IntegerGlobalAverageConstraint(Constraint):
 		return self.tune * self.priority * abs(global_mean - mean)
 
 
+# A constraint that controls the number of members per-team which selected a particular option
+# "candidates" is a list of valid answers to the question
+class OptionCountConstraint(Constraint):
+	should_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
+	shouldnt_tune = 1.0
+	
+	# Each team <should/shouldn’t> have <BXY> members <with/without> [degree] <VALUE>.
+	#                   |                 \-----------------\   |                |
+	#                   \------------------------- \        |   \--------\       \--\
+	#                                              V        V            V          V
+	def __init__(self, name, field, priority, should_bool, count_bxy, with_bool, selection, candidates):
+		super().__init__(name, field, "option", priority)
+		self.should_bool = should_bool
+		self.count_bxy = count_bxy
+		self.with_bool = with_bool
+		self.selection = selection
+	
+	def evaluate(self, team, student_info):
+		count = len([student for student in team if student_info[student][self.field] == self.selection])
+		if self.should_bool:
+			return self.should_tune * self.priority * self.count_bxy.scaled_distance(count)
+		else:
+			return self.shouldnt_tune * self.priority * self.count_bxy.scaled_inclusion(count)
+
+
+# A constraint which requires members of a team to be more/less similar
+# to each other in their answers to an "option" (select one of) question
+# "candidates" is a list of valid answers to the question
+class OptionSimilarityConstraint(Constraint):
+	similar_tune = 1.0	# tuning values to match influence of different constraints (with the same priority).
+	diverse_tune = 1.0
+	
+	# Each team should have <similar/diverse> [degree].
+	#                              |
+	#                              \---------------\
+	#                                              V
+	def __init__(self, name, field, priority, similar_bool, candidates):
+		super().__init__(name, field, "option", priority)
+		self.similar_bool = similar_bool
+		self.candidates = candidates
+	
+	def evaluate(self, team, student_info):
+		votes = {candidate:0 for candidate in self.candidates}
+		
+		# Collect votes
+		for student in team:
+			choice = student_info[student][self.field]
+			votes[choice] += 1
+		
+		if self.similar_bool:
+			return self.similar_tune * self.priority * (len(team) - max(votes.values()))
+		else:
+			return self.diverse_tune * self.priority * (len(team)/len(self.candidates) - min(votes.values()))
+
+
 # A constraint requires members of a team to be more/less similar to each other
 # in their answers to a "subset" (select multiple values) question
 class SubsetSimilarityConstraint(Constraint):
