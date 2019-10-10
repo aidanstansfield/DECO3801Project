@@ -1,3 +1,6 @@
+# This file defines functions for serialising and deserialising
+# allocation requests and responses.
+
 import json
 
 from . import allocator
@@ -52,7 +55,7 @@ class ConstraintEncoder(json.JSONEncoder):
 		
 		elif isinstance(obj, OptionSimilarityConstraint):
 			obj_dict = {"constr_type": "SubsetSimilarityConstraint"}
-			for attr in ("name","field","priority","similar_bool", "candidates"):
+			for attr in ("name","field","priority","similar_bool","candidates"):
 				obj_dict[attr] = getattr(obj, attr)
 			return obj_dict
 		
@@ -64,10 +67,16 @@ class ConstraintEncoder(json.JSONEncoder):
 		
 		elif isinstance(obj, SubsetSimilarityConstraint):
 			obj_dict = {"constr_type": "SubsetSimilarityConstraint"}
-			for attr in ("name","field","priority","similar_bool", "candidates"):
+			for attr in ("name","field","priority","similar_bool","candidates"):
 				obj_dict[attr] = getattr(obj, attr)
 			return obj_dict
-			
+		
+		elif isinstance(obj, BooleanCountConstraint):
+			obj_dict = {"constr_type": "BooleanCountConstraint"}
+			for attr in ("name","field","priority","should_bool","count_bxy","with_bool"):
+				obj_dict[attr] = getattr(obj, attr)
+			return obj_dict
+		
 		else: # fail with TypeError
 			return json.JSONEncoder.default(self, obj)
 
@@ -80,18 +89,18 @@ def constraint_hook(obj):
 			# name, field, priority, should_bool, count_bxy, with_bool, value_bxy
 			count_bxy = BXY(*obj["count_bxy"])
 			value_bxy = BXY(*obj["value_bxy"])
-			return IntegerCountConstraint(obj["name"], obj["field"],obj["priority"],
+			return IntegerCountConstraint(obj["name"], obj["field"], obj["priority"],
 				obj["should_bool"], count_bxy, obj["with_bool"], value_bxy)
 		
 		elif obj.get("constr_type") == "IntegerAverageConstraint":
 			# name, field, priority, should_bool, average_bxy
 			average_bxy = BXY(*obj["average_bxy"])
-			return IntegerAverageConstraint(obj["name"], obj["field"],obj["priority"],
+			return IntegerAverageConstraint(obj["name"], obj["field"], obj["priority"],
 				obj["should_bool"], average_bxy)
 		
 		elif obj.get("constr_type") == "IntegerSimilarityConstraint":
 			# name, field, priority, similar_bool
-			return IntegerSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
+			return IntegerSimilarityConstraint(obj["name"], obj["field"], obj["priority"],
 				obj["similar_bool"])
 		
 		elif obj.get("constr_type") == "IntegerGlobalAverageConstraint":
@@ -117,8 +126,14 @@ def constraint_hook(obj):
 		
 		elif obj.get("constr_type") == "SubsetSimilarityConstraint":
 			# name, field, priority, similar_bool, candidates
-			return SubsetSimilarityConstraint(obj["name"], obj["field"],obj["priority"],
+			return SubsetSimilarityConstraint(obj["name"], obj["field"], obj["priority"],
 				obj["similar_bool"], obj["candidates"])
+		
+		elif obj.get("constr_type") == "BooleanCountConstraint":
+			# name, field, priority, should_bool, count_bxy, with_bool
+			count_bxy = BXY(*obj["count_bxy"])
+			return BooleanCountConstraint(obj["name"], obj["field"], obj["priority"],
+				obj["should_bool"], count_bxy, obj["with_bool"])
 		
 		elif obj.get("constr_type") is not None:
 			#TODO will break if anything is called "constr_type"

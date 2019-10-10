@@ -1,3 +1,5 @@
+# Unit tests to ensure constraints are evaluated correctly.
+
 import unittest
 import os.path
 import sys
@@ -10,38 +12,8 @@ if __package__ is None or __package__ == "":
 from . import constraints
 
 
-all_students = ["0","1","2","3","4"]
-older_students = ["2","3"]
-younger_students = ["0","1","4"]
-degrees = ["IT", "CS", "SE"]
-preferences = ["ui", "networking", "graphics", "gameplay"]
-student_info = {
-	"0": {
-		"name":        "Alice",
-		"age":         18,
-		"degree":      "IT",
-		"preferences": ["ui", "networking", "graphics", "gameplay"]},
-	"1": {
-		"name":        "Bob",
-		"age":         19,
-		"degree":      "CS",
-		"preferences": ["ui", "networking"]},
-	"2": {
-		"name":        "Charlie",
-		"age":         21,
-		"degree":      "CS",
-		"preferences": ["ui", "gameplay"]},
-	"3": {
-		"name":        "Daniel",
-		"age":         22,
-		"degree":      "SE",
-		"preferences": []},
-	"4": {
-		"name":        "Eric",
-		"age":         19,
-		"degree":      "IT",
-		"preferences": ["networking", "graphics"]}}
-
+# Data for testing
+from .test_data import *
 
 
 class TestIntegerCountConstraint(unittest.TestCase):
@@ -228,7 +200,32 @@ class TestSubsetSimilarityConstraint(unittest.TestCase):
 	def test_not_diverse(self):
 		cost = self.diversity_constraint.evaluate(younger_students, student_info)
 		self.assertEqual(cost, 0.5)
+
+
+class TestBooleanCountConstraint(unittest.TestCase):
+	def setUp(self):
+		self.should_constraint = constraints.BooleanCountConstraint(
+			"postgraduate constraint", "postgrad", 1, True,
+			constraints.BXY(1,1), True)
+		self.shouldnt_constraint = constraints.BooleanCountConstraint(
+			"postgraduate constraint", "postgrad", 1, False,
+			constraints.BXY(1,1), True)
 	
+	def test_should_met(self):
+		cost = self.should_constraint.evaluate(all_students, student_info)
+		self.assertEqual(cost, 0)
+	
+	def test_should_unmet(self):
+		cost = self.should_constraint.evaluate(younger_students, student_info)
+		self.assertEqual(cost, 1)
+	
+	def test_shouldnt_met(self):
+		cost = self.shouldnt_constraint.evaluate(younger_students, student_info)
+		self.assertEqual(cost, 0)
+	
+	def test_shouldnt_unmet(self):
+		cost = self.shouldnt_constraint.evaluate(all_students, student_info)
+		self.assertEqual(cost, 1)
 
 
 if __name__=='__main__':

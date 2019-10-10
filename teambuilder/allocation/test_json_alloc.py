@@ -1,4 +1,6 @@
-import json 
+# Unit tests to ensure serialisation and deserialisation is performed correctly.
+
+import json
 import unittest
 import os.path
 import sys
@@ -12,71 +14,7 @@ from . import json_alloc
 
 
 # Data for testing
-age_constraint = json_alloc.IntegerCountConstraint("age constraint",
-	"age", 1, True, json_alloc.BXY(2,2), True, json_alloc.BXY(20,30))
-
-age_constraint_flat = {
-	"constr_type": "IntegerCountConstraint",
-	"name":        "age constraint",
-	"field":       "age",
-	"priority":    1,
-	"should_bool": True,
-	"count_bxy":   [2, 2],
-	"with_bool":   True,
-	"value_bxy":   [20, 30]}
-
-preference_constraint = json_alloc.SubsetSimilarityConstraint(
-	"preference constraint", "preferences", 1,
-	True, ("ui", "networking", "graphics", "gameplay"))
-
-preference_constraint_flat = {
-	"constr_type":  "SubsetSimilarityConstraint",
-	"name":         "preference constraint",
-	"field":        "preferences",
-	"priority":     1,
-	"similar_bool": True,
-	"candidates":   ["ui", "networking", "graphics", "gameplay"]}
-
-example_students = {
-	"0": {
-		"name":        "Alice",
-		"age":         18,
-		"degree":      "IT",
-		"preferences": ["ui", "networking", "graphics", "gameplay"]},
-	"1": {
-		"name":        "Bob",
-		"age":         19,
-		"degree":      "CS",
-		"preferences": ["ui", "networking"]},
-	"2": {
-		"name":        "Charlie",
-		"age":         21,
-		"degree":      "CS",
-		"preferences": ["ui", "gameplay"]},
-	"3": {
-		"name":        "Daniel",
-		"age":         22,
-		"degree":      "SE",
-		"preferences": []},
-	"4": {
-		"name":        "Eric",
-		"age":         19,
-		"degree":      "IT",
-		"preferences": ["networking", "graphics"]}}
-
-example_students_json = json.dumps(example_students)
-
-example_teams = {
-	"0": ["0", "2"],
-	"1": ["3", "1", "4"]}
-
-example_request_flat = {
-	"min_size":    1,
-	"ideal_size":  2,
-	"max_size":    3,
-	"constraints": [age_constraint_flat],
-	"students":    example_students}
-
+from .test_data import *
 
 
 # Tests for the ConstraintEncoder class
@@ -124,7 +62,7 @@ class TestEncodeTeams(unittest.TestCase):
 # Tests for the encode_request function
 class TestEncodeRequest(unittest.TestCase):
 	def setUp(self):
-		self.encoded = json_alloc.encode_request(1, 2, 3, [age_constraint], example_students)
+		self.encoded = json_alloc.encode_request(1, 2, 3, [age_constraint], student_info)
 		self.flat = json.loads(self.encoded)
 	
 	def test_encode_min_size(self):
@@ -140,7 +78,7 @@ class TestEncodeRequest(unittest.TestCase):
 		self.assertEqual(self.flat["constraints"], [age_constraint_flat])
 	
 	def test_encode_students(self):
-		self.assertEqual(self.flat["students"], example_students)
+		self.assertEqual(self.flat["students"], student_info)
 
 
 # Tests for the decode_request function
@@ -159,7 +97,7 @@ class TestDecodeRequest(unittest.TestCase):
 		self.assertEqual(self.valid_decoded[2], 3)
 	
 	def test_decode_valid_students(self):
-		self.assertEqual(self.valid_decoded[3], example_students)
+		self.assertEqual(self.valid_decoded[3], student_info)
 	
 	def test_decode_valid_constraint_count(self):
 		self.assertEqual(len(self.valid_decoded[4]), 1)
@@ -172,7 +110,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"ideal_size":  2,
 			"max_size":    3,
 			"constraints": [],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid minimum size")
@@ -182,7 +120,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"min_size":    1,
 			"max_size":    3,
 			"constraints": [],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid ideal size")
@@ -192,7 +130,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"min_size":    1,
 			"ideal_size":  2,
 			"constraints": [],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid maximum size")
@@ -212,7 +150,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"min_size":    1,
 			"ideal_size":  2,
 			"max_size":    3,
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		decoded = json_alloc.decode_request(request)
 		self.assertEqual(decoded[4], [])
 	
@@ -234,7 +172,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"ideal_size":  2,
 			"max_size":    3,
 			"constraints": [],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid minimum size")
@@ -245,7 +183,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"ideal_size":  "bar",
 			"max_size":    3,
 			"constraints": [],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid ideal size")
@@ -256,7 +194,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"ideal_size":  2,
 			"max_size":    "baz",
 			"constraints": [],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid maximum size")
@@ -278,7 +216,7 @@ class TestDecodeRequest(unittest.TestCase):
 			"ideal_size":  2,
 			"max_size":    3,
 			"constraints": "barbazz",
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid constraint list")
@@ -295,7 +233,7 @@ class TestDecodeRequest(unittest.TestCase):
 				"name": "preference constraint",
 				"priority": 1,
 				"similar_bool": true}],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			print(json_alloc.decode_request(request))
 		self.assertEqual(cm.exception.message, "Invalid constraint JSON")
@@ -312,7 +250,7 @@ class TestDecodeRequest(unittest.TestCase):
 				"name": "preference constraint",
 				"priority": 1,
 				"similar_bool": true}],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid JSON for constraint (preference constraint)")
@@ -331,7 +269,7 @@ class TestDecodeRequest(unittest.TestCase):
 				"should_bool": true,
 				"value_bxy": [20,30],
 				"with_bool": true}],
-			"students":    """+example_students_json+"}"
+			"students":    """+student_info_json+"}"
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
 			json_alloc.decode_request(request)
 		self.assertEqual(cm.exception.message, "Invalid JSON for constraint (age_constraint)")
@@ -340,21 +278,21 @@ class TestDecodeRequest(unittest.TestCase):
 # Tests for the validate_request function
 class TestValidateRequest(unittest.TestCase):
 	def test_valid(self):
-		json_alloc.validate_request("foobar", 1, 2, 3, example_students, [age_constraint])
+		json_alloc.validate_request("foobar", 1, 2, 3, student_info, [age_constraint])
 	
 	def test_misorder_min_ideal(self):
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
-			json_alloc.validate_request("foobar", 2, 1, 3, example_students, [age_constraint])
+			json_alloc.validate_request("foobar", 2, 1, 3, student_info, [age_constraint])
 		self.assertEqual(cm.exception.message, "Invalid group size ordering")
 	
 	def test_misorder_ideal_max(self):
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
-			json_alloc.validate_request("foobar", 1, 3, 2, example_students, [age_constraint])
+			json_alloc.validate_request("foobar", 1, 3, 2, student_info, [age_constraint])
 		self.assertEqual(cm.exception.message, "Invalid group size ordering")
 	
 	def test_misorder_min_max(self):
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
-			json_alloc.validate_request("foobar", 3, 2, 1, example_students, [age_constraint])
+			json_alloc.validate_request("foobar", 3, 2, 1, student_info, [age_constraint])
 		self.assertEqual(cm.exception.message, "Invalid group size ordering")
 	
 	def test_invalid_student(self):
@@ -380,7 +318,7 @@ class TestValidateConstraint(unittest.TestCase):
 			"4": {"name":"Eric",    "preferences":19, "age":["networking", "graphics"]}}
 	
 	def test_integer_constraint_valid(self):
-		json_alloc.validate_constraint("foobar", example_students, age_constraint)
+		json_alloc.validate_constraint("foobar", student_info, age_constraint)
 	
 	def test_integer_constraint_no_field(self):
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
@@ -393,7 +331,7 @@ class TestValidateConstraint(unittest.TestCase):
 		self.assertEqual(cm.exception.message, "Constraint (age constraint) type (integer) doesn't match student info field (age) type")
 	
 	def test_subset_constraint_valid(self):
-		json_alloc.validate_constraint("foobar", example_students, preference_constraint)
+		json_alloc.validate_constraint("foobar", student_info, preference_constraint)
 	
 	def test_subset_constraint_no_field(self):
 		with self.assertRaises(json_alloc.InvalidRequestError) as cm:
@@ -420,7 +358,7 @@ class TestDecodeIntegerCountConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "age count")
-		json_alloc.validate_constraint("TestDecodeIntegerCountConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeIntegerCountConstraint", student_info, result)
 
 
 class TestDecodeIntegerAverageConstraint(unittest.TestCase):
@@ -435,7 +373,7 @@ class TestDecodeIntegerAverageConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "average age")
-		json_alloc.validate_constraint("TestDecodeIntegerAverageConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeIntegerAverageConstraint", student_info, result)
 
 
 class TestDecodeIntegerSimilarityConstraint(unittest.TestCase):
@@ -449,7 +387,7 @@ class TestDecodeIntegerSimilarityConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "age similarity")
-		json_alloc.validate_constraint("TestDecodeIntegerSimilarityConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeIntegerSimilarityConstraint", student_info, result)
 
 
 class TestDecodeIntegerGlobalAverageConstraint(unittest.TestCase):
@@ -462,7 +400,7 @@ class TestDecodeIntegerGlobalAverageConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "age global similarity")
-		json_alloc.validate_constraint("TestDecodeIntegerGlobalAverageConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeIntegerGlobalAverageConstraint", student_info, result)
 
 
 class TestDecodeOptionCountConstraint(unittest.TestCase):
@@ -480,7 +418,7 @@ class TestDecodeOptionCountConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "degree count")
-		json_alloc.validate_constraint("TestDecodeOptionCountConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeOptionCountConstraint", student_info, result)
 
 
 class TestDecodeOptionSimilarityConstraint(unittest.TestCase):
@@ -495,7 +433,7 @@ class TestDecodeOptionSimilarityConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "degree similar")
-		json_alloc.validate_constraint("TestDecodeOptionSimilarityConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeOptionSimilarityConstraint", student_info, result)
 
 
 class TestDecodeSubsetCountConstraint(unittest.TestCase):
@@ -513,7 +451,7 @@ class TestDecodeSubsetCountConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "preference count")
-		json_alloc.validate_constraint("TestDecodeSubsetCountConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeSubsetCountConstraint", student_info, result)
 
 
 class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
@@ -528,7 +466,24 @@ class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
 		}"""
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "preference similarity")
-		json_alloc.validate_constraint("TestDecodeSubsetSimilarityConstraint", example_students, result)
+		json_alloc.validate_constraint("TestDecodeSubsetSimilarityConstraint", student_info, result)
+
+
+class TestDecodeBooleanCountConstraint(unittest.TestCase):
+	def test_decode_valid(self):
+		constraint = """{
+			"constr_type":  "BooleanCountConstraint",
+			"name":         "postgraduate count",
+			"field":        "postgrad",
+			"priority":     1,
+			"should_bool":  true,
+			"count_bxy":    [1,1],
+			"with_bool":    true
+		}"""
+		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
+		self.assertEqual(result.name, "postgraduate count")
+		json_alloc.validate_constraint("TestDecodeBooleanCountConstraint", student_info, result)
+
 
 
 # Tests for the allocate function
