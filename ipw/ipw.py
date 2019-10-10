@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, request, render_template, redirect, send_from_directory
+from flask import Flask, request, render_template, redirect, send_from_directory, jsonify, json
 import os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime as dt
@@ -35,16 +35,32 @@ def favicon():
 
 @app.route('/ipw/statistics')
 def statistics():
+    # rows = Interested.query.all()
+    
+    # response = {
+    #     "rows" : [row.time for row in rows],
+    #     "no_clicks" : len(rows)
+    # }
+
+    return render_template('stats.html')
+
+@app.route('/ipw/get-stats', methods=['POST'])
+def get_stats():
     rows = Interested.query.all()
-    # do fancy dbms stats and plots
-    return render_template('stats.html', rows=rows)
+    
+    response = {
+        "rows" : [[row.time] for row in rows],
+        "no_clicks" : len(rows)
+    }
+
+    return jsonify(response)
 
 @app.route('/ipw/interested', methods=['POST'])
 def interested():
     row = Interested(time=dt.now())
     db.session.add(row)
     db.session.commit()
-    return 'Change this to be asynchronous js'
+    return ('', 204);
 
 if __name__ == "__main__":
 	host = "0.0.0.0"

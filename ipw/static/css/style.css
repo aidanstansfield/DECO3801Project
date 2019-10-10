@@ -12,8 +12,15 @@ p {
     color: #808080;
 }
 
+strong {
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
 h1, h2 {
     font-family: "Roboto", sans-serif;
+    margin-block-start: 0;
+    padding-top: 0.67em;
 }
 
 h1 {
@@ -82,10 +89,8 @@ h2 {
 }
 
 /* HEADING STYLING */
-.centered-heading {
+.centered {
     text-align: center;
-    flex-basis: 100%;
-    flex-grow: 0;
 }
 
 .emphasized-heading {

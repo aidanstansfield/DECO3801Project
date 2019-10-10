@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel='stylesheet' type='text/css' href = '/ipw/static/css/style.css'>
+    <link rel='stylesheet' type='text/css' href='/ipw/static/css/style.css'>
 </head>
 <body>
     <div class= 'container'>
@@ -23,7 +23,7 @@
             <iframe class='mvp-holder' src="https://www.youtube.com/embed/UUeLzJ2ZJEI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div>
-            <h1 class='centered-heading'>How it works</h1>
+            <h1 class='centered'>How it works</h1>
             <div class='step-container'>
                 <div class='step-container__text step-container__text--left'>
                     <h2>Login</h2>
@@ -48,7 +48,7 @@
                     </p>
                 </div>
             </div>
-            <h2 class='centered-heading emphasized-heading'>Wait for student responses</h2>
+            <h2 class='centered emphasized-heading'>Wait for student responses</h2>
             <div class='step-container'>
                 <div class='step-container__text step-container__text--left'>
                     <h2>Add your constraints</h2>
@@ -109,29 +109,29 @@
             </div>
             <button class='waves-effect waves-light btn-large' type='submit'><span>Sign Me Up!</span></button>
         </form>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script>
-        <script type='text/javascript'>
-            $(document).ready(function() {
-                $('#submit-form').hide();
-            });
-            $("#interested-form").submit(function(e){
-                e.preventDefault();
-                $.ajax({
-                    url: "/ipw/interested",
-                    method: "POST"
-                }).done(function() {
-                    $('#submit-form').slideDown();
-                    $('html, body').animate({
-                        scrollTop: $(document).height()
-                    }, 'slow');
-                })
-            });
-            $("#submit-form").validate({
-                errorElement: "span"
-            });
-        </script>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('#submit-form').hide();
+        });
+        $("#interested-form").submit(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: "/ipw/interested",
+                method: "POST"
+            }).done(function() {
+                $('#submit-form').slideDown();
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 'slow');
+            })
+        });
+        $("#submit-form").validate({
+            errorElement: "span"
+        });
+    </script>
 </body>
 </html>
