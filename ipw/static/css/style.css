@@ -104,6 +104,11 @@ h3 {
 }
 
 /* STEP CONTAINER STYLING */
+hr {
+    width: 80%;
+    margin: 1em auto;
+}
+
 .step-container {
     display: flex;
 }
@@ -118,8 +123,15 @@ h3 {
 }
 
 .step-container__img {
+    display: flex;
+    align-content: center;
     flex-basis: 50%;
-    background: #FFFFFF;
+    /* background: #FFFFFF; */
+}
+
+.step-container__img img {
+    width: 100%;
+    flex: 0;
 }
 
 /* FORM STYLING */
