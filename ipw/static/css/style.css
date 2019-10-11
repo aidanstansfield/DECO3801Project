@@ -144,6 +144,14 @@ h3 {
     margin: 2em auto;
 }
 
+.link-holder {
+    padding: 2em;
+}
+
+.link-holder a {
+    margin-top: 1em;
+}
+
 /* TABLE STYLING */
 table {
     width: 80%;
