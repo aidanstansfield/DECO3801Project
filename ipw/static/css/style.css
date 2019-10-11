@@ -12,8 +12,16 @@ p {
     color: #808080;
 }
 
+strong {
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
 h1, h2 {
     font-family: "Roboto", sans-serif;
+    margin-block-start: 0;
+    padding-top: 0.67em;
+    padding-bottom: 0.67em;
 }
 
 h1 {
@@ -82,10 +90,8 @@ h2 {
 }
 
 /* HEADING STYLING */
-.centered-heading {
+.centered {
     text-align: center;
-    flex-basis: 100%;
-    flex-grow: 0;
 }
 
 .emphasized-heading {
@@ -132,6 +138,12 @@ h2 {
 .input-field {
     width: 50%;
     margin: 2em auto;
+}
+
+/* TABLE STYLING */
+table {
+    width: 80%;
+    margin: 0 auto;
 }
 
 @media screen and (max-width: 600px) {

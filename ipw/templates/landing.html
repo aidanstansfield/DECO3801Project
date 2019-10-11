@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel='stylesheet' type='text/css' href = '/ipw/static/css/style.css'>
+    <link rel='stylesheet' type='text/css' href='/ipw/static/css/style.css'>
 </head>
 <body>
     <div class= 'container'>
@@ -16,6 +16,7 @@
                     Team Builder is an application that makes group allocation easy.
                     Just create a course, add your students and you're on your way.
                 </p>
+                <a class='waves-effect waves-light btn-large' href="/ipw/statistics">Statistics</a>
             </div>
         </div>
         <div class='section section--shaded section--vertical-centered'>
@@ -23,7 +24,7 @@
             <iframe class='mvp-holder' src="https://www.youtube.com/embed/UUeLzJ2ZJEI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div>
-            <h1 class='centered-heading'>How it works</h1>
+            <h1 class='centered'>How it works</h1>
             <div class='step-container'>
                 <div class='step-container__text step-container__text--left'>
                     <h2>Login</h2>
@@ -48,7 +49,7 @@
                     </p>
                 </div>
             </div>
-            <h2 class='centered-heading emphasized-heading'>Wait for student responses</h2>
+            <h2 class='centered emphasized-heading'>Wait for student responses</h2>
             <div class='step-container'>
                 <div class='step-container__text step-container__text--left'>
                     <h2>Add your constraints</h2>
@@ -91,7 +92,7 @@
             <button class='waves-effect waves-light btn-large' type="submit"><span>I'm Interested!</span></button>
         </form>
         <form id="submit-form" class='form-basis form-basis--shaded' action="/ipw/register" method="post">
-            <div class='main-blurb'>
+            <div id='signup-blurb' class='main-blurb'>
                 <p>If you want to be notified of updates to the application, you can
                 use the sign up form below.</p>
             </div>
@@ -116,7 +117,7 @@
                     <span for="who"></span>
                 </div>
             </div>
-            <button class='waves-effect waves-light btn-large' type='submit'><span>Sign Me Up!</span></button>
+            <button id="submit-form-btn" class='waves-effect waves-light btn-large' type='submit'><span>Sign Me Up!</span></button>
         </form>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -124,6 +125,7 @@
         <script type='text/javascript'>
             $(document).ready(function() {
                 $('#submit-form').hide();
+                $('select').formSelect();
             });
             $("#interested-form").submit(function(e){
                 e.preventDefault();
@@ -131,6 +133,7 @@
                     url: "/ipw/interested",
                     method: "POST"
                 }).done(function() {
+                    $("#interested-form").hide();
                     $('#submit-form').slideDown();
                     $('html, body').animate({
                         scrollTop: $(document).height()
@@ -138,29 +141,32 @@
                 })
             });
             $("#submit-form").validate({
-                errorElement: "span"
-            });
-            $("#submit-form").submit(function(e){
-                e.preventDefault();
-                var formData = {
-                    'name': $('#name').val(),
-                    'email': $('#email').val(),
-                    'who': $('#who').val()
-                };
-                $.ajax({
-                    url: "/ipw/register",
-                    method: "POST",
-                    data: formData,
-                    success: function(data) {
-                        if (data.error) {
-                            // display error to user
-                            console.log(parsed_data.message);
-                        } else {
-                            // can we make a lil box appear that says 'Thanks!'
-                            console.log('Thanks!');
+                errorElement: "span",
+                submitHandler: function(form) {
+                    var formData = {
+                        'name': $('#name').val(),
+                        'email': $('#email').val(),
+                        'who': $('#who').val()
+                    };
+                    $.ajax({
+                        url: "/ipw/register",
+                        method: "POST",
+                        data: formData,
+                        success: function(data) {
+                            if (data.error) {
+                                $("#email").next("span").text(data.message);
+                                $("#email").next("span").show();
+                                $("#email").addClass("invalid");
+                            } else {
+                                $(".form-input-holder").empty();
+                                $("#submit-form-btn").remove();
+                                $("#signup-blurb").hide();
+                                $(".form-input-holder").append("<h3 class='centered'>Thanks!</h3>");
+                            }
                         }
-                    }
-                })
+                    });
+                    return false;
+                }
             });
         </script>
     </div>
