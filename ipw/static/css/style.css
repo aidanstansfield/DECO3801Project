@@ -124,7 +124,8 @@ hr {
 
 .step-container__img {
     display: flex;
-    align-content: center;
+    align-items: center;
+    justify-content: center;
     flex-basis: 50%;
     /* background: #FFFFFF; */
 }
