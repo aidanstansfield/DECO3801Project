@@ -124,7 +124,8 @@ hr {
 
 .step-container__img {
     display: flex;
-    align-content: center;
+    align-items: center;
+    justify-content: center;
     flex-basis: 50%;
     /* background: #FFFFFF; */
 }
@@ -197,8 +198,13 @@ table {
         flex-direction: column;
     }
 
+    .step-container__img {
+        order: 1;
+    }
+
     .step-container__text--left {
         text-align: initial;
+        /* order: 0; */
     }
 }
 
