@@ -48,7 +48,6 @@
                 url: '/ipw/get-stats',
                 method: 'POST'
             }).done(function(response) {
-                console.log(response)
                 updateClickCount(response.no_clicks);
                 updateUserCount(response.no_users);
                 updateUserTable(response.users);
@@ -61,6 +60,7 @@
                 method: 'POST'
             }).done(function(response) {
                 updateClickCount(response.no_clicks);
+                updateUserCount(response.no_users);
                 updateUserTable(response.users);
             })
         }, 5000);  
