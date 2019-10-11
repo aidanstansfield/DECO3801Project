@@ -9,14 +9,85 @@
         <h1 class='centered section--shaded'>Statistics</h1>
         <h2 class='centered'>Click Count</h2>
         <p class='centered' id="click-count"></p>
+        <h5>Interest over time</h5>
+        <canvas id="interest_chart" width="400" height="400"></canvas>
         <h2 class='centered'>Signed Up Users</h2>
         <p class='centered' id="user-count"></p>
         <table class='bordered highlight' id="users">
         </table>
+        <h5>Who is interested</h5>
+        <canvas id="who_chart" width="400" height="400"></canvas>
     </div>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
     <script type="text/javascript">
+        var interest_ctx = document.getElementById('interest_chart').getContext('2d');
+        var interest_chart = new Chart(interest_ctx, {
+            type: 'line',
+            data: {
+                labels: ['Today'],
+                datasets: [{
+                    label: '# of people interested',
+                    data: [0],
+                    fill: false,
+                    borderColor: 'rgba(75, 192, 192)',
+                    lineTension: 0.1
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var who_ctx = document.getElementById('who_chart').getContext('2d');
+        var who_chart = new Chart(who_ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Staff', 'Student', 'Other'],
+                datasets: [{
+                    label: '# of Registrations',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                responsive: false
+            }
+        });
+
+        function updateChart(chart, dataset, labels, data) {
+            if (chart.data.labels != labels || chart.data.datasets[dataset].data != data) {
+                chart.data.labels = labels;
+                chart.data.datasets[dataset].data = data;
+                chart.update();
+            }
+        }
         
         function updateClickCount(count) {
             $("#click-count").html('The "I\'m Interested" button has been clicked <strong>' + count + "</strong> times");
@@ -48,10 +119,11 @@
                 url: '/ipw/get-stats',
                 method: 'POST'
             }).done(function(response) {
-                console.log(response)
                 updateClickCount(response.no_clicks);
                 updateUserCount(response.no_users);
                 updateUserTable(response.users);
+                updateChart(who_chart, 0, response.who_labels, response.who_data);
+                updateChart(interest_chart, 0, response.interest_labels, response.interest_data)
             });
         });
 
@@ -61,27 +133,12 @@
                 method: 'POST'
             }).done(function(response) {
                 updateClickCount(response.no_clicks);
+                updateUserCount(response.no_users);
                 updateUserTable(response.users);
+                updateChart(who_chart, response.who_labels, response.who_data);
             })
-        }, 5000);  
-      </script>
-    <!-- <h1> This is the stats page</h1> -->
-    <!-- Make a graph for avg clicks/day -->
-    <!-- {% if rows %}
-        <ul>
-            {% for row in rows %}
-                <li>Time: {{ row.time }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %} -->
-    <!-- Make a bar graph for count of who registers -->
-    <!-- {% if whos %}
-        <ul>
-            {% for row in whos %}
-                <li>Who: {{ row.who }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %} -->
+        }, 60000);
+    </script>
     
 </body>
 </html>
