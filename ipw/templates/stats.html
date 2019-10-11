@@ -123,7 +123,7 @@
                 updateUserCount(response.no_users);
                 updateUserTable(response.users);
                 updateChart(who_chart, 0, response.who_labels, response.who_data);
-                updateChart(interest_chart, 0, response.interest_labels, response.interest_data)
+                updateChart(interest_chart, 0, response.interest_labels, response.interest_data);
             });
         });
 
@@ -135,7 +135,8 @@
                 updateClickCount(response.no_clicks);
                 updateUserCount(response.no_users);
                 updateUserTable(response.users);
-                updateChart(who_chart, response.who_labels, response.who_data);
+                updateChart(who_chart, 0, response.who_labels, response.who_data);
+                updateChart(interest_chart, 0, response.interest_labels, response.interest_data);
             })
         }, 60000);
     </script>
