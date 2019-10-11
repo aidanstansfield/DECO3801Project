@@ -32,6 +32,10 @@ h2 {
     font-size: 2.5rem;
 }
 
+h3 {
+    font-size: 2rem;
+}
+
 /* CONTAINER STYLING */
 .container {
     width: 100%;
@@ -143,6 +147,16 @@ h2 {
 /* TABLE STYLING */
 table {
     width: 80%;
+    margin: 0 auto;
+}
+
+/* GRAPH STYLING */
+.graph-holder {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+.graph-holder canvas {
     margin: 0 auto;
 }
 

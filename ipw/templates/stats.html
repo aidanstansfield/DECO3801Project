@@ -7,16 +7,24 @@
 <body>
     <div class='container'>
         <h1 class='centered section--shaded'>Statistics</h1>
+        
         <h2 class='centered'>Click Count</h2>
         <p class='centered' id="click-count"></p>
-        <h5>Interest over time</h5>
-        <canvas id="interest_chart" width="400" height="400"></canvas>
+        
+        <h3 class='centered'>Interest over time</h3>
+        <div class='graph-holder'>
+            <canvas id="interest_chart" width="400" height="400"></canvas>
+        </div>
+
         <h2 class='centered'>Signed Up Users</h2>
         <p class='centered' id="user-count"></p>
         <table class='bordered highlight' id="users">
         </table>
-        <h5>Who is interested</h5>
-        <canvas id="who_chart" width="400" height="400"></canvas>
+
+        <h3 class='centered'>Who is interested</h3>
+        <div class='graph-holder'>
+            <canvas id="who_chart" width="400" height="400"></canvas>
+        </div>
     </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -123,7 +131,7 @@
                 updateUserCount(response.no_users);
                 updateUserTable(response.users);
                 updateChart(who_chart, 0, response.who_labels, response.who_data);
-                updateChart(interest_chart, 0, response.interest_labels, response.interest_data)
+                updateChart(interest_chart, 0, response.interest_labels, response.interest_data);
             });
         });
 
@@ -135,7 +143,8 @@
                 updateClickCount(response.no_clicks);
                 updateUserCount(response.no_users);
                 updateUserTable(response.users);
-                updateChart(who_chart, response.who_labels, response.who_data);
+                updateChart(who_chart, 0, response.who_labels, response.who_data);
+                updateChart(interest_chart, 0, response.interest_labels, response.interest_data);
             })
         }, 60000);
     </script>
