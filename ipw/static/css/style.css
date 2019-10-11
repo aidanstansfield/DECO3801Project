@@ -197,8 +197,13 @@ table {
         flex-direction: column;
     }
 
+    .step-container__img {
+        order: 1;
+    }
+
     .step-container__text--left {
         text-align: initial;
+        /* order: 0; */
     }
 }
 
