@@ -616,4 +616,10 @@ h6 {
     h2 { display: none;}
     .header {display: none;}
     textarea {display: none;}
+    .allocation-results{
+      display: block;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      }
   }
