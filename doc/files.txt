@@ -7,15 +7,33 @@ repository                                      Root directory
 │   ├── constraints.txt                         A list of the constraints which may be used in allocations
 │   ├── files.txt                               This file
 │   └── references.txt                          Information about third-party resources used in this project
-├── informative-product-website                 Source code for informative product website (IPW)
-│   ├── informative-product-website.py          Flask app for the IPW
-│   └── static                                  Static content for the IPW
-│       ├── css
-│       │   └── style.css
-│       ├── favicon.ico
-│       └── images
-│           ├── logo-purple.png
-│           └── team-builder-logo.png
+├── ipw                                         Source code for informative product website (IPW)
+│   ├── config.py
+│   ├── __init__.py
+│   ├── ipw-database-table-init.sql
+│   ├── ipw.ini
+│   ├── ipw.py                                  Flask app for the IPW
+│   ├── models.py
+│   ├── static                                  Static content for the IPW
+│   │   ├── css
+│   │   │   └── style.css
+│   │   ├── favicon.ico
+│   │   └── images
+│   │       ├── allocationGif.gif
+│   │       ├── constraintGif.gif
+│   │       ├── exportGif.gif
+│   │       ├── facebookimg.png
+│   │       ├── loginGif.gif
+│   │       ├── logo-purple.png
+│   │       ├── makeCourse.gif
+│   │       ├── redditimg.png
+│   │       ├── team-builder-logo.png
+│   │       └── twitterimg.png
+│   ├── templates                               Template files for generating the IPW
+│   │   ├── interest.html
+│   │   ├── landing.html
+│   │   └── stats.html
+│   └── wsgi.py
 ├── README.md                                   Documentation for users
 ├── site                                        Static content for the TeamBuilder website
 │   ├── css
@@ -31,11 +49,13 @@ repository                                      Root directory
 │   │   │   ├── _allocation-constraints.scss
 │   │   │   ├── _allocation_container.scss
 │   │   │   ├── _allocation-controls.scss
+│   │   │   ├── allocation-form.scss
 │   │   │   ├── _allocation_results.scss
 │   │   │   ├── _container.scss
 │   │   │   ├── _header.scss
 │   │   │   ├── _landing-info.scss
-│   │   │   └── _page_heading.scss
+│   │   │   ├── _loading.scss
+│   │   │   └── _modal.scss
 │   │   ├── external                            Styles drawn from external sources
 │   │   │   ├── _include-media.scss
 │   │   │   └── _normalize.scss
@@ -66,15 +86,28 @@ repository                                      Root directory
     │   ├── test_data.py                        Example data for use in unit tests
     │   ├── test_group_size_generator.py        Unit tests for group_size_generator.py
     │   └── test_json_alloc.py                  Unit tests for json_alloc.py
+    ├── config.py
+    ├── database-table-init.sql
     ├── __init__.py
+    ├── models.py
     ├── static                                  Static content for the TeamBuilder website
     │   ├── css
     │   │   ├── style.css
     │   │   └── style.css.map
     │   ├── favicon.ico
-    │   └── images
-    │       ├── logo-purple.png
-    │       └── team-builder-logo.png
+    │   ├── html
+    │   │   ├── alloc-group.html
+    │   │   ├── constraint.html
+    │   │   ├── constraint-modal.html
+    │   │   ├── constraintSelect.html
+    │   │   ├── integerCount.html
+    │   │   └── subsetSimilarity.html
+    │   ├── images
+    │   │   ├── logo-purple.png
+    │   │   └── team-builder-logo.png
+    │   └── js
+    │       ├── allocate.js
+    │       └── constraints.js
     ├── teambuilder.ini                         uWSGI configuration
     ├── teambuilder.py                          Flask functions for the TeamBuilder website
     ├── templates                               Flask HTML templates
