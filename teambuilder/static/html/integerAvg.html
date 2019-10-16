@@ -1,0 +1,14 @@
+<div ng-form name='integerAvgForm'>
+    <p>Each group 
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
+        <option value='true'>SHOULD</option>
+        <option value='false'>SHOULDN'T</option>
+    </select>
+    have average
+    {{selectedParam}}
+    between 
+    <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='constr.fieldMin' min="1">
+    and
+    <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='constr.fieldMax' min="1">
+    </p>
+</div>

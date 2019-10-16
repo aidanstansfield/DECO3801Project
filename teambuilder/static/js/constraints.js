@@ -75,8 +75,8 @@ function IntegerCountConstraint(shouldBool, countMin, countMax,
     }
 
     function toHTML() {
-        var sentence = "<p>Each team ";
-        if (params["should_bool"]) {
+        var sentence = "<p>Each group ";
+        if (params["should_bool"] == "true") {
             sentence += "<strong>SHOULD HAVE</strong> ";
         } else {
             sentence += "<strong>SHOULDN'T HAVE</strong> ";
@@ -86,7 +86,7 @@ function IntegerCountConstraint(shouldBool, countMin, countMax,
         sentence += "and "
         sentence += "<strong>" + params["count_bxy"][1] + "</strong> ";
         sentence += "members ";
-        if (params["with_bool"]) {
+        if (params["with_bool"] == "true") {
             sentence += "<strong>WITH</strong> ";
         } else {
             sentence += "<strong>WITHOUT</strong> ";
@@ -110,6 +110,416 @@ function IntegerCountConstraint(shouldBool, countMin, countMax,
     return result;
 }
 
+function IntegerAverageConstraint(shouldBool, field,
+    fieldMin, fieldMax) {
+    // Each team <should/shouldn't> have average <field> between
+    // <min and <max>
+
+    var isError = false;
+    var errMsg = "";
+
+    if (!isBoolean(shouldBool)) {
+        errMsg = "Invalid constraint boolean";
+        isError = true;
+    } else if (!isNumber(fieldMin)) {
+        errMsg = "Invalid minimum average";
+        isError = true;
+    } else if (!isNumber(fieldMax)) {
+        errMsg = "Invalid maximum average";
+        isError = true;
+    } else if (fieldMin > fieldMax) {
+        errMsg = "Min average cannot exceed max average"
+        isError = true;
+    }
+
+    var params = {
+        "constr_type" : "IntegerAverageConstraint",
+        "name" : field + " constraint",
+        "should_bool" : shouldBool,
+        "field" : field,
+        "priority" : 1,
+        "average_bxy" : [fieldMin, fieldMax]
+    }
+
+    function getField() {
+        return params["field"];
+    }
+
+    function hasError() {
+        return isError;
+    }
+
+    function getErrorMsg() {
+        return errMsg;
+    }
+
+    function toJSON() {
+        return JSON.parse(JSON.stringify(params));
+    }
+
+    function toHTML() {
+        var sentence = "<p>Each group ";
+        console.log(typeof params["should_bool"]);
+        if (params["should_bool"] == "true") {
+            sentence += "<strong>SHOULD HAVE</strong> ";
+        } else {
+            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+        }
+        sentence += "average "
+        sentence += "<strong>" + params["field"] + "</strong>";
+        sentence += " between <strong>" + params["average_bxy"][0] + "</strong>";
+        sentence += " and <strong>" + params["average_bxy"][1] + "</strong>";
+
+        return sentence;
+    }
+
+    var result = createObject(IntegerAverageConstraint.prototype)
+    result.toJSON = toJSON;
+    result.toHTML = toHTML;
+    result.hasError = hasError;
+    result.getErrorMsg = getErrorMsg;
+    result.getField = getField;
+
+    return result;
+}
+
+function IntegerSimilarityConstraint(similarBool, field) {
+    // Each team <should/shouldn't> have similar <field>
+
+    var isError = false;
+    var errMsg = "";
+
+    if (!isBoolean(similarBool)) {
+        errMsg = "Invalid constraint boolean";
+        isError = true;
+    }
+
+    var params = {
+        "constr_type" : "IntegerSimilarityConstraint",
+        "name" : field + " constraint",
+        "similar_bool" : similarBool,
+        "field" : field,
+        "priority" : 1
+    }
+
+    function getField() {
+        return params["field"];
+    }
+
+    function hasError() {
+        return isError;
+    }
+
+    function getErrorMsg() {
+        return errMsg;
+    }
+
+    function toJSON() {
+        return JSON.parse(JSON.stringify(params));
+    }
+
+    function toHTML() {
+        var sentence = "<p>Each group ";
+        if (params["similar_bool"] == "true") {
+            sentence += "<strong>SHOULD HAVE</strong> ";
+        } else {
+            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+        }
+        sentence += "similar "
+        sentence += "<strong>" + params["field"] + "</strong>";
+
+        return sentence;
+    }
+
+    var result = createObject(IntegerSimilarityConstraint.prototype)
+    result.toJSON = toJSON;
+    result.toHTML = toHTML;
+    result.hasError = hasError;
+    result.getErrorMsg = getErrorMsg;
+    result.getField = getField;
+
+    return result;
+}
+
+function IntegerGlobalAverageConstraint(field) {
+    // All teams should have similar <field>
+
+    var isError = false;
+    var errMsg = "";
+
+    var params = {
+        "constr_type" : "IntegerGlobalAverageConstraint",
+        "name" : field + " constraint",
+        "field" : field,
+        "priority" : 1
+    }
+
+    function getField() {
+        return params["field"];
+    }
+
+    function hasError() {
+        return isError;
+    }
+
+    function getErrorMsg() {
+        return errMsg;
+    }
+
+    function toJSON() {
+        return JSON.parse(JSON.stringify(params));
+    }
+
+    function toHTML() {
+        var sentence = "<p>All groups have similar " + params["field"];
+        return sentence;
+    }
+
+    var result = createObject(IntegerSimilarityConstraint.prototype)
+    result.toJSON = toJSON;
+    result.toHTML = toHTML;
+    result.hasError = hasError;
+    result.getErrorMsg = getErrorMsg;
+    result.getField = getField;
+
+    return result;
+}
+
+function OptionCountConstraint(shouldBool, countMin, countMax,
+    withBool, field, option) {
+    // Each team <should/shouldn't> have between <min>
+    // and <max> members <with/without> <field> equal to <option>
+
+    var isError = false;
+    var errMsg = "";
+
+    if (!isNumber(countMin) || !isNumber(countMax) || countMin > countMax) {
+        errMsg = "Invalid count constraint bounds";
+        isError = true;
+    } else if (!isBoolean(shouldBool)) {
+        errMsg = "Invalid constraint boolean";
+        isError = true;
+    }
+
+    var params = {
+        "constr_type" : "OptionCountConstraint",
+        "name" : field + " constraint",
+        "should_bool" : shouldBool,
+        "count_bxy" : [countMin, countMax],
+        "with_bool" : withBool,
+        "field" : field,
+        "selection" : option,
+        "candidates": [],
+        "priority" : 1
+    }
+
+    function getField() {
+        return params["field"];
+    }
+
+    function hasError() {
+        return isError;
+    }
+
+    function getErrorMsg() {
+        return errMsg;
+    }
+
+    function setCandidates(candidates) {
+        if (isArray(candidates)) {
+            params.candidates = [...candidates];
+        }
+    }
+
+    function toJSON() {
+        return JSON.parse(JSON.stringify(params));
+    }
+
+    function toHTML() {
+        var sentence = "<p>Each group ";
+        if (params["should_bool"] == "true") {
+            sentence += "<strong>SHOULD HAVE</strong> ";
+        } else {
+            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+        }
+        sentence += "between ";
+        sentence += "<strong>" + params["count_bxy"][0] + "</strong> ";
+        sentence += "and "
+        sentence += "<strong>" + params["count_bxy"][1] + "</strong> ";
+        sentence += "members ";
+        if (params["with_bool"] == "true") {
+            sentence += "<strong>WITH</strong> ";
+        } else {
+            sentence += "<strong>WITHOUT</strong> ";
+        }
+        sentence += "<strong>" + params["field"] + "</strong> ";
+        sentence += "equal to ";
+        sentence += "<strong>" + params["selection"] + "</strong> ";
+        
+        return sentence;
+    }
+
+    var result = createObject(OptionCountConstraint.prototype)
+    result.toJSON = toJSON;
+    result.toHTML = toHTML;
+    result.hasError = hasError;
+    result.getErrorMsg = getErrorMsg;
+    result.setCandidates = setCandidates;
+    result.getField = getField;
+
+    return result;
+}
+
+function OptionSimilarityConstraint(shouldBool, field) {
+    // Each team <should/shouldn't> have similar <field>
+
+    var isError = false;
+    var errMsg = "";
+
+    if (!isBoolean(shouldBool)) {
+        errMsg = "Invalid constraint boolean";
+        isError = true;
+    }
+
+    var params = {
+        "constr_type" : "OptionSimilarityConstraint",
+        "name" : field + " constraint",
+        "similar_bool" : shouldBool,
+        "field" : field,
+        "candidates" : [],
+        "priority" : 1
+    }
+
+    function getField() {
+        return params["field"];
+    }
+
+    function hasError() {
+        return isError;
+    }
+
+    function getErrorMsg() {
+        return errMsg;
+    }
+
+    function toJSON() {
+        return JSON.parse(JSON.stringify(params));
+    }
+
+    function setCandidates(candidates) {
+        if (isArray(candidates)) {
+            params.candidates = [...candidates];
+        }
+    }
+
+    function toHTML() {
+        var sentence = "<p>Each group ";
+        if (params["similar_bool"] == "true") {
+            sentence += "<strong>SHOULD HAVE</strong> ";
+        } else {
+            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+        }
+        sentence += "similar "
+        sentence += "<strong>" + params["field"] + "</strong>";
+
+        return sentence;
+    }
+
+    var result = createObject(OptionSimilarityConstraint.prototype)
+    result.toJSON = toJSON;
+    result.toHTML = toHTML;
+    result.setCandidates = setCandidates;
+    result.hasError = hasError;
+    result.getErrorMsg = getErrorMsg;
+    result.getField = getField;
+
+    return result;
+}
+
+function SubsetCountConstraint(shouldBool, countMin, countMax,
+    withBool, field, option) {
+    // Each team <should/shouldn't> have between <min>
+    // and <max> members <with/without> <field> equal to <option>
+
+    var isError = false;
+    var errMsg = "";
+
+    if (!isNumber(countMin) || !isNumber(countMax) || countMin > countMax) {
+        errMsg = "Invalid count constraint bounds";
+        isError = true;
+    } else if (!isBoolean(shouldBool)) {
+        errMsg = "Invalid constraint boolean";
+        isError = true;
+    }
+
+    var params = {
+        "constr_type" : "SubsetCountConstraint",
+        "name" : field + " constraint",
+        "should_bool" : shouldBool,
+        "count_bxy" : [countMin, countMax],
+        "with_bool" : withBool,
+        "field" : field,
+        "selection" : option,
+        "candidates": [],
+        "priority" : 1
+    }
+
+    function getField() {
+        return params["field"];
+    }
+
+    function hasError() {
+        return isError;
+    }
+
+    function getErrorMsg() {
+        return errMsg;
+    }
+
+    function setCandidates(candidates) {
+        if (isArray(candidates)) {
+            params.candidates = [...candidates];
+        }
+    }
+
+    function toJSON() {
+        return JSON.parse(JSON.stringify(params));
+    }
+
+    function toHTML() {
+        var sentence = "<p>Each group ";
+        if (params["should_bool"] == "true") {
+            sentence += "<strong>SHOULD HAVE</strong> ";
+        } else {
+            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+        }
+        sentence += "between ";
+        sentence += "<strong>" + params["count_bxy"][0] + "</strong> ";
+        sentence += "and "
+        sentence += "<strong>" + params["count_bxy"][1] + "</strong> ";
+        sentence += "members ";
+        if (params["with_bool"] == "true") {
+            sentence += "<strong>WITH</strong> ";
+        } else {
+            sentence += "<strong>WITHOUT</strong> ";
+        }
+        sentence += "<strong>" + params["field"] + "</strong> ";
+        sentence += "equal to ";
+        sentence += "<strong>" + params["selection"] + "</strong> ";
+        
+        return sentence;
+    }
+
+    var result = createObject(SubsetCountConstraint.prototype)
+    result.toJSON = toJSON;
+    result.toHTML = toHTML;
+    result.hasError = hasError;
+    result.getErrorMsg = getErrorMsg;
+    result.setCandidates = setCandidates;
+    result.getField = getField;
+
+    return result;
+}
 
 function SubsetSimilarityConstraint(shouldBool, field) {
     // Each team <should/shouldn't> have similar <field>
@@ -154,8 +564,8 @@ function SubsetSimilarityConstraint(shouldBool, field) {
     }
 
     function toHTML() {
-        var sentence = "<p>Each team ";
-        if (params["similar_bool"]) {
+        var sentence = "<p>Each group ";
+        if (params["similar_bool"] == "true") {
             sentence += "<strong>SHOULD HAVE</strong> ";
         } else {
             sentence += "<strong>SHOULDN'T HAVE</strong> ";
@@ -176,3 +586,4 @@ function SubsetSimilarityConstraint(shouldBool, field) {
 
     return result;
 }
+
