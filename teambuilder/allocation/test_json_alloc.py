@@ -452,6 +452,43 @@ class TestDecodeSubsetCountConstraint(unittest.TestCase):
 		result = json.loads(constraint, object_hook=json_alloc.constraint_hook)
 		self.assertEqual(result.name, "preference count")
 		json_alloc.validate_constraint("TestDecodeSubsetCountConstraint", student_info, result)
+	
+	def test_horrid(self):
+		request_json = """{
+			"min_size": 3, "ideal_size": 4, "max_size": 5,
+			"students": {
+				"41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": false},
+				"41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree": ["CS"], "postgraduate": true},
+				"41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
+				"42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree": ["SE"], "postgraduate": true},
+				"43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree": ["CS"], "postgraduate": true},
+				"43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree": ["CS"], "postgraduate": false},
+				"44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree": ["SE"], "postgraduate": false},
+				"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
+				"44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree": ["IT"], "postgraduate": true},
+				"46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree": ["CS"], "postgraduate": true},
+				"47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree": ["SE"], "postgraduate": false},
+				"49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree": ["SE"], "postgraduate": true},
+				"49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": false},
+				"49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
+				"49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
+				"49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree": ["IT"], "postgraduate": true}},
+			"constraints": [{
+				"constr_type": "SubsetCountConstraint",
+				"name":        "preferences constraint",
+				"should_bool": true,
+				"count_bxy":   [3, 4],
+				"with_bool":   true,
+				"field":       "preferences",
+				"selection":   "graphics",
+				"candidates":  ["graphics", "gameplay", "networking", "ui"],
+				"priority":    1}]
+			}"""
+		result_json = json_alloc.allocate(request_json)
+		result = json.loads(result_json)
+		if "reason" in result:
+			print(result["reason"])
+		self.assertTrue(result["success"])
 
 
 class TestDecodeSubsetSimilarityConstraint(unittest.TestCase):
