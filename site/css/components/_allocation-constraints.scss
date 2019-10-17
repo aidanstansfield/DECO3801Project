@@ -111,8 +111,3 @@
     }
 }
 
-.allocation-controls {
-    @include media("print") {
-        display: none;
-    }
-}
