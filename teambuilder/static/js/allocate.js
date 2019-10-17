@@ -430,7 +430,10 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
                     constraint.setCandidates(candidates[field]);
                 }
             });
+        
 
+            // Make the loader appear
+            document.getElementsByClassName("loader-container")[0].classList.remove("loader-container--hidden");
             // Once we've populated everything, we are ready to send the request
             $http({
                 method : "post",
@@ -445,6 +448,7 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
             }).then(function success(response) {
                 $rootScope.teams = response.data['teams'];
                 console.log(response.data);
+                document.getElementsByClassName("loader-container")[0].classList.add("loader-container--hidden");
             }, function error(response) {
                 console.log("Error with response");
             });
