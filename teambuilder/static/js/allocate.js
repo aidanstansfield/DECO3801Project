@@ -227,7 +227,7 @@ app.factory('ConstraintHolder', function($rootScope){
         // Adds a new constraint into the constraint list
         // Note that no validation is done here
         addConstraint : function(constraint) {
-            constraintList.push({val : constraint, enabled: false});
+            constraintList.push({val : constraint, enabled: true});
             notify();
         },
 
