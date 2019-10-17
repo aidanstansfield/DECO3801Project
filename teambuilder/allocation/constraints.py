@@ -173,6 +173,7 @@ class OptionCountConstraint(Constraint):
 		self.count_bxy = count_bxy
 		self.with_bool = with_bool
 		self.selection = selection
+		self.candidates = candidates
 	
 	def evaluate(self, team, student_info):
 		count = len(team_filter(team, student_info, self.field, self.with_bool, lambda x: x == self.selection))
@@ -228,6 +229,7 @@ class SubsetCountConstraint(Constraint):
 		self.count_bxy = count_bxy
 		self.with_bool = with_bool
 		self.selection = selection
+		self.candidates = candidates
 	
 	def evaluate(self, team, student_info):
 		count = len(team_filter(team, student_info, self.field, self.with_bool, lambda x: self.selection in x))
