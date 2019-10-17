@@ -157,6 +157,13 @@ template {
   display: -webkit-flex;
   display: flex; }
 
+@media print {
+  .temp {
+    display: none; } }
+.temp * {
+  display: block;
+  width: 100%; }
+
 *,
 html,
 body {
@@ -302,6 +309,9 @@ h6 {
     @media (max-width: 400px) {
       .header__nav {
         flex-direction: column; } }
+    @media print {
+      .header__nav {
+        display: none; } }
   .header__nav-btn {
     text-align: center;
     margin-right: 10px; }
@@ -352,6 +362,9 @@ h6 {
       .allocation-controls__button {
         margin-left: 0;
         margin-bottom: 10px; } }
+  @media print {
+    .allocation-controls {
+      display: none; } }
 
 .allocation-separator {
   flex-direction: row;
@@ -405,6 +418,11 @@ h6 {
   .allocation-constraints__title-button {
     flex-grow: 0;
     flex-basis: 50%; }
+    @media print {
+      .allocation-constraints__title-button {
+        display: none; } }
+  .allocation-constraints__size-holder {
+    text-align: center; }
   .allocation-constraints__size-input {
     width: 60%;
     margin: 0 auto;
@@ -426,6 +444,9 @@ h6 {
     position: relative;
     flex-direction: column;
     align-content: flex-start; }
+  @media print {
+    .allocation-constraints > p {
+      display: none; } }
 
 .allocation-results-wrapper {
   flex-basis: 60%;
@@ -435,6 +456,11 @@ h6 {
   @media (max-width: 600px) {
     .allocation-results-wrapper {
       flex-basis: 100%; } }
+  .allocation-results-wrapper h2 {
+    display: none; }
+    @media print {
+      .allocation-results-wrapper h2 {
+        display: block; } }
 
 .allocation-results {
   position: absolute;
@@ -456,13 +482,17 @@ h6 {
       height: inherit; } }
   .allocation-results--hidden {
     display: none; }
+  @media print {
+    .allocation-results::-webkit-scrollbar {
+      width: 0 !important; } }
 
 .allocation-group {
   margin: 1em auto;
   padding: 1em;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   flex-wrap: wrap;
-  justify-content: space-around; }
+  justify-content: space-around;
+  page-break-inside: avoid; }
   .allocation-group__name {
     flex-basis: 100%;
     text-align: center;
@@ -543,6 +573,9 @@ h6 {
     .allocation-constraint__delete:hover {
       border-color: #ff9399;
       color: #d8000c; }
+    @media print {
+      .allocation-constraint__delete {
+        display: none; } }
 
 .constraint-input-field {
   font-family: "Roboto", sans-serif;

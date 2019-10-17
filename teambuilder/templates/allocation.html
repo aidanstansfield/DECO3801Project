@@ -45,6 +45,7 @@
                     </div>
                 </div>
                 <div class="allocation-results-wrapper">
+                    <h2>Allocation Results</h2>
                     <div class="allocation-results">                        
                         <group class="allocation-group" ng-repeat="(entry, group) in teams">  
                         </group> 
@@ -70,10 +71,12 @@
                 </div>
             </div>
         </div>
-        <h2>Student Details</h2>
-        <textarea ng-model="studentData"></textarea>
-        <textarea ng-model="studentParams"></textarea>
-        <textarea ng-model="paramOptions"></textarea>
+        <div class='temp'>
+            <h2>Student Details</h2>
+            <textarea ng-model="studentData"></textarea>
+            <textarea ng-model="studentParams"></textarea>
+            <textarea ng-model="paramOptions"></textarea>
+        </div>
         <!-- <div class='constraint-modal' ng-controller="constraintEntryController">
             <div class='constraint-modal__body'>
                 <h2>Add a New Constraint</h2>

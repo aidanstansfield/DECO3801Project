@@ -8,9 +8,9 @@ from allocation.json_alloc import allocate
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
-db = SQLAlchemy(app)
-from models import *
-db.create_all()
+# db = SQLAlchemy(app)
+# from models import *
+# db.create_all()
 
 # allow these user's even if they're not staff
 explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414', 

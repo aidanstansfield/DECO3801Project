@@ -94,6 +94,10 @@ $lever-enabled-color: $colour__teal;
             border-color: $colour__red--light;
             color: $colour__red;
         }
+        
+        @include media("print") {
+            display: none;
+        }
     }
 
     &__info-holder {
