@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 from flask import Flask, request, abort, send_from_directory, render_template 
 from flask import redirect, jsonify
+from flask_sqlalchemy import SQLAlchemy
 import os
 import json
 from allocation.json_alloc import allocate
 
 app = Flask(__name__)
+app.config.from_object('config.Config')
+db = SQLAlchemy(app)
+from models import *
+db.create_all()
 
 # allow these user's even if they're not staff
 explicitly_allowed_users = ['s4434177', 's4200694', 's4317687', 's4386414', 

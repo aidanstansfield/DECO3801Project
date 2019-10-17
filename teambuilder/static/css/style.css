@@ -608,3 +608,18 @@ h6 {
 .modal-controls {
   justify-content: flex-end;
   padding-top: 1em; }
+
+@media print {
+    .allocation-controls{ display: none;}
+    .allocation-constraints {display: none;}
+    h1 { display: none;}
+    h2 { display: none;}
+    .header {display: none;}
+    textarea {display: none;}
+    .allocation-results{
+      display: block;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      }
+  }
