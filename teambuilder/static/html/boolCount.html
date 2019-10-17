@@ -1,4 +1,4 @@
-<div ng-form name='subsetCountForm'>
+<div ng-form name='boolCountForm'>
     <p>Each group
     <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
         <option value='true'>SHOULD</option>
@@ -14,8 +14,5 @@
         <option value='false'>WITHOUT</option>
     </select>
     {{selectedParam}}
-    containing 
-    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.optVal'
-        ng-options="option for option in getParamOptions(selectedParam)">>
     </p>
 </div>

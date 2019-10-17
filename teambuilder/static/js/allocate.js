@@ -119,6 +119,14 @@ app.directive('subsetsimilarityform', function() {
     }
 });
 
+// The form input for specifying a boolean count constraint
+app.directive('boolrangeform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/boolCount.html'
+    }
+});
+
 
 app.directive('constraintmodal', function() {
     console.log("Running");
@@ -138,8 +146,8 @@ app.directive('constraintmodal', function() {
 // but later this will come from the database
 app.factory('DataHolder', function($rootScope) {
 
-    var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree" : ["IT"]}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree" : ["IT"]}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree" : ["CS"]}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree" : ["SE"]}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree" : ["IT"]}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"]}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree" : ["CS"]}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree" : ["SE"]}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree" : ["CS"]}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree" : ["SE"]}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree" : ["IT"]}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree" : ["IT"]}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree" : ["IT"]}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree" : ["SE"]}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree" : ["CS"]}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"]}}';
-    var studentParams = '{"age" : "integer" , "preferences" : "multi-select", "degree" : "option"}';
+    var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree" : ["IT"], "postgraduate" : true}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree" : ["CS"], "postgraduate" : false}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : true}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : false}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree" : ["SE"], "postgraduate" : false}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree" : ["IT"], "postgraduate" : true}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree" : ["SE"], "postgraduate" : true}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree" : ["CS"], "postgraduate" : true}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}}';
+    var studentParams = '{"age" : "integer" , "preferences" : "multi-select", "degree" : "option", "postgraduate" : "bool"}';
     var paramOptions = '{"preferences" : ["graphics", "gameplay", "networking", "ui"], "degree" : ["IT", "CS", "SE"]}';
 
     // Emits an event to tell listening parties that the internal state
@@ -600,7 +608,16 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 var constraint = SubsetSimilarityConstraint(shouldBool, field);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
-            }
+            } else if ($scope.constraintType == "boolRange") {
+                var shouldBool = $scope.constr.shouldBool;
+                var countMin = parseInt($scope.constr.countMin, 10);
+                var countMax = parseInt($scope.constr.countMax, 10);
+                var withBool = $scope.constr.withBool;
+                var field = $scope.selectedParam;
+                var constraint = BooleanCountConstraint(shouldBool, countMin, countMax, withBool, field);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
+            } 
         }
 }]);
 
