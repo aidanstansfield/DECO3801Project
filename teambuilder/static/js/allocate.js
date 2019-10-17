@@ -28,15 +28,6 @@ var constraintFormats = {
     ]
 };
 
-// FILTERS --------------------------------------------------------------------
-
-// Sanitizes thr given HTML output before it is added to the DOM
-app.filter('to_trusted', ['$sce', function($sce) {
-    return function(data) {
-        return $sce.trustAsHtml(data); 
-    };
-}]);
-
 // DIRECTIVES -----------------------------------------------------------------
 
 // A constraint that in the constraint list
@@ -307,6 +298,24 @@ app.factory('ConstraintHolder', function($rootScope){
         }
     }
 });
+
+// FILTERS --------------------------------------------------------------------
+
+// Sanitizes the given HTML output before it is added to the DOM
+app.filter('to_trusted', ['$sce', function($sce) {
+    return function(data) {
+        return $sce.trustAsHtml(data); 
+    };
+}]);
+
+// Retrieves the student data associated with the given entry
+app.filter('student_name', ['DataHolder', function(DataHolder) {
+    return function(data) {
+        var entry = JSON.parse(DataHolder.getStudentData())[data]
+        return entry["name"];
+    };
+}]);
+
 
 // CONTROLLERS ----------------------------------------------------------------
 
