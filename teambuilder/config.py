@@ -15,6 +15,7 @@ class Config:
     else:
         load_dotenv()
         SECRET_KEY = environ.get("SECRET_KEY")
+        FLASK_ENV = 'production'
         # Database
         SQLALCHEMY_DATABASE_URI = environ.get("SQLALCHEMY_DATABASE_URI")
         SQLALCHEMY_TRACK_MODIFICATIONS = False
