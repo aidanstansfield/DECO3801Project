@@ -1,0 +1,15 @@
+<div class='constraint-modal' ng-controller="constraintEntryController">
+    <div class='constraint-modal__body'>
+        <h2>Add a New Constraint</h2>
+        <h3>Step 1: Select your constraint parameter</h3>
+        <select class='constraint-input-field' ng-change="updateSelectedParam()" ng-model="selectedParam" ng-options="param for param in availableParams">
+        </select>
+        <div id='entryConstraintSelect'></div>
+        <div id='entryConstraintInput'></div>
+        <div class='modal-controls'>
+            <button class='constraint-modal__button constraint-modal__button--cancel' ng-click='closeConstraintModal()'>Cancel</button>
+            <button class='constraint-modal__button constraint-modal__button--add' ng-click='submitConstraint()' ng-show="addConstraintVisible()">Add Constraint</button>
+        </div>
+    </div>
+</div>
+<div class='constraint-modal__background'></div>

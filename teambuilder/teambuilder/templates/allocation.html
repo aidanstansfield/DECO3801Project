@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' href='static/css/style.css'/>
+    <link rel="stylesheet" href= 
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">     
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+</head>
+<body ng-app="allocator">
+    <div class='container' ng-controller="rootController">
+        {% include 'header.html' %}
+        
+        <div class="allocation-container">
+            <div class="allocation-controls" ng-controller='controlsController'>
+                <button class="allocation-controls__button" ng-click="runAllocation()">Run Allocation</button>
+                <button class="allocation-controls__button">Export Allocation</button>
+            </div>
+            <div class='allocation-separator'>
+                <div class='allocation-constraints-wrapper'>
+                    <div class="allocation-constraints">
+                        <h2 class="allocation-constraints__heading">Group Sizes</h2>
+                        <p>Enter your preferred group sizes:</p>
+                        <div class="allocation-constraints__size-holder">
+                            <div>
+                                <input class="allocation-constraints__size-input" name="minSize" type="text" ng-model="minSize">
+                                <label class="allocation-constraints__size-label" for="minSize">Min</label>
+                            </div>
+                            <div>
+                                <input class="allocation-constraints__size-input"  name="idealSize" type="text" ng-model="idealSize">
+                                <label class="allocation-constraints__size-label" for="minSize">Ideal</label>
+                            </div>
+                            <div>
+                                <input class="allocation-constraints__size-input"  name="maxSize" type="text" ng-model="maxSize">
+                                <label class="allocation-constraints__size-label"  for="minSize">Max</label>
+                            </div>
+                        </div>
+                        <div class='allocation-constraints__title-holder'>
+                            <h2 class="allocation-constraints__heading">Constraints</h2>
+                            <button class='allocation-constraints__title-button' ng-click="openConstraintModal()">Add New</button>
+                        </div>
+                        <div class='allocation-constraints__constraint-container'>
+                            <constraint class='allocation-constraint' ng-repeat="constraint in constraintList"></constraint>
+                        </div>
+                    </div>
+                </div>
+                <div class="allocation-results-wrapper">
+                    <div class="allocation-results">                        
+                        <group class="allocation-group" ng-repeat="(entry, group) in teams">  
+                        </group> 
+                    </div>    
+                </div>
+            </div>
+        </div>
+        <h2>Student Details</h2>
+        <textarea ng-model="studentData"></textarea>
+        <textarea ng-model="studentParams"></textarea>
+        
+        <!-- <div class='constraint-modal' ng-controller="constraintEntryController">
+            <div class='constraint-modal__body'>
+                <h2>Add a New Constraint</h2>
+                <h3>Step 1: Select your constraint parameter</h3>
+                <select class='constraint-input-field' ng-change="updateSelectedParam()" ng-model="selectedParam" ng-options="param for param in availableParams">
+                </select>
+                <div id='entryConstraintSelect'></div>
+                <div id='entryConstraintInput'></div>
+            </div>
+        </div>
+        <div class='constraint-modal__background'></div> -->
+    </div> 
+    <script type='text/javascript' src='/static/js/constraints.js'/></script>
+    <script type='text/javascript' src='/static/js/allocate.js'/></script>
+</body>
+</html>
