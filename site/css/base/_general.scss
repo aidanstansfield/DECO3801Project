@@ -47,3 +47,15 @@ $breakpoints: (
     display: -webkit-flex;
     display: flex;
 }
+
+// This should be removed once the student data comes
+// from the database
+@media print {
+    .temp {
+        display: none;
+    }
+}
+.temp * {
+    display: block;
+    width: 100%;
+}

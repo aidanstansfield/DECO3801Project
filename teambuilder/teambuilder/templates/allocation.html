@@ -14,7 +14,7 @@
         <div class="allocation-container">
             <div class="allocation-controls" ng-controller='controlsController'>
                 <button class="allocation-controls__button" ng-click="runAllocation()">Run Allocation</button>
-                <button class="allocation-controls__button">Export Allocation</button>
+                <button class="allocation-controls__button" onclick="window.print()">Print Allocation</button>
             </div>
             <div class='allocation-separator'>
                 <div class='allocation-constraints-wrapper'>
@@ -45,17 +45,38 @@
                     </div>
                 </div>
                 <div class="allocation-results-wrapper">
+                    <h2>Allocation Results</h2>
                     <div class="allocation-results">                        
                         <group class="allocation-group" ng-repeat="(entry, group) in teams">  
                         </group> 
-                    </div>    
+                    </div>   
+                    <div class='loader-container loader-container--hidden'>
+                        <div class="spinner">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                        </div> 
+                        <!-- <div class="sk-cube-grid">
+                            <div class="sk-cube sk-cube1"></div>
+                            <div class="sk-cube sk-cube2"></div>
+                            <div class="sk-cube sk-cube3"></div>
+                            <div class="sk-cube sk-cube4"></div>
+                            <div class="sk-cube sk-cube5"></div>
+                            <div class="sk-cube sk-cube6"></div>
+                            <div class="sk-cube sk-cube7"></div>
+                            <div class="sk-cube sk-cube8"></div>
+                            <div class="sk-cube sk-cube9"></div>
+                        </div> -->
+                    </div>
                 </div>
             </div>
         </div>
-        <h2>Student Details</h2>
-        <textarea ng-model="studentData"></textarea>
-        <textarea ng-model="studentParams"></textarea>
-        
+        <div class='temp'>
+            <h2>Student Details</h2>
+            <textarea ng-model="studentData"></textarea>
+            <textarea ng-model="studentParams"></textarea>
+            <textarea ng-model="paramOptions"></textarea>
+        </div>
         <!-- <div class='constraint-modal' ng-controller="constraintEntryController">
             <div class='constraint-modal__body'>
                 <h2>Add a New Constraint</h2>

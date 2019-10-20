@@ -1,11 +1,10 @@
-<div ng-form name='integerCountForm'>
+<div ng-form name='subsetCountForm'>
     <p>Each group
     <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
         <option value='true'>SHOULD</option>
         <option value='false'>SHOULDN'T</option>
     </select>
     have between 
-    <span ng-show="countMin > countMax">What??</span>
     <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='constr.countMin' min="1">
     and
     <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='constr.countMax' min="1"> 
@@ -15,9 +14,8 @@
         <option value='false'>WITHOUT</option>
     </select>
     {{selectedParam}}
-    between
-    <input class='constraint-input-field constraint-input-field--inline' name='fieldMin' type='number' ng-model='constr.fieldMin'>
-    and
-    <input class='constraint-input-field constraint-input-field--inline' name='fieldMax' type='number' ng-model='constr.fieldMax'>
+    containing 
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.optVal'
+        ng-options="option for option in getParamOptions(selectedParam)">>
     </p>
 </div>

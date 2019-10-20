@@ -69,10 +69,15 @@
         flex-grow: 0;
         flex-basis: 50%;
         @extend %button-green;
+
+        @include media("print") {
+            display: none;
+        }
     }
 
     &__size-holder {
         @extend %flexbox;
+        text-align: center;
     }
 
     &__size-input {
@@ -98,4 +103,11 @@
         flex-direction: column;
         align-content: flex-start;
     }
+
+    @include media("print") {
+        & > p {
+            display: none;
+        }
+    }
 }
+

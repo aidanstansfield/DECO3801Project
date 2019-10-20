@@ -10,6 +10,15 @@
     @include media('<=medium') {
         flex-basis: 100%;
     }
+
+    
+    h2 {
+        display: none;
+
+        @include media("print") {
+            display: block;
+        }
+    }
 }
 
 .allocation-results {
@@ -35,6 +44,12 @@
     &--hidden {
         display: none;
     }
+
+    &::-webkit-scrollbar {
+        @include media("print") {
+            width: 0 !important
+        }
+    }
 }
 
 .allocation-group {
@@ -44,6 +59,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     flex-wrap: wrap;
     justify-content: space-around;
+    page-break-inside: avoid;
 
     &__name {
         flex-basis: 100%;
@@ -63,5 +79,17 @@
             box-shadow: 0 7px 14px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
             cursor: pointer;
         }
+
+        @include media("print") {
+            width: 100%;
+            margin: initial;
+        }
+    }
+
+    @include media("print") {
+        width: 48%;
+        display: inline-block;
+        margin: 5px;
+        border: 1px solid black;
     }
 }

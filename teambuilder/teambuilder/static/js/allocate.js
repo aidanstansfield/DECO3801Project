@@ -10,32 +10,23 @@ var app = angular.module('allocator', []);
 
 var constraintFormats = {
     "integer" : [
-        {val: "integerCount", msg: "Each team <should/shouldn't> have between <min> and <max> members <with/without> <param> between <min> and <max>"},
-        //{val: "integerAvg", msg: "Each team <should/shouldn't> have an average <param> betweem <min> and <max>"},
-        //{val: "integerSim", msg: "Each team should have <similar/diverse> <param>"},
-        //{val: "integerSimGlob", msg: "All teams should have similar <param>"}
+        {val: "integerCount", msg: "Each group <should/shouldn't> have between <min> and <max> members <with/without> <param> between <min> and <max>"},
+        {val: "integerAvg", msg: "Each group <should/shouldn't> have an average <param> betweem <min> and <max>"},
+        {val: "integerSim", msg: "Each group should have <similar/diverse> <param>"},
+        {val: "integerSimGlob", msg: "All groups should have similar <param>"}
     ],
     "multi-select" : [
-        {val: "subsetSimilarity", msg: "Each team <should/shouldn't> have similar <param>"},
-        //{val: "subsetRange", msg: "Each team <should/shouldn't> have between <min> and <max> members <with/without> <param> equal to <value>"}
+        {val: "subsetSimilarity", msg: "Each group <should/shouldn't> have similar <param>"},
+        {val: "subsetRange", msg: "Each group <should/shouldn't> have between <min> and <max> members <with/without> <param> equal to <value>"}
     ],
     "bool" : [
-        {val: "boolRange", msg: "Each team <should/shouldn’t> have between <min> and <max> members <with/without> <param>"}
+        {val: "boolRange", msg: "Each group <should/shouldn’t> have between <min> and <max> members <with/without> <param>"}
     ],
     "option" : [
-        {val: "optRange", msg: "Each team <should/shouldn’t> have between <min> and <max> members <with/without> <param> equal to <value>"},
-        {val: "optSimilarity", msg: "Each team <should/shouldn't> have <similar/diverse> <param>"}
+        {val: "optRange", msg: "Each group <should/shouldn’t> have between <min> and <max> members <with/without> <param> equal to <value>"},
+        {val: "optSimilarity", msg: "Each group <should/shouldn't> have similar <param>"}
     ]
 };
-
-// FILTERS --------------------------------------------------------------------
-
-// Sanitizes thr given HTML output before it is added to the DOM
-app.filter('to_trusted', ['$sce', function($sce) {
-    return function(data) {
-        return $sce.trustAsHtml(data); 
-    };
-}]);
 
 // DIRECTIVES -----------------------------------------------------------------
 
@@ -72,6 +63,54 @@ app.directive('integercountform', function() {
     }
 });
 
+// The form input for specifying an integer average constraint
+app.directive('integeravgform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/integerAvg.html'
+    }
+});
+
+// The form input for specifying an integer similarity constraint
+app.directive('integersimform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/integerSim.html'
+    }
+});
+
+// The form input for specifying a global similarity constraint
+app.directive('integersimglobform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/integerSimGlob.html'
+    }
+});
+
+// The form input for specifying an option count constraint
+app.directive('optrangeform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/optRange.html'
+    }
+});
+
+// The form input for specifying an option similarity constraint
+app.directive('optsimilarityform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/optSimilarity.html'
+    }
+});
+
+// The form input for specifying a subset count constraint
+app.directive('subsetrangeform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/subsetCount.html'
+    }
+});
+
 // The form input for specifying a subset simlarity constraint
 app.directive('subsetsimilarityform', function() {
     return {
@@ -79,6 +118,15 @@ app.directive('subsetsimilarityform', function() {
         templateUrl: '/static/html/subsetSimilarity.html'
     }
 });
+
+// The form input for specifying a boolean count constraint
+app.directive('boolrangeform', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/static/html/boolCount.html'
+    }
+});
+
 
 app.directive('constraintmodal', function() {
     console.log("Running");
@@ -98,8 +146,9 @@ app.directive('constraintmodal', function() {
 // but later this will come from the database
 app.factory('DataHolder', function($rootScope) {
 
-    var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"]}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": []}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"]}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"]}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"]}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"]}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"]}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"]}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"]}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"]}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"]}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"]}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"]}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"]}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"]}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"]}}';
-    var studentParams = '{"age" : "integer" , "preferences" : "multi-select"}';
+    var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree" : ["IT"], "postgraduate" : true}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree" : ["CS"], "postgraduate" : false}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : true}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : false}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree" : ["SE"], "postgraduate" : false}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree" : ["IT"], "postgraduate" : true}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree" : ["SE"], "postgraduate" : true}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree" : ["CS"], "postgraduate" : true}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}}';
+    var studentParams = '{"age" : "integer" , "preferences" : "multi-select", "degree" : "option", "postgraduate" : "bool"}';
+    var paramOptions = '{"preferences" : ["graphics", "gameplay", "networking", "ui"], "degree" : ["IT", "CS", "SE"]}';
 
     // Emits an event to tell listening parties that the internal state
     // has changed.
@@ -133,6 +182,20 @@ app.factory('DataHolder', function($rootScope) {
             return studentParams;
         },
 
+        // Sets the parameter values that can be specified in option
+        // constraints. This will be removed later since this should 
+        // come from the database
+        setParamOptions : function(dataString) {
+            paramOptions = dataString;
+            notify();
+        },
+
+        // Returns the option values which can be selected in option
+        // constraints
+        getParamOptions : function() {
+            return paramOptions;
+        },
+
         // Allows the provided callback to be run when the notify()
         // method is invoked - this allows changes to be detected and
         // acted on
@@ -164,7 +227,7 @@ app.factory('ConstraintHolder', function($rootScope){
         // Adds a new constraint into the constraint list
         // Note that no validation is done here
         addConstraint : function(constraint) {
-            constraintList.push({val : constraint, enabled: false});
+            constraintList.push({val : constraint, enabled: true});
             notify();
         },
 
@@ -244,12 +307,31 @@ app.factory('ConstraintHolder', function($rootScope){
     }
 });
 
+// FILTERS --------------------------------------------------------------------
+
+// Sanitizes the given HTML output before it is added to the DOM
+app.filter('to_trusted', ['$sce', function($sce) {
+    return function(data) {
+        return $sce.trustAsHtml(data); 
+    };
+}]);
+
+// Retrieves the student data associated with the given entry
+app.filter('student_name', ['DataHolder', function(DataHolder) {
+    return function(data) {
+        var entry = JSON.parse(DataHolder.getStudentData())[data]
+        return entry["name"];
+    };
+}]);
+
+
 // CONTROLLERS ----------------------------------------------------------------
 
 // Initialises the scope to constain the initial data values
 function initialiseData($scope, DataHolder, ConstraintHolder) {
     $scope.studentData = DataHolder.getStudentData();
     $scope.studentParams = DataHolder.getStudentParams();
+    $scope.paramOptions = DataHolder.getParamOptions();
     $scope.minSize = ConstraintHolder.getMinSize();
     $scope.idealSize = ConstraintHolder.getIdealSize();
     $scope.maxSize = ConstraintHolder.getMaxSize();
@@ -266,6 +348,11 @@ function initialiseWatchers($scope, DataHolder, ConstraintHolder) {
     $scope.$watch('studentParams', function(newValue, oldValue) {
         if (newValue != oldValue) {
             DataHolder.setStudentParams(newValue);
+        }
+    });
+    $scope.$watch('paramOptions', function(newValue, oldValue) {
+        if (newValue != oldValue) {
+            DataHolder.setParamOptions(newValue);
         }
     });
     $scope.$watch('minSize', function(newValue, oldValue) {
@@ -342,18 +429,19 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
         $scope.runAllocation = function() {
             // We need to populate the candidates for the subset similarty constraints
             ConstraintHolder.getEnabledConstraints().forEach(function(constraint){
-                if (constraint instanceof SubsetSimilarityConstraint) {
+                if (constraint instanceof SubsetSimilarityConstraint ||
+                    constraint instanceof OptionCountConstraint ||
+                    constraint instanceof OptionSimilarityConstraint ||
+                    constraint instanceof SubsetCountConstraint) {
                     var field = constraint.getField();
-                    var candidates = new Set();
-                    var students = JSON.parse(DataHolder.getStudentData());
-                    
-                    for (var student in students) {
-                        students[student][field].forEach(item => candidates.add(item));
-                    }
-                    constraint.setCandidates(Array.from(candidates));
+                    var candidates = JSON.parse(DataHolder.getParamOptions())
+                    constraint.setCandidates(candidates[field]);
                 }
             });
+        
 
+            // Make the loader appear
+            document.getElementsByClassName("loader-container")[0].classList.remove("loader-container--hidden");
             // Once we've populated everything, we are ready to send the request
             $http({
                 method : "post",
@@ -368,6 +456,7 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
             }).then(function success(response) {
                 $rootScope.teams = response.data['teams'];
                 console.log(response.data);
+                document.getElementsByClassName("loader-container")[0].classList.add("loader-container--hidden");
             }, function error(response) {
                 console.log("Error with response");
             });
@@ -380,6 +469,7 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
     function($rootScope, $scope, $compile, ConstraintHolder, DataHolder){
 
         $scope.paramData = JSON.parse(DataHolder.getStudentParams())
+        $scope.optionData = JSON.parse(DataHolder.getParamOptions())
         $scope.availableParams = Object.keys($scope.paramData);
         $scope.selectedParam = "";
         $scope.constraintType = "";
@@ -402,6 +492,10 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
         // the given parameter. 
         $scope.getConstraintForms = function(param) {
             return constraintFormats[$scope.paramData[param]]
+        }
+
+        $scope.getParamOptions = function(param) {
+            return $scope.optionData[param];
         }
 
         $scope.updateSelectedParam = function() {
@@ -463,13 +557,67 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 var constraint = IntegerCountConstraint(shouldBool, countMin, countMax, withBool, field, fieldMin, fieldMax);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
+            } else if ($scope.constraintType == "integerAvg") {
+                var shouldBool = $scope.constr.shouldBool;
+                var field = $scope.selectedParam;
+                var fieldMin = parseInt($scope.constr.fieldMin, 10);
+                var fieldMax = parseInt($scope.constr.fieldMax, 10);
+                var constraint = IntegerAverageConstraint(shouldBool, field, fieldMin, fieldMax);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
+            } else if ($scope.constraintType == "integerSim") {
+                var shouldBool = $scope.constr.shouldBool;
+                var field = $scope.selectedParam;
+                var constraint = IntegerSimilarityConstraint(shouldBool, field);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
+            } else if ($scope.constraintType == "integerSimGlob") {
+                var field = $scope.selectedParam;
+                var constraint = IntegerGlobalAverageConstraint(field);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
+            } else if ($scope.constraintType == "optRange") {
+                var shouldBool = $scope.constr.shouldBool;
+                var countMin = parseInt($scope.constr.countMin, 10);
+                var countMax = parseInt($scope.constr.countMax, 10);
+                var withBool = $scope.constr.withBool;
+                var field = $scope.selectedParam;
+                var optVal = $scope.constr.optVal;
+                var constraint = OptionCountConstraint(shouldBool, countMin, countMax, withBool, field, optVal);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
+            } else if ($scope.constraintType == "optSimilarity") {
+                var shouldBool = $scope.constr.shouldBool;
+                var field = $scope.selectedParam;
+                var constraint = OptionSimilarityConstraint(shouldBool, field);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
+            } else if ($scope.constraintType == "subsetRange") {
+                var shouldBool = $scope.constr.shouldBool;
+                var countMin = parseInt($scope.constr.countMin, 10);
+                var countMax = parseInt($scope.constr.countMax, 10);
+                var withBool = $scope.constr.withBool;
+                var field = $scope.selectedParam;
+                var optVal = $scope.constr.optVal;
+                var constraint = SubsetCountConstraint(shouldBool, countMin, countMax, withBool, field, optVal);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
             } else if ($scope.constraintType == "subsetSimilarity") {
                 var shouldBool = $scope.constr.shouldBool;
                 var field = $scope.selectedParam;
                 var constraint = SubsetSimilarityConstraint(shouldBool, field);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
-            }
+            } else if ($scope.constraintType == "boolRange") {
+                var shouldBool = $scope.constr.shouldBool;
+                var countMin = parseInt($scope.constr.countMin, 10);
+                var countMax = parseInt($scope.constr.countMax, 10);
+                var withBool = $scope.constr.withBool;
+                var field = $scope.selectedParam;
+                var constraint = BooleanCountConstraint(shouldBool, countMin, countMax, withBool, field);
+                ConstraintHolder.addConstraint(constraint);
+                $scope.closeConstraintModal();
+            } 
         }
 }]);
 

@@ -32,4 +32,8 @@
             margin-bottom: 10px;
         }
     }
+
+    @include media("print") {
+        display: none;
+    }
 }
