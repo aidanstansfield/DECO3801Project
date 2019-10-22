@@ -1,10 +1,12 @@
-<div>
+<div ng-form name='form.subsetSimForm'>
     <p>Each group
-        <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
+        <select class='constraint-input-field constraint-input-field--inline' ng-model='shouldBool' required>
             <option value='true'>SHOULD</option>
             <option value='false'>SHOULDN'T</option>
         </select>
         have similar
         {{selectedParam}}
     </p>
+    <span ng-show='form.subsetSimForm.$invalid'>Form Is Invalid</span>
+    <span ng-show='form.subsetSimForm.$valid'>Form Is Valid!</span>
 </div>

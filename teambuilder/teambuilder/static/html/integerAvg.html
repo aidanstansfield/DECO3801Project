@@ -1,14 +1,19 @@
-<div ng-form name='integerAvgForm'>
+<div ng-form name='form.integerAvgForm'>
     <p>Each group 
-    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='shouldBool' required>
         <option value='true'>SHOULD</option>
         <option value='false'>SHOULDN'T</option>
     </select>
     have average
     {{selectedParam}}
     between 
-    <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='constr.fieldMin' min="1">
+    <input class='constraint-input-field constraint-input-field--inline' name='fieldMin' type='number' ng-model='fieldMin' required>
     and
-    <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='constr.fieldMax' min="1">
+    <input class='constraint-input-field constraint-input-field--inline' name='fieldMax' type='number' ng-model='fieldMax' required>
     </p>
+    <span ng-show='form.integerAvgForm.fieldMin.$dirty'>
+        <p ng-show='invalidFieldMinSize()'>Min average cannot exceed max average</p>
+    </span>
+    <span ng-show='form.integerAvgForm.$invalid || invalidFieldMinSize()'>Form Is Invalid</span>
+    <span ng-show='form.integerAvgForm.$valid && !invalidFieldMinSize()'>Form Is Valid!</span>
 </div>

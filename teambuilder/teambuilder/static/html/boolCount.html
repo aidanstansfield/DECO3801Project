@@ -1,18 +1,24 @@
-<div ng-form name='boolCountForm'>
+<div ng-form name='form.boolCountForm'>
     <p>Each group
-    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='shouldBool' required>
         <option value='true'>SHOULD</option>
         <option value='false'>SHOULDN'T</option>
     </select>
     have between 
-    <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='constr.countMin' min="1">
+    <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='countMin' min="1" required>
     and
-    <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='constr.countMax' min="1"> 
+    <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='countMax' required> 
     members
-    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.withBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='withBool' required>
         <option value='true'>WITH</option>
         <option value='false'>WITHOUT</option>
     </select>
     {{selectedParam}}
     </p>
+    <span ng-show='form.boolCountForm.countMin.$dirty'>
+        <p ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
+        <p ng-show='form.boolCountForm.countMin.$invalid && form.boolCountForm.countMin.$error.min'>Min members must be greater than zero</p>
+    </span>
+    <span ng-show='form.boolCountForm.$invalid || invalidCountMinSize()'>Form Is Invalid</span>
+    <span ng-show='form.boolCountForm.$valid && !invalidCountMinSize()'>Form Is Valid!</span>
 </div>

@@ -1,23 +1,31 @@
-<div ng-form name='integerCountForm'>
+<div ng-form name='form.integerCountForm'>
     <p>Each group
-    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='shouldBool' required>
         <option value='true'>SHOULD</option>
         <option value='false'>SHOULDN'T</option>
     </select>
     have between 
-    <span ng-show="countMin > countMax">What??</span>
-    <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='constr.countMin' min="1">
+    <input class='constraint-input-field constraint-input-field--inline' name='countMin' type='number' ng-model='countMin' min="1" required>
     and
-    <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='constr.countMax' min="1"> 
+    <input class='constraint-input-field constraint-input-field--inline' name='countMax' type='number' ng-model='countMax' required> 
     members
-    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.withBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='withBool' required>
         <option value='true'>WITH</option>
         <option value='false'>WITHOUT</option>
     </select>
     {{selectedParam}}
     between
-    <input class='constraint-input-field constraint-input-field--inline' name='fieldMin' type='number' ng-model='constr.fieldMin'>
+    <input class='constraint-input-field constraint-input-field--inline' name='fieldMin' type='number' ng-model='fieldMin' required>
     and
-    <input class='constraint-input-field constraint-input-field--inline' name='fieldMax' type='number' ng-model='constr.fieldMax'>
+    <input class='constraint-input-field constraint-input-field--inline' name='fieldMax' type='number' ng-model='fieldMax' required>
     </p>
+    <span ng-show='form.integerCountForm.countMin.$dirty'>
+        <p ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
+        <p ng-show='form.integerCountForm.countMin.$invalid && form.integerCountForm.countMin.$error.min'>Min members must be greater than zero</p>
+    </span>
+    <span ng-show='form.integerCountForm.fieldMin.$dirty'>
+        <p ng-show='invalidFieldMinSize()'>Min average cannot exceed max average</p>
+    </span>
+    <span ng-show='form.integerCountForm.$invalid || invalidFieldMinSize() || invalidCountMinSize()'>Form Is Invalid</span>
+    <span ng-show='form.integerCountForm.$valid && !invalidFieldMinSize() && !invalidCountMinSize()'>Form Is Valid!</span>
 </div>

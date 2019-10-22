@@ -1,10 +1,12 @@
-<div ng-form name='integerSimForm'>
+<div ng-form name='form.integerSimForm'>
     <p>Each group
-    <select class='constraint-input-field constraint-input-field--inline' ng-model='constr.shouldBool'>
+    <select class='constraint-input-field constraint-input-field--inline' ng-model='shouldBool' required>
         <option value='true'>SHOULD</option>
         <option value='false'>SHOULDN'T</option>
     </select>
     have similar 
     {{selectedParam}}
     </p>
+    <span ng-show='form.integerSimForm.$invalid'>Form Is Invalid</span>
+    <span ng-show='form.integerSimForm.$valid'>Form Is Valid!</span>
 </div>

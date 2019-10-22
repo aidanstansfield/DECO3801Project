@@ -473,6 +473,8 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
         $scope.availableParams = Object.keys($scope.paramData);
         $scope.selectedParam = "";
         $scope.constraintType = "";
+        $scope.form = {};
+
         var addConstraintBtnVisible = false;
 
         // We need to update the parameters whenever the input field changes
@@ -496,6 +498,14 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
 
         $scope.getParamOptions = function(param) {
             return $scope.optionData[param];
+        }
+
+        $scope.invalidCountMinSize = function() {
+            return $scope.countMin > $scope.countMax;
+        }
+
+        $scope.invalidFieldMinSize = function() {
+            return $scope.fieldMin > $scope.fieldMax;
         }
 
         $scope.updateSelectedParam = function() {
@@ -547,26 +557,36 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
 
         $scope.submitConstraint = function() {
             if ($scope.constraintType == "integerCount") {
-                var shouldBool = $scope.constr.shouldBool;
-                var countMin = parseInt($scope.constr.countMin, 10);
-                var countMax = parseInt($scope.constr.countMax, 10);
-                var withBool = $scope.constr.withBool;
+                if (!$scope.form.integerCountForm.$valid || $scope.invalidFieldMinSize() || 
+                        $scope.invalidCountMinSize()) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
+                var countMin = parseInt($scope.countMin, 10);
+                var countMax = parseInt($scope.countMax, 10);
+                var withBool = $scope.withBool;
                 var field = $scope.selectedParam;
-                var fieldMin = parseInt($scope.constr.fieldMin, 10);
-                var fieldMax = parseInt($scope.constr.fieldMax, 10);
+                var fieldMin = parseInt($scope.fieldMin, 10);
+                var fieldMax = parseInt($scope.fieldMax, 10);
                 var constraint = IntegerCountConstraint(shouldBool, countMin, countMax, withBool, field, fieldMin, fieldMax);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
             } else if ($scope.constraintType == "integerAvg") {
-                var shouldBool = $scope.constr.shouldBool;
+                if (!$scope.form.integerAvgForm.$valid || $scope.invalidFieldMinSize()) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
                 var field = $scope.selectedParam;
-                var fieldMin = parseInt($scope.constr.fieldMin, 10);
-                var fieldMax = parseInt($scope.constr.fieldMax, 10);
+                var fieldMin = parseInt($scope.fieldMin, 10);
+                var fieldMax = parseInt($scope.fieldMax, 10);
                 var constraint = IntegerAverageConstraint(shouldBool, field, fieldMin, fieldMax);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
             } else if ($scope.constraintType == "integerSim") {
-                var shouldBool = $scope.constr.shouldBool;
+                if (!$scope.form.integerSimForm.$valid) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
                 var field = $scope.selectedParam;
                 var constraint = IntegerSimilarityConstraint(shouldBool, field);
                 ConstraintHolder.addConstraint(constraint);
@@ -577,42 +597,58 @@ app.controller('constraintEntryController', ['$rootScope', '$scope', '$compile',
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
             } else if ($scope.constraintType == "optRange") {
-                var shouldBool = $scope.constr.shouldBool;
-                var countMin = parseInt($scope.constr.countMin, 10);
-                var countMax = parseInt($scope.constr.countMax, 10);
-                var withBool = $scope.constr.withBool;
+                if (!$scope.form.optRangeForm.$valid || $scope.invalidCountMinSize() || 
+                        $scope.invalidCountMinSize()) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
+                var countMin = parseInt($scope.countMin, 10);
+                var countMax = parseInt($scope.countMax, 10);
+                var withBool = $scope.withBool;
                 var field = $scope.selectedParam;
-                var optVal = $scope.constr.optVal;
+                var optVal = $scope.optVal;
                 var constraint = OptionCountConstraint(shouldBool, countMin, countMax, withBool, field, optVal);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
             } else if ($scope.constraintType == "optSimilarity") {
-                var shouldBool = $scope.constr.shouldBool;
+                if (!$scope.form.optSimilarityForm.$valid) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
                 var field = $scope.selectedParam;
                 var constraint = OptionSimilarityConstraint(shouldBool, field);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
             } else if ($scope.constraintType == "subsetRange") {
-                var shouldBool = $scope.constr.shouldBool;
-                var countMin = parseInt($scope.constr.countMin, 10);
-                var countMax = parseInt($scope.constr.countMax, 10);
-                var withBool = $scope.constr.withBool;
+                if (!$scope.form.subsetCountForm.$valid || $scope.invalidCountMinSize()) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
+                var countMin = parseInt($scope.countMin, 10);
+                var countMax = parseInt($scope.countMax, 10);
+                var withBool = $scope.withBool;
                 var field = $scope.selectedParam;
-                var optVal = $scope.constr.optVal;
+                var optVal = $scope.optVal;
                 var constraint = SubsetCountConstraint(shouldBool, countMin, countMax, withBool, field, optVal);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
             } else if ($scope.constraintType == "subsetSimilarity") {
-                var shouldBool = $scope.constr.shouldBool;
+                if (!$scope.form.subsetSimForm.$valid) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
                 var field = $scope.selectedParam;
                 var constraint = SubsetSimilarityConstraint(shouldBool, field);
                 ConstraintHolder.addConstraint(constraint);
                 $scope.closeConstraintModal();
             } else if ($scope.constraintType == "boolRange") {
-                var shouldBool = $scope.constr.shouldBool;
-                var countMin = parseInt($scope.constr.countMin, 10);
-                var countMax = parseInt($scope.constr.countMax, 10);
-                var withBool = $scope.constr.withBool;
+                if (!$scope.form.boolCountForm.$valid || $scope.invalidCountMinSize()) {
+                    return;
+                }
+                var shouldBool = $scope.shouldBool;
+                var countMin = parseInt($scope.countMin, 10);
+                var countMax = parseInt($scope.countMax, 10);
+                var withBool = $scope.withBool;
                 var field = $scope.selectedParam;
                 var constraint = BooleanCountConstraint(shouldBool, countMin, countMax, withBool, field);
                 ConstraintHolder.addConstraint(constraint);
