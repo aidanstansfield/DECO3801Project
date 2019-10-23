@@ -247,6 +247,12 @@ h6 {
     color: #d8000c;
     border: 2px solid #ff9399; }
 
+.error-msg {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5em;
+  color: #d8000c; }
+
 .container {
   margin: 0 auto;
   flex-direction: column;

@@ -1,0 +1,7 @@
+// errors.scss
+// Contains styling for error messages thoughout
+// the site.
+.error-msg {
+    @include paragraph-font;
+    color: $colour__red;
+}

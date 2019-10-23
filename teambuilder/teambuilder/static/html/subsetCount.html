@@ -20,9 +20,7 @@
     </select>
     </p>
     <span ng-show='form.subsetCountForm.countMin.$dirty'>
-        <p ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
-        <p ng-show='form.subsetCountForm.countMin.$invalid && form.subsetCountForm.countMin.$error.min'>Min members must be greater than zero</p>
+        <p class='error-msg' ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
+        <p class='error-msg' ng-show='form.subsetCountForm.countMin.$invalid && form.subsetCountForm.countMin.$error.min'>Min members must be greater than zero</p>
     </span>
-    <span ng-show='form.subsetCountForm.$invalid || invalidCountMinSize()'>Form Is Invalid</span>
-    <span ng-show='form.subsetCountForm.$valid && !invalidCountMinSize()'>Form Is Valid!</span>
 </div>

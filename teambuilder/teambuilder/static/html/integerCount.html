@@ -20,12 +20,10 @@
     <input class='constraint-input-field constraint-input-field--inline' name='fieldMax' type='number' ng-model='fieldMax' required>
     </p>
     <span ng-show='form.integerCountForm.countMin.$dirty'>
-        <p ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
-        <p ng-show='form.integerCountForm.countMin.$invalid && form.integerCountForm.countMin.$error.min'>Min members must be greater than zero</p>
+        <p class='error-msg' ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
+        <p class='error-msg' ng-show='form.integerCountForm.countMin.$invalid && form.integerCountForm.countMin.$error.min'>Min members must be greater than zero</p>
     </span>
     <span ng-show='form.integerCountForm.fieldMin.$dirty'>
-        <p ng-show='invalidFieldMinSize()'>Min average cannot exceed max average</p>
+        <p class='error-msg' ng-show='invalidFieldMinSize()'>Min average cannot exceed max average</p>
     </span>
-    <span ng-show='form.integerCountForm.$invalid || invalidFieldMinSize() || invalidCountMinSize()'>Form Is Invalid</span>
-    <span ng-show='form.integerCountForm.$valid && !invalidFieldMinSize() && !invalidCountMinSize()'>Form Is Valid!</span>
 </div>

@@ -20,10 +20,7 @@
     </select>
     </p>
     <span ng-show='form.optRangeForm.countMin.$dirty'>
-        <p ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
-        <p ng-show='form.optRangeForm.countMin.$invalid && form.optRangeForm.countMin.$error.min'>Min members must be greater than zero</p>
+        <p class='error-msg' ng-show='invalidCountMinSize()'>Min members cannot exceed max members</p>
+        <p class='error-msg'ng-show='form.optRangeForm.countMin.$invalid && form.optRangeForm.countMin.$error.min'>Min members must be greater than zero</p>
     </span>
-    
-    <span ng-show='form.optRangeForm.$invalid || invalidCountMinSize()'>Form Is Invalid</span>
-    <span ng-show='form.optRangeForm.$valid && !invalidCountMinSize()'>Form Is Valid!</span>
 </div>
