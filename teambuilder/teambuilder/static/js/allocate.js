@@ -513,7 +513,7 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
                 method : "post",
                 url : "/allocate",
                 data : {
-                    cid : parseInt(window.$cid, 10),
+                    cid : window.$cid,
                     min_size : parseInt(ConstraintHolder.getMinSize(), 10),
                     ideal_size : parseInt(ConstraintHolder.getIdealSize(), 10),
                     max_size : parseInt(ConstraintHolder.getMaxSize(), 10),
