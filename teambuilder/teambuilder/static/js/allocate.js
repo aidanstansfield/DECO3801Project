@@ -445,7 +445,7 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
             // Once we've populated everything, we are ready to send the request
             $http({
                 method : "post",
-                url : "/allocator",
+                url : "/allocate",
                 data : {
                     min_size : parseInt(ConstraintHolder.getMinSize(), 10),
                     ideal_size : parseInt(ConstraintHolder.getIdealSize(), 10),
