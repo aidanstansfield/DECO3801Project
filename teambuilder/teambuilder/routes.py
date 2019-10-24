@@ -55,10 +55,31 @@ def courses():
     return render_template('courses.html', courses=courses, page_title='My Courses')
 
 # course creation page
-@main_bp.route('/create-course')
+@main_bp.route('/create-course', methods=['GET', 'POST'])
 @login_required
 def create_course():
-    return render_template('create-course.html', page_title='Create New Course', require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses')
+    # To go into the create_course page:
+    if request.method == 'GET':
+        return render_template('create-course.html', page_title='Create New Course', require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses')
+    # otherwise we're posting data for a new course
+    
+    data = request.json
+    # print(data)
+    # Create course & student
+    new_course = Course(name=data.get('name'), questions=json.dumps(data.get('questions')), 
+        uid=current_user.id)
+    db.session.add(new_course)
+    db.session.flush()
+
+    for student in data.get('students'):
+        new_student = Student(sid=student.get('sid'), cid=new_course.cid,
+            sname=student.get('name'))
+        db.session.add(new_student)
+    
+    db.session.commit()
+
+    # Once we're done, we redirect them to the courses page
+    return redirect(url_for('main_bp.courses'))
 
 # course details page. Optionally takes a course ID field
 @main_bp.route('/course/<id>')
