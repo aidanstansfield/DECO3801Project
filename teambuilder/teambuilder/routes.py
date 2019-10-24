@@ -35,7 +35,7 @@ def allocation():
 def course_allocation(id=id):
     course = Course.query.filter_by(cid=id).first()
     if course == None:
-        return "didn't find it"
+        return render_template('error.html', err_message='We were unable to find the course you were looking for')
     return render_template('allocation.html', page_title=course.name, 
         require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses',
         questions=course.questions, cid=id)
@@ -97,7 +97,7 @@ def run_allocation():
     cid = data.get('cid')
     course = Course.query.filter_by(cid=cid).first()
     if (course == None):
-        return "Could not find that course"
+        return render_template('error.html', err_message='We were unable to find the course you were looking for')
     students = {}
     for student in course.students:
         if student.response != None and student.response != '':
@@ -114,21 +114,22 @@ def run_allocation():
 @main_bp.route('/survey/<int:id>', methods=['GET', 'POST'])
 def survey(id=None):
     if (id == None):
-        return "The URL you have input is complete" # maybe make this pretty
+        return render_template('error.html', err_message="The URL you attempted to use is incomplete.")
+        # return "The URL you have input is complete" # maybe make this pretty
     username = request.headers.get('X-Uq-User')
     if username == None:
         # there was no X-Uq-User.
         if (app.config['FLASK_ENV'] == 'development'):
             username = 's4434177' # testing, remove later
         else:
-            return "There was an error retrieving your username from UQ SSO."
+            return render_template('error.html', err_message="There was an error retrieving your username from UQ SSO.")
     course = Course.query.filter_by(cid=id).first()
     if (course == None):
-        return "The URL you have input is invalid"
+        return render_template('error.html', err_message="The URL you have used is invalid")
     
     student = Student.query.filter_by(cid=id, sid=username).first()
     if (student == None):
-        return "You are not a part of the course this survey regards."
+        return render_template('error.html', err_message="It appears as though you are not a part of the course this survey relates to.")
     if request.method == 'GET':
         print(course.questions)
         return render_template('survey.html', course_name=course.name, questions=json.loads(course.questions))

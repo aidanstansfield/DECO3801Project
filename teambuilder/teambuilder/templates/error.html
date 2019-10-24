@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel='stylesheet' type='text/css' href='/static/css/style.css'/>
+    {% if page_title %}
+        <title>{{ page_title }}</title>
+    {% else %}
+        <title>TeamBuilder</title>
+    {% endif %}
+</head>
+<body>
+    <div class='container container--centered-children'>
+        <div class='landing-info'>
+            <img class='landing-info__logo' src='/static/images/team-builder-logo.png'/>
+            <h1>Error</h1>
+            <p>{{ err_message }}</p>
+            <a class='waves-effect waves-light btn-large landing-info__button' href="/">Take Me To The Home Page</a>
+        </div>
+    </div> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
+</body>
+</html>
