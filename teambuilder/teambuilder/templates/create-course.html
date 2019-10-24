@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel='stylesheet' type='text/css' href='/static/css/style.css'/>
+    <link rel="stylesheet" href= 
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+
+    {% if page_title %}
+        <title>{{ page_title }}</title>
+    {% else %}
+        <title>TeamBuilder</title>
+    {% endif %} 
+</head>
+<body ng-app='courseCreator'>
+    <div class='container' id='controller' ng-controller='rootController'>
+        {% include 'header.html' %}
+
+        <div ng-form='courseForm' class='create-form__container'>
+            <h1>Step 1: Give Your Course a Name</h1>
+            <div class="input-field">
+                <input id="course_name" 
+                    ng-model='course_name' type="text" class="validate" required>
+                <label for="course_name">Course Name</label>
+                <span></span>
+            </div>
+            <h1>Step 2: Add Your Students</h1>
+            <p>
+                To add your students, please upload a CSV file containing their UQ student numbers
+                and optionally their names as a second column. For example:
+
+                <div class='file-example'>
+                    <code>
+                        sXXXXXXX, John Smith<br>
+                        sXXXXXXX, Jane Doe<br>
+                        ...
+                    </code>
+                </div>
+
+            </p>
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>Choose File</span>
+                    <input type="file" name='studentFile' required>
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" name="studentFileText" type="text">
+                </div>
+                <span id='studentFileErr' class='error-msg'></span>
+            </div>
+            <p id="studentData"></p>
+            
+            <div id='qController' ng-controller="questionController">
+                <h1>Step 3: Create a Course Survey</h1>
+                <p>
+                    If you would like to perform allocations based on student data,
+                    you can add some questions for them to answer using the form below.
+                    These questions will be made available to them via a URL link.
+                </p>
+                <p>
+                    For the 'Valid Responses' field, if the question type is a number,
+                    please provide the valid range of values as two comma separated values
+                    (e.g. 10, 12). For any other data type, provide the valid answers as 
+                    a set of comma-separated strings (e.g. Answer 1, Answer 2).
+                </p>
+                <div class='row'>
+                    <div class="input-field col s12">
+                        <input id="question_text" type="text" 
+                            class="validate" ng-model="question_text" required>
+                        <label for="question_text">Question Text (e.g. What is your age?)</label>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class="input-field col s6">
+                        <input id="question_label" type="text" class="validate" 
+                            ng-model='question_label' required>
+                        <label for="question_label">Question Label (e.g. age)</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <select id='question_type' ng-model='question_type' required>
+                            <option value="int" selected>Integer</option>
+                            <option value="multi">Multiple Choice (Single Answer)</option>
+                            <option value="option">Multiple Choice (Multiple Answers)</option>
+                            <option value="bool">Boolean</option>
+                        </select>
+                        <label>Question Type</label>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class="input-field col s12">
+                        <input id="question_answers" type="text" class="validate" 
+                            ng-model="question_answers" required>
+                        <label for="question_answers">Valid Responses</label>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class="input-field col s12">
+                        <button id='addQuestionBtn' class='waves-effect waves-light btn'>Add Question</button>
+                    </div>
+                </div>
+                <div class='row'>
+                    <h2>Added Questions</h2>
+                    <table>
+                        <thead>
+                            <th>Question Text</th>
+                            <th>Question Label</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat='question in questionList'>
+                                <td>{% raw %} {{question.text}} {% endraw %}</td>
+                                <td>{% raw %} {{question.label}} {% endraw %}</td>
+                                <td><button ng-click="removeQuestion($index)" class='waves-effect waves-light btn red lighten-2'>Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class='row center-align'>
+                    <button id='createCourseBtn' ng-click='createCourse()' class='waves-effect waves-light btn'>Create Course</button>
+                </div>
+            </div>
+        </div>
+        <!-- Name -->
+        <!-- List of student IDs (load from file) -->
+            <!-- Optionally provide student names -->
+        <!-- Optionally create questions -->
+        
+    </div> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>  
+
+    <script type='text/javascript'>
+
+        // STUDENT DATA FILE CHECKING ==============================
+        var invalidFile = false;
+
+        var isStudentNumber = function(string) {
+            if (string.length != 8 || string[0] != 's') {
+                return false;
+            }
+            for (var i = 1; i < string.length; i++) {
+                var next = string[i];
+                if (next < '0' || next > '9') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var text = e.target.result;
+            var rows = text.split('\n');
+            var fileElement = document.getElementsByName('studentFileText')[0]
+            var errElement = document.getElementById("studentFileErr");
+
+            if (rows.length < 1) {
+                fileElement.classList.add("invalid");
+                errElement.innerHTML = "The given file appeard to be empty";
+                return;
+            }
+            var students = [];
+
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].trim() === "") {
+                    continue;
+                }
+                var split = rows[i].split(',');
+                if (split.length > 2) {
+                    fileElement.classList.add("invalid");
+                    errElement.innerHTML = "The given file has an invalid entry on row " + (i + 1);
+                    invalidFile = true;
+                    return;
+                }
+                var id = split[0].trim();
+                var name = null;
+                
+                if (!isStudentNumber(id)) {
+                    fileElement.classList.add("invalid");
+                    errElement.innerHTML = "The given file has an invalid student ID on row " + (i + 1);
+                    invalidFile = true;
+                    return;
+                }
+                if (split.length == 2) {
+                    name = split[1].trim();
+                }
+                students.push({"id" : id, "name" : name});
+            }
+            if (students.length == 0) {
+                fileElement.classList.add("invalid");
+                errElement.innerHTML = "The given file appears to be empty";
+                invalidFile = true;
+                return;
+            }
+            errElement.innerHTML = "";
+            invalidFile = false;
+            angular.element($('#controller')).scope().setStudents(students);
+        }
+        
+        document.getElementsByName('studentFile')[0].addEventListener('change', function(e){
+            var files = e.target.files
+            reader.readAsText(files[0])
+        }, false);
+
+        // COURSE SURVEY LOGIC =====================================
+        var app = angular.module("courseCreator", []);
+        
+        app.factory("QuestionHolder", ['$rootScope', function($rootScope){
+
+            var addedQuestions = [];
+            function notify() {
+                $rootScope.$emit('question-holder-event');
+            }
+
+            return {
+                addQuestion: function(text, label, type, responses) {
+                    addedQuestions.push({
+                        'text': text,
+                        'label' : label,
+                        'type' : type,
+                        'responses' : responses
+                    });
+                    notify();
+                },
+
+                removeQuestion: function(index) {
+                    if (index >= 0 && index < addedQuestions.length) {
+                        addedQuestions.splice(index, 1);
+                    }
+                    notify();
+                },
+
+                questionLabelExists: function(label) {
+                    for (var i = 0; i < addedQuestions.length; i++) {
+                        if (addedQuestions[i]['label'] === label) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+
+                getQuestionList: function() {
+                    return addedQuestions;
+                },
+
+                subscribe : function(scope, callback) {
+                    var handler = $rootScope.$on('question-holder-event', callback);
+                    scope.$on('$destroy', handler);
+                }
+            }
+        }]);
+
+        app.controller("questionController", ['$rootScope', '$scope', 'QuestionHolder', function($rootScope, $scope, QuestionHolder){
+
+            $rootScope.questionList = [];
+
+            $scope.questionLabelExists = function(label) {
+                return QuestionHolder.questionLabelExists(label);
+            }
+
+            $scope.addQuestion = function() {
+                var text = $scope.question_text;
+                var label = $scope.question_label;
+                var type = $scope.question_type;
+                var responses = $scope.question_answers;
+                QuestionHolder.addQuestion(text, label, type, responses);
+            }
+
+            $scope.removeQuestion = function(index) {
+                QuestionHolder.removeQuestion(index);
+            }
+
+            QuestionHolder.subscribe($scope, function(){
+                $rootScope.questionList = [...QuestionHolder.getQuestionList()];
+            });
+        }]);
+
+        app.controller("rootController", ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http){
+            
+            var students = null;
+            var questions = null;
+
+            $scope.setStudents = function(studentData) {
+                students = studentData;
+            }
+
+            $rootScope.createCourse = function() {
+                console.log("run");
+                if ($scope.course_name == "") {
+                    return;
+                }
+                if (students == null) {
+                    return;
+                }
+                
+                $http({
+                    method : "post",
+                    url : "/create-course",
+                    data : {
+                        name : $scope.course_name,
+                        students : students,
+                        questions: $rootScope.questions,
+                    }
+                }).then(function success(response) {
+                   console.log("data sent successfully")
+                }, function error(response) {
+                    console.log("Error with response");
+                });
+            }
+        }]);
+        
+       
+        $('#addQuestionBtn').on('click', function() {
+            var questionTextInput = $('#question_text');
+            var labelValInput = $('#question_label');
+            var questionTypeInput = $('#question_type');
+            var validResponsesInput = $('#question_answers');
+            var error = false;
+            if (questionTextInput.val() === "") {
+                questionTextInput.addClass('invalid');
+                error = true;
+            } else {
+                questionTextInput.removeClass('invalid');
+                error = false;
+            }
+            if (labelValInput.val() === "" || 
+                angular.element($('#qController')).scope().questionLabelExists(labelValInput.val())) {
+                labelValInput.addClass("invalid");
+                error = true;
+            } else {
+                labelValInput.removeClass('invalid');
+            }
+            if (validResponsesInput.val() === "") {
+                validResponsesInput.addClass('invalid');
+                error = true;
+            } else {
+                validResponsesInput.removeClass('invalid');
+            }
+            if (error) {
+                return;
+            }
+            responses = null;
+            if (questionTypeInput.val() === "int") {
+                var split = validResponsesInput.val().split(",");
+                if (split.length != 2) {
+                    validResponsesInput.addClass('invalid');
+                    error = true;
+                } else {
+                    var min = parseInt(split[0]);
+                    var max = parseInt(split[1]);
+
+                    if (min === NaN || max == NaN) {
+                        validResponsesInput.addClass('invalid');
+                        error = true;
+                    } else {
+                        responses = [min, max];
+                    }                    
+                }
+            } else {
+                responses = validResponsesInput.val().split(",");
+                validResponsesInput.removeClass('invalid');
+            }
+            if (error) {
+                return;
+            }
+            angular.element($('#qController')).scope().addQuestion();
+        });
+
+        $(document).ready(function(){
+            $('select').formSelect();
+        });
+    </script>
+</body>
+</html>

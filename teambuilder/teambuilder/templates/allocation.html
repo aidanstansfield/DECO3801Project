@@ -7,6 +7,11 @@
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+    {% if page_title %}
+        <title>{{ page_title }}</title>
+    {% else %}
+        <title>TeamBuilder</title>
+    {% endif %}
 </head>
 <body ng-app="allocator">
     <div class='container' ng-controller="rootController">
@@ -69,6 +74,7 @@
         </div>
     </div> 
     <script type='text/javascript'>
+
         var $cid = {{ cid }};
         {% if questions %}
             var $questions = JSON.parse('{{ questions }}');
