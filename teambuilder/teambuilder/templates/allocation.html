@@ -74,7 +74,11 @@
         </div>
     </div> 
     <script type='text/javascript'>
-        var providedQuestions = '{{ questions }}';
+
+        var $cid = {{ cid }};
+        {% if questions %}
+            var $questions = JSON.parse('{{ questions }}');
+        {% endif %}
     </script>
     <script type='text/javascript' src='/static/js/allocate.js'></script>
     <script type='text/javascript' src='/static/js/constraints.js'></script> 

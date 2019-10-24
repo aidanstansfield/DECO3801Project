@@ -8,6 +8,7 @@ import json
 from .allocation.json_alloc import allocate
 from .models import User, Course, Student
 from flask import current_app as app
+from . import db
 
 main_bp = Blueprint('main_bp', __name__, template_folder='templates',
                     static_folder='static')
@@ -22,7 +23,7 @@ def favicon():
 def home():
     return render_template('landing.html')
 
-# allocation page
+# allocation page. TO BE DELETED & REPLACED WITH BELOW
 @main_bp.route('/allocation')
 @login_required
 def allocation():
@@ -35,7 +36,9 @@ def course_allocation(id=id):
     course = Course.query.filter_by(cid=id).first()
     if course == None:
         return "didn't find it"
-    return render_template('allocation.html', page_title=course.name, require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses')
+    return render_template('allocation.html', page_title=course.name, 
+        require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses',
+        questions=course.questions, cid=id)
 
 # courses page
 @main_bp.route('/courses')
@@ -68,42 +71,66 @@ def course_info(id=None):
 @main_bp.route('/allocate', methods=['POST'])
 @login_required
 def run_allocation():
+    data = request.json
+    cid = data.get('cid')
+    course = Course.query.filter_by(cid=cid).first()
+    if (course == None):
+        return "Could not find that course"
+    students = {}
+    for student in course.students:
+        if student.response != None and student.response != '':
+            students[student.sid] = json.loads(student.response)
+    data.pop('cid')
+    data['students'] = students
     response = app.response_class(
-        response = allocate(json.dumps(request.json)),
+        response = allocate(json.dumps(data)),
         status = 200,
         mimetype = 'application/json'
     )
     return response 
 
-@main_bp.route('/survey/<int:id>')
+@main_bp.route('/survey/<int:id>', methods=['GET', 'POST'])
 def survey(id=None):
     if (id == None):
         return "The URL you have input is complete" # maybe make this pretty
     username = request.headers.get('X-Uq-User')
     if username == None:
         # there was no X-Uq-User.
-        username = 's4434177' # testing, remove later
-        # return "There was an error retrieving your username from UQ SSO."
+        if (app.config['FLASK_ENV'] == 'development'):
+            username = 's4434177' # testing, remove later
+        else:
+            return "There was an error retrieving your username from UQ SSO."
     course = Course.query.filter_by(cid=id).first()
     if (course == None):
         return "The URL you have input is invalid"
     student = Student.query.filter_by(cid=id, sid=username).first()
     if (student == None):
         return "You are not a part of the course this survey regards."
-    return "put template for survey here"
+    if request.method == 'GET':
+        return "put template for survey here"#render_template('survey.html', questions=course.questions)
+    else:
+        response = request.json
+        student.response = json.dumps(response)
+        db.session.commit()
 
-"""
-# Example how to create course & student
-new_course = Course(name='putnamehere', questions='putquestionshere', 
+""" Danie put this into course create
+# To go into the create_course page:
+if request.method == 'GET':
+    return render_template('create_course.html')
+# otherwise it's post, assuming you've set methods=['GET', 'POST'] in route
+data = request.json
+# Create course & student
+new_course = Course(name=data.get('name'), questions=json.dumps(data.get('questions')), 
         uid=current_user.id)
 db.session.add(new_course)
-new_student = Student(sid='puttheiridhere',cid=new_course.cid,
-        name='putnamehere, or dont, name is optional for anon', 
-        response='you can leave this out since it wont be set till they respond')
-db.session.add(new_student)
+for student in data.get('students'):
+    new_student = Student(sid=student.get('sid'), cid=new_course.cid,
+        name=student.get('name'))
+    db.session.add(new_student)
 # and finally
 db.session.commit()
 """
+
 
 # this will only run if we're running the script manually (i.e. debugging)
 if __name__ == "__main__":

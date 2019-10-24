@@ -5,10 +5,11 @@ Description=uWSGI instance to serve teambuilder
 After=network.target
 
 [Service]
-User=s4434177
-Group=www-data
-WorkingDirectory=/opt/deco3801-allotech/teambuilder
-ExecStart=/opt/uwsgi --ini teambuilder.ini
+User=s4434177 ; who the service runs as
+Group=www-data ; which group they should be apart of
+WorkingDirectory=/opt/deco3801-allotech/teambuilder ; location of repo/teambuilder
+; modify path to point to your uwsgi binary, and the path to teambuilder.ini
+ExecStart=/opt/uwsgi --ini /opt/deco3801-allotech/teambuilder/teambuilder.ini
 
 [Install]
 WantedBy=multi-user.target
