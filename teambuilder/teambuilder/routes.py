@@ -23,22 +23,24 @@ def favicon():
 def home():
     return render_template('landing.html')
 
-# allocation page. TO BE DELETED & REPLACED WITH BELOW
-@main_bp.route('/allocation')
+@main_bp.route('/course/<int:cid>/allocate')
 @login_required
-def allocation():
-    return render_template('allocation.html', page_title='Title Here', require_back_btn=True, 
-        back_btn_link='/courses', back_btn_text='All Courses', questions = 'foo')
-
-@main_bp.route('/course/<int:id>/allocate')
-@login_required
-def course_allocation(id=id):
-    course = Course.query.filter_by(cid=id).first()
+def course_allocation(cid=None):
+    course = Course.query.filter_by(cid=cid).first()
     if course == None:
         return render_template('error.html', err_message='We were unable to find the course you were looking for')
+    names = {}
+    for student in course.students:
+        if student.sname != None and student.sname != '':
+            names[student.sid] = {'name': student.sname}
+        else:
+            names[student.sid] = {'name': ''}
+    if course.questions == None or course.questions == '':
+        return render_template('allocation.html', page_title=course.name, 
+            require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses', cid=cid, names=json.dumps(names))
     return render_template('allocation.html', page_title=course.name, 
         require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses',
-        questions=course.questions, cid=id)
+        questions=course.questions, cid=cid, names=json.dumps(names))
 
 # courses page
 @main_bp.route('/courses')
@@ -46,13 +48,30 @@ def course_allocation(id=id):
 def courses():
     courses = []
     for course in current_user.courses:
+        if (course.questions == None or course.questions == ''):
+            courses.append({'cid': course.cid, 'name': course.name, 
+                'num_responded': 0, 'num_pending': 0, 'survey_url_display': 'No questionairre set!'})
+            continue
         num_students = len(course.students)
         num_responded = sum(1 for student in course.students 
                 if student.response != None and student.response != '')
         courses.append({'cid': course.cid, 'name': course.name, 
                 'num_responded': num_responded, 'num_pending': num_students - 
-                num_responded, 'survey_url': request.url_root + url_for('main_bp.survey', id=course.cid)[1:]})
+                num_responded, 'survey_url': request.url_root + url_for('main_bp.survey', cid=course.cid)[1:]})
     return render_template('courses.html', courses=courses, page_title='My Courses')
+
+@main_bp.route('/removecourse/<int:cid>')
+@login_required
+def remove_course():
+    course = Course.query.filter_by(cid=cid).first()
+    if course == None:
+        return "No such course"
+    course = Course.query.filter_by(cid=cid, uid=current_user.id).first()
+    if course == None:
+        return "That is not your course"
+    db.session.delete(course)
+    return "Course deleted"
+    
 
 # course creation page
 @main_bp.route('/create-course', methods=['GET', 'POST'])
@@ -94,12 +113,12 @@ def course_info(id=None):
 @login_required
 def run_allocation():
     data = request.json
-    print(data)
     cid = data.get('cid')
     course = Course.query.filter_by(cid=cid).first()
     if (course == None):
         return render_template('error.html', err_message='We were unable to find the course you were looking for')
     students = {}
+    names = {}
     for student in course.students:
         if student.response != None and student.response != '':
             students[student.sid] = json.loads(student.response)
@@ -112,9 +131,9 @@ def run_allocation():
     )
     return response 
 
-@main_bp.route('/survey/<int:id>', methods=['GET', 'POST'])
-def survey(id=None):
-    if (id == None):
+@main_bp.route('/survey/<int:cid>', methods=['GET', 'POST'])
+def survey(cid=None):
+    if (cid == None):
         return render_template('error.html', err_message="The URL you attempted to use is incomplete.")
         # return "The URL you have input is complete" # maybe make this pretty
     username = request.headers.get('X-Uq-User')
@@ -124,15 +143,16 @@ def survey(id=None):
             username = 's4434177' # testing, remove later
         else:
             return render_template('error.html', err_message="There was an error retrieving your username from UQ SSO.")
-    course = Course.query.filter_by(cid=id).first()
+    course = Course.query.filter_by(cid=cid).first()
     if (course == None):
         return render_template('error.html', err_message="The URL you have used is invalid")
     
-    student = Student.query.filter_by(cid=id, sid=username).first()
+    student = Student.query.filter_by(cid=cid, sid=username).first()
     if (student == None):
         return render_template('error.html', err_message="It appears as though you are not a part of the course this survey relates to.")
     if request.method == 'GET':
-        print(course.questions)
+        if course.questions == None or course.questions == '':
+            return render_template('survey.html', course_name=course.name)
         return render_template('survey.html', course_name=course.name, questions=json.loads(course.questions))
     else:
         response = request.json

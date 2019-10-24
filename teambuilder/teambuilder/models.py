@@ -9,7 +9,7 @@ class User(UserMixin, db.Model):
     # NOTE; must be called 'id' for UserMixin goodness
     id = db.Column(db.Integer, primary_key=True) 
     username = db.Column(db.String, nullable=False, unique=True)
-    courses = db.relationship('Course', backref='users', lazy=True)
+    courses = db.relationship('Course', cascade="all,delete", backref='users', lazy=True)
 
 class Course(db.Model):
     __tablename__ = 'courses'
@@ -21,7 +21,7 @@ class Course(db.Model):
     # a json dump of the questions
     questions = db.Column(db.Text, nullable=True)
     uid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    students = db.relationship('Student', backref='courses', lazy=True)
+    students = db.relationship('Student', cascade="all,delete", backref='courses', lazy=True)
 
 class Student(db.Model):
     __tablename__ = 'students'

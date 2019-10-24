@@ -199,11 +199,21 @@ app.directive('constraintmodal', function() {
 // but later this will come from the database
 app.factory('DataHolder', function($rootScope) {
 
-    var providedQuestions = window.providedQuestions;
-    
-    var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree" : ["IT"], "postgraduate" : true}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree" : ["CS"], "postgraduate" : false}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : true}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : false}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree" : ["SE"], "postgraduate" : false}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree" : ["IT"], "postgraduate" : true}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree" : ["SE"], "postgraduate" : true}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree" : ["CS"], "postgraduate" : true}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}}';
-    var studentParams = '{"age" : "integer" , "preferences" : "multi-select", "degree" : "option", "postgraduate" : "bool"}';
-    var paramOptions = '{"preferences" : ["graphics", "gameplay", "networking", "ui"], "degree" : ["IT", "CS", "SE"]}';
+    var providedQuestions = window.$providedQuestions;
+    var studentParams = {}
+    var paramOptions = {}
+    for (var i = 0; i < providedQuestions.length; i++) {
+        studentParams[providedQuestions[i]['label']] = providedQuestions[i]['type'];
+        if (providedQuestions[i]['type'] == 'multi-select' || providedQuestions[i]['type'] == 'option') {
+            paramOptions[providedQuestions[i]['label']] = providedQuestions[i]['responses'];
+        }
+    }
+    studentParams = JSON.stringify(studentParams);
+    paramOptions = JSON.stringify(paramOptions);
+    var studentData = JSON.stringify(window.$names);
+    //var studentData = '{"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree" : ["IT"], "postgraduate" : true}, "43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree" : ["CS"], "postgraduate" : false}, "49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : true}, "41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree" : ["SE"], "postgraduate" : false}, "43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree" : ["CS"], "postgraduate" : true}, "44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree" : ["SE"], "postgraduate" : false}, "49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}, "44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree" : ["IT"], "postgraduate" : true}, "49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : false}, "42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree" : ["SE"], "postgraduate" : true}, "46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree" : ["CS"], "postgraduate" : true}, "49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree" : ["IT"], "postgraduate" : true}}';
+    //var studentParams = '{"age" : "integer" , "preferences" : "multi-select", "degree" : "option", "postgraduate" : "bool"}';
+    //var paramOptions = '{"preferences" : ["graphics", "gameplay", "networking", "ui"], "degree" : ["IT", "CS", "SE"]}';
 
     // Emits an event to tell listening parties that the internal state
     // has changed.
@@ -267,8 +277,8 @@ app.factory('DataHolder', function($rootScope) {
 app.factory('ConstraintHolder', function($rootScope){
 
     var constraintList = [];
-    var minSize = 3;
-    var idealSize = 4;
+    var minSize = 1;
+    var idealSize = 3;
     var maxSize = 5;
     
     // Emits an event to tell listening parties that the internal state

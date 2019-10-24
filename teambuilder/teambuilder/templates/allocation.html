@@ -75,10 +75,15 @@
     </div> 
     <script type='text/javascript'>
 
-        // var $cid = {{ cid }};
-        // {% if questions %}
-        //     var $questions = JSON.parse('{{ questions }}');
-        // {% endif %}
+        var $cid = {{ cid }};
+        {% autoescape false %}
+        {% if questions %}
+             var $providedQuestions = JSON.parse('{{ questions }}');
+        {% endif %}
+        {% if names %}
+            var $names = JSON.parse('{{ names }}');
+        {% endif %}
+        {% endautoescape %}
     </script>
     <script type='text/javascript' src='/static/js/allocate.js'></script>
     <script type='text/javascript' src='/static/js/constraints.js'></script> 

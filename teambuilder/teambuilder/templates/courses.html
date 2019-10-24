@@ -34,7 +34,11 @@
                         <td><a href="/course/{{ course.cid }}/allocate">{{ course.name }}</td>
                         <td> {{ course.num_responded }} </td>
                         <td> {{ course.num_pending }} </td>
-                        <td> <a href="{{ course.survey_url }}">{{ course.survey_url }}</a></td>
+                        {% if course.survey_url %}
+                            <td> <a href="{{ course.survey_url }}">{{ course.survey_url }}</a></td>
+                        {% else %}
+                            <td>{{ course.survey_url_display }}</td>
+                        {% endif %}
                         <td><button class='waves-effect waves-light btn red lighten-2'>Remove</button></td>
                     </tr>
                     {% endfor %}
