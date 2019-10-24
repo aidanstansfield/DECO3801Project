@@ -5,21 +5,41 @@
     <link rel='stylesheet' type='text/css' href='/static/css/style.css'/>
     <link rel="stylesheet" href= 
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   
+    {% if page_title %}
+        <title>{{ page_title }}</title>
+    {% else %}
+        <title>TeamBuilder</title>
+    {% endif %}
 </head>
 <body>
     <div class='container'>
         {% include 'header.html' %}
         
         <div class='heading'>
-            <button class='waves-effect waves-light btn'>Add Course</button>
+            <a href="/create-course" class='waves-effect waves-light btn'>Add Course</a>
         </div>
         <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Responses Received</th>
+                        <th>Responses Pending</th>
+                        <th>Survey URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td><a href="/course/{{ course.cid }}/allocate">{{ course.name }}</td>
+                        <td> {{ course.num_responded }} </td>
+                        <td> {{ course.num_pending }} </td>
+                        <td> {{ course.survey_url }} </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <ul>
-            {% for course in courses %}
-                <li><a href="/course/{{ course.cid }}/allocate">{{ course.name }}. 
-                    Responses Received: {{ course.num_responded }}. Responses 
-                    Pending: {{ course.num_pending }}</a></li>
-            {% endfor %}
             </ul>
         </div>
     </div> 

@@ -759,3 +759,12 @@ h6 {
   35% {
     -webkit-transform: scale3D(0, 0, 1);
     transform: scale3D(0, 0, 1); } }
+.create-form__container {
+  width: 80%;
+  margin: 0 auto; }
+
+.file-example {
+  width: 50%;
+  margin: 0 auto;
+  padding: 10px;
+  background: #ececec; }

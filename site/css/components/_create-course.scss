@@ -1,0 +1,15 @@
+// Contains styling for the components on the 
+// 'Create Course' page.
+.create-form {
+    &__container {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+.file-example {
+    width: 50%;
+    margin: 0 auto;
+    padding: 10px;
+    background: $colour__gray--white;
+}

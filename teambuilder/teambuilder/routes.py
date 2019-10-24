@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import request, abort, send_from_directory, render_template, Blueprint
+from flask import request, abort, send_from_directory, render_template, Blueprint, url_for
 from flask import redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_required, current_user
@@ -26,7 +26,8 @@ def home():
 @main_bp.route('/allocation')
 @login_required
 def allocation():
-    return render_template('allocation.html', page_title='Title Here', require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses')
+    return render_template('allocation.html', page_title='Title Here', require_back_btn=True, 
+        back_btn_link='/courses', back_btn_text='All Courses', questions = 'foo')
 
 @main_bp.route('/course/<int:id>/allocate')
 @login_required
@@ -47,8 +48,14 @@ def courses():
                 if student.response != None and student.response != '')
         courses.append({'cid': course.cid, 'name': course.name, 
                 'num_responded': num_responded, 'num_pending': num_students - 
-                num_responded})
+                num_responded, 'survey_url': request.url_root + url_for('main_bp.survey', id=course.cid)[1:]})
     return render_template('courses.html', courses=courses, page_title='My Courses')
+
+# course creation page
+@main_bp.route('/create-course')
+@login_required
+def create_course():
+    return render_template('create-course.html', page_title='Create New Course', require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses')
 
 # course details page. Optionally takes a course ID field
 @main_bp.route('/course/<id>')
