@@ -51,7 +51,12 @@ app.directive('constraintformatselect', function() {
     return {
         templateUrl: '/static/html/constraintSelect.html', 
         restrict: 'E',
-        scope: false
+        scope: false,
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     };
 });
 
@@ -59,7 +64,12 @@ app.directive('constraintformatselect', function() {
 app.directive('integercountform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/integerCount.html'
+        templateUrl: '/static/html/integerCount.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -67,7 +77,12 @@ app.directive('integercountform', function() {
 app.directive('integeravgform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/integerAvg.html'
+        templateUrl: '/static/html/integerAvg.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -75,7 +90,12 @@ app.directive('integeravgform', function() {
 app.directive('integersimform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/integerSim.html'
+        templateUrl: '/static/html/integerSim.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -83,7 +103,12 @@ app.directive('integersimform', function() {
 app.directive('integersimglobform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/integerSimGlob.html'
+        templateUrl: '/static/html/integerSimGlob.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -91,7 +116,12 @@ app.directive('integersimglobform', function() {
 app.directive('optrangeform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/optRange.html'
+        templateUrl: '/static/html/optRange.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -99,7 +129,12 @@ app.directive('optrangeform', function() {
 app.directive('optsimilarityform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/optSimilarity.html'
+        templateUrl: '/static/html/optSimilarity.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -107,7 +142,12 @@ app.directive('optsimilarityform', function() {
 app.directive('subsetrangeform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/subsetCount.html'
+        templateUrl: '/static/html/subsetCount.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -115,7 +155,12 @@ app.directive('subsetrangeform', function() {
 app.directive('subsetsimilarityform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/subsetSimilarity.html'
+        templateUrl: '/static/html/subsetSimilarity.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -123,16 +168,25 @@ app.directive('subsetsimilarityform', function() {
 app.directive('boolrangeform', function() {
     return {
         restrict: 'E',
-        templateUrl: '/static/html/boolCount.html'
+        templateUrl: '/static/html/boolCount.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
-
 
 app.directive('constraintmodal', function() {
     console.log("Running");
     return {
         restrict: 'E',
-        templateUrl: '/static/html/constraint-modal.html'
+        templateUrl: '/static/html/constraint-modal.html',
+        link: function($scope, elem, attrs) {
+            elem.ready(function() {
+                $('select').formSelect();
+            });
+        }
     }
 });
 
@@ -374,8 +428,8 @@ function initialiseWatchers($scope, DataHolder, ConstraintHolder) {
 
 // The root controller is responsible for controlling data changes
 // between the factories
-app.controller('rootController', ['$scope', '$compile', 'DataHolder', 'ConstraintHolder', 
-    function($scope, $compile, DataHolder, ConstraintHolder) {
+app.controller('rootController', ['$scope', '$compile', '$timeout', 'DataHolder', 'ConstraintHolder', 
+    function($scope, $compile, $timeout, DataHolder, ConstraintHolder) {
 
         var modalOpen = false;
         initialiseData($scope, DataHolder, ConstraintHolder);
@@ -407,6 +461,20 @@ app.controller('rootController', ['$scope', '$compile', 'DataHolder', 'Constrain
             body.appendChild(modal);
             $compile(modal)($scope);
             modalOpen = true;
+            
+            
+            // var selectElms = body.getElementsByTagName('select');
+            // console.log(selectElms);
+            // console.log(selectElms.length);
+            // for (var i = 0; i < selectElms.length; i++) {
+            //     console.log(i);
+            //     console.log(selectElms[i].id);
+            // }
+            // console.log(selectElms);
+            // console.log(selectList);
+            // selectList.forEach(function(value, index, array){
+            //     console.log(value);//.material_select();
+            // })
         }
 
         $scope.closeConstraintModal = function() {

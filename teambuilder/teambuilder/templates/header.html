@@ -1,10 +1,12 @@
 <div class='header'>
     <img class='header__logo' src='/static/images/team-builder-logo.png' alt="Logo"/>
     <div class='header__title-holder'>
-        <h1 class='header__title'>Allocation Demo</h1>
+        <h1 class='header__title'>{{ page_title }}</h1>
     </div>
     <div class='header__nav'>
-        <a class="header__nav-btn" href="#">All Allocations</a>
-        <a class="header__nav-btn" href="{{ url_for('auth_bp.logout') }}">Logout</a>
+        {% if require_back_btn %}
+            <a class="waves-effect waves-light btn header__nav-btn" href="{{ back_btn_link }}">{{ back_btn_text }}</a>
+        {% endif %}
+        <a class="waves-effect waves-light btn header__nav-btn" href="{{ url_for('auth_bp.logout') }}">Logout</a>
     </div>
 </div>

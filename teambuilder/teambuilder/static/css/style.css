@@ -150,7 +150,7 @@ template {
 [hidden] {
   display: none; }
 
-.container, .header, .header__title-holder, .header__nav, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder, .modal-controls, .loader-container {
+.container, .header, .header__title-holder, .header__nav, .heading, .allocation-container, .allocation-controls, .allocation-separator, .allocation-constraints-wrapper, .allocation-constraints__title-holder, .allocation-constraints__size-holder, .allocation-constraints__constraint-container, .allocation-results-wrapper, .allocation-group, .allocation-constraint__status-holder, .modal-controls, .loader-container {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -216,7 +216,7 @@ h6 {
   font-size: 1rem;
   margin-bottom: 0.6em; }
 
-.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .constraint-add-button, .constraint-modal__button--add, .allocation-constraint__delete, .constraint-cancel-button, .constraint-modal__button--cancel, .constraint-modal__button {
+.allocation-constraints__title-button, .constraint-add-button, .constraint-cancel-button {
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
   line-height: 1.5em;
@@ -227,22 +227,22 @@ h6 {
   border: 2px solid transparent;
   outline: 0;
   border-radius: 3px; }
-  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .constraint-add-button:hover, .constraint-modal__button--add:hover, .allocation-constraint__delete:hover, .constraint-cancel-button:hover, .constraint-modal__button--cancel:hover, .constraint-modal__button:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .constraint-add-button:focus, .constraint-modal__button--add:focus, .allocation-constraint__delete:focus, .constraint-cancel-button:focus, .constraint-modal__button--cancel:focus, .constraint-modal__button:focus {
+  .allocation-constraints__title-button:hover, .constraint-add-button:hover, .constraint-cancel-button:hover, .allocation-constraints__title-button:focus, .constraint-add-button:focus, .constraint-cancel-button:focus {
     cursor: pointer;
     font-weight: 600; }
 
-.landing-info__button, .header__nav-btn, .allocation-controls__button, .allocation-constraints__title-button, .constraint-add-button, .constraint-modal__button--add {
+.allocation-constraints__title-button, .constraint-add-button {
   color: #fff;
   background-color: #6CE6C5; }
-  .landing-info__button:hover, .header__nav-btn:hover, .allocation-controls__button:hover, .allocation-constraints__title-button:hover, .constraint-add-button:hover, .constraint-modal__button--add:hover, .landing-info__button:focus, .header__nav-btn:focus, .allocation-controls__button:focus, .allocation-constraints__title-button:focus, .constraint-add-button:focus, .constraint-modal__button--add:focus {
+  .allocation-constraints__title-button:hover, .constraint-add-button:hover, .allocation-constraints__title-button:focus, .constraint-add-button:focus {
     background-color: #fff;
     color: #36af8f;
     border: 2px solid #6CE6C5; }
 
-.allocation-constraint__delete, .constraint-cancel-button, .constraint-modal__button--cancel {
+.constraint-cancel-button {
   color: #fff;
   background-color: #ff9399; }
-  .allocation-constraint__delete:hover, .constraint-cancel-button:hover, .constraint-modal__button--cancel:hover, .allocation-constraint__delete:focus, .constraint-cancel-button:focus, .constraint-modal__button--cancel:focus {
+  .constraint-cancel-button:hover, .constraint-cancel-button:focus {
     background-color: #fff;
     color: #d8000c;
     border: 2px solid #ff9399; }
@@ -279,10 +279,11 @@ h6 {
         max-width: 150px; } }
   .landing-info__button {
     margin: 0 auto;
-    width: 45%; }
+    height: auto; }
     @media (max-width: 400px) {
       .landing-info__button {
-        width: 80%; } }
+        width: 80%;
+        line-height: 2; } }
 
 .header {
   align-items: center;
@@ -333,6 +334,19 @@ h6 {
         margin-right: initial; }
         .header__nav-btn:last-of-type {
           margin-bottom: 0px; } }
+
+.heading {
+  width: 100%;
+  padding: 1em 0; }
+  @media (max-width: 600px) {
+    .heading {
+      justify-content: center; } }
+  @media (max-width: 600px) {
+    .heading__button {
+      width: 50%; } }
+  @media (max-width: 400px) {
+    .heading__button {
+      width: 100%; } }
 
 .allocation-container {
   flex-direction: column;
@@ -495,7 +509,6 @@ h6 {
 .allocation-group {
   margin: 1em auto;
   padding: 1em;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   flex-wrap: wrap;
   justify-content: space-around;
   page-break-inside: avoid; }
@@ -506,13 +519,8 @@ h6 {
   .allocation-group__item {
     display: inline-block;
     flex-basis: 40%;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     padding: 0 0.5em;
-    margin: 0.5em 0;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-    .allocation-group__item:hover {
-      box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-      cursor: pointer; }
+    margin: 0.5em 0; }
     @media print {
       .allocation-group__item {
         width: 100%;
@@ -528,12 +536,8 @@ h6 {
   border-radius: 10px;
   margin: 1em auto;
   padding: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
   width: 100%; }
-  .allocation-constraint:hover {
-    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); }
   .allocation-constraint__status-holder {
     justify-content: space-between;
     align-items: center; }
@@ -563,8 +567,7 @@ h6 {
       height: 14px;
       background-color: #ececec;
       border-radius: 14px;
-      z-index: 1;
-      transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+      z-index: 1; }
     .allocation-constraint__enabled-label:after {
       content: '';
       position: absolute;
@@ -584,12 +587,7 @@ h6 {
     left: 16px;
     background-color: #6CE6C5; }
   .allocation-constraint__delete {
-    background-color: #ff9399;
-    align-self: flex-end;
-    padding: 5px 20px; }
-    .allocation-constraint__delete:hover {
-      border-color: #ff9399;
-      color: #d8000c; }
+    align-self: flex-end; }
     @media print {
       .allocation-constraint__delete {
         display: none; } }

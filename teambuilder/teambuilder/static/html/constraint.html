@@ -7,7 +7,7 @@
         <label class='allocation-constraint__enabled-label' 
             for="check-{{$index}}">Enabled</label>
     </div>
-    <button class='allocation-constraint__delete' ng-click='removeConstraint($index)'>Delete</button>
+    <button class='waves-effect waves-light btn red lighten-2 allocation-constraint__delete' ng-click='removeConstraint($index)'>Delete</button>
 </div>
 <div class='allocation-constraint__info-holder' ng-bind-html="constraint.val.toHTML() | to_trusted">
 </div>

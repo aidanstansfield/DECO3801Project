@@ -1,0 +1,27 @@
+// heading.scss
+// Contains styling for a heading box that
+// can be placed at the top of a page below
+// the main title
+
+.heading {
+    @extend %flexbox;
+    width: 100%;
+    padding: 1em 0;
+
+    @include media("<=medium") {
+        justify-content: center;
+    }
+
+    &__button {
+        //@extend %button-base;
+        //@extend %button-green;
+
+        @include media("<=medium") {
+            width: 50%;
+        }
+
+        @include media("<=small") {
+            width: 100%;
+        }
+    }
+}
