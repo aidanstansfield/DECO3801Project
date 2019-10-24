@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' type='text/css' href='static/css/style.css'/>
+    <link rel='stylesheet' type='text/css' href='/static/css/style.css'/>
     <link rel="stylesheet" href= 
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">     
 </head>
@@ -12,6 +12,15 @@
         <div class='heading'>
             <h1 class='heading__title'>My Courses</h1>
             <button class='heading__button'>Add Course</button>
+        </div>
+        <div>
+            <ul>
+            {% for course in courses %}
+                <li><a href="/course/{{ course.cid }}/allocate">{{ course.name }}. 
+                    Responses Received: {{ course.num_responded }}. Responses 
+                    Pending: {{ course.num_pending }}</a></li>
+            {% endfor %}
+            </ul>
         </div>
     </div> 
 </body>
