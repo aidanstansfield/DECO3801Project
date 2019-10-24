@@ -106,18 +106,24 @@ def survey(id=None):
         student.response = json.dumps(response)
         db.session.commit()
 
-"""
-# Example how to create course & student
-new_course = Course(name='putnamehere', questions='putquestionshere', 
+""" Danie put this into course create
+# To go into the create_course page:
+if request.method == 'GET':
+    return render_template('create_course.html')
+# otherwise it's post, assuming you've set methods=['GET', 'POST'] in route
+data = request.json
+# Create course & student
+new_course = Course(name=data.get('name'), questions=json.dumps(data.get('questions')), 
         uid=current_user.id)
 db.session.add(new_course)
-new_student = Student(sid='puttheiridhere',cid=new_course.cid,
-        name='putnamehere, or dont, name is optional for anon', 
-        response='you can leave this out since it wont be set till they respond')
-db.session.add(new_student)
+for student in data.get('students'):
+    new_student = Student(sid=student.get('sid'), cid=new_course.cid,
+        name=student.get('name'))
+    db.session.add(new_student)
 # and finally
 db.session.commit()
 """
+
 
 # this will only run if we're running the script manually (i.e. debugging)
 if __name__ == "__main__":
