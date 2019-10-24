@@ -6,7 +6,7 @@ repository                                      Root directory
 ├── doc                                         Documentation for developers
 │   ├── constraints.txt                         A list of the constraints which may be used in allocations
 │   ├── files.txt                               This file
-│   └── references.txt                          Information about third-party resources used in this project
+│   └── credit.txt                              Information about Allotech and third-party resources used in this project
 ├── ipw                                         Source code for informative product website (IPW)
 │   ├── config.py
 │   ├── __init__.py
@@ -33,13 +33,15 @@ repository                                      Root directory
 │   │   ├── interest.html
 │   │   ├── landing.html
 │   │   └── stats.html
-│   └── wsgi.py
+│   └── wsgi.py                                 uWSGI entry point for the informative product website
+├── LICENSE.txt                                 BSD 2-clause license
 ├── README.md                                   Documentation for users
 ├── site                                        Static content for the TeamBuilder website
 │   ├── css
 │   │   ├── base                                Generic styles which are used in other components
 │   │   │   ├── _buttons.scss
 │   │   │   ├── _colours.scss
+│   │   │   ├── _errors.scss
 │   │   │   ├── _fonts.scss
 │   │   │   ├── _general.scss
 │   │   │   ├── _headings.scss
@@ -54,7 +56,7 @@ repository                                      Root directory
 │   │   │   ├── _container.scss
 │   │   │   ├── _header.scss
 │   │   │   ├── _landing-info.scss
-│   │   │   ├── _loading.scss
+│   │   │   ├── _loader.scss
 │   │   │   └── _modal.scss
 │   │   ├── external                            Styles drawn from external sources
 │   │   │   ├── _include-media.scss             Credit: Include Media
@@ -66,54 +68,64 @@ repository                                      Root directory
 │   │   ├── logo-purple.png
 │   │   └── team-builder-logo.png
 │   └── testing.html                            Pre-testing CSS styles
-└── teambuilder                                 Flask content for the TeamBuilder website
-    ├── allocation                              Python package for performing allocations
-    │   ├── allocation_example.py               Example of allocating students
-    │   ├── allocation_json_example.py          Example of JSON de/serialisation of requests and responses
-    │   ├── allocator.py                        Performs an allocation of students to teams
-    │   ├── constraints.py                      Constraints for allocations
-    │   ├── cp.py                               Example of a Constraint-Programming approach
-    │   ├── generation                          Data generation for allocation examples
-    │   │   ├── csv_gen_demo.py                 Produce CSV-formatted example student data
-    │   │   ├── fnames.txt                      Example first names
-    │   │   ├── generate_test_data.py           Generates information for example students - student IDs are not valid
-    │   │   ├── lnames.txt                      Example last names
-    │   ├── group_size_generator.py             Selects the sizes of teams to make
+└── teambuilder                                 TeamBuilder project directory
+    ├── config.py                               Flask and database configuration
+    ├── database-table-init.sql                 Script to create database tables
+    ├── dev_start.sh                            Used for local testing
+    ├── teambuilder                             Flask content for the TeamBuilder website
+    │   ├── allocation                          Python package for performing allocations
+    │   │   ├── allocation_example.py           Example of allocating students
+    │   │   ├── allocation_json_example.py      Example of JSON de/serialisation of requests and responses
+    │   │   ├── allocator.py                    Performs an allocation of students to teams
+    │   │   ├── constraints.py                  Constraints for allocations
+    │   │   ├── cp.py                           Example of a Constraint-Programming approach
+    │   │   ├── generation                      Data generation for allocation examples
+    │   │   │   ├── csv_gen_demo.py             Produce CSV-formatted example student data
+    │   │   │   ├── fnames.txt                  Example first names
+    │   │   │   ├── generate_test_data.py       Generates information for example students - student IDs are not valid
+    │   │   │   └── lnames.txt                  Example last names
+    │   │   ├── group_size_generator.py         Selects the sizes of teams to make
+    │   │   ├── __init__.py
+    │   │   ├── json_alloc.py                   Wraps and unwraps JSON-encoded requests and responses
+    │   │   ├── test_allocator.py               Unit tests for allocator.py
+    │   │   ├── test_constraints.py             Unit tests for constraints.py
+    │   │   ├── test_data.py                    Example data for use in unit tests
+    │   │   ├── test_group_size_generator.py    Unit tests for group_size_generator.py
+    │   │   └── test_json_alloc.py              Unit tests for json_alloc.py
+    │   ├── auth.py                             Flask functions for authenticating users
     │   ├── __init__.py
-    │   ├── json_alloc.py                       Wraps and unwraps JSON-encoded requests and responses
-    │   ├── test_allocator.py                   Unit tests for allocator.py
-    │   ├── test_constraints.py                 Unit tests for constraints.py
-    │   ├── test_data.py                        Example data for use in unit tests
-    │   ├── test_group_size_generator.py        Unit tests for group_size_generator.py
-    │   └── test_json_alloc.py                  Unit tests for json_alloc.py
-    ├── config.py
-    ├── database-table-init.sql
-    ├── __init__.py
-    ├── models.py
-    ├── static                                  Static content for the TeamBuilder website
-    │   ├── css
-    │   │   ├── style.css
-    │   │   └── style.css.map
-    │   ├── favicon.ico
-    │   ├── html
-    │   │   ├── alloc-group.html
-    │   │   ├── constraint.html
-    │   │   ├── constraint-modal.html
-    │   │   ├── constraintSelect.html
-    │   │   ├── integerCount.html
-    │   │   └── subsetSimilarity.html
-    │   ├── images
-    │   │   ├── logo-purple.png
-    │   │   └── team-builder-logo.png
-    │   └── js
-    │       ├── allocate.js
-    │       └── constraints.js
+    │   ├── models.py                           Flask classes for representing database entries
+    │   ├── routes.py                           Flask request handlers for the TeamBuilder website
+    │   ├── static                              Static content for the TeamBuilder website
+    │   │   ├── css
+    │   │   │   ├── style.css
+    │   │   │   └── style.css.map
+    │   │   ├── favicon.ico
+    │   │   ├── html                            HTML for constraint forms and displaying groups in the allocation page
+    │   │   │   ├── alloc-group.html
+    │   │   │   ├── boolCount.html
+    │   │   │   ├── constraint.html
+    │   │   │   ├── constraint-modal.html
+    │   │   │   ├── constraintSelect.html
+    │   │   │   ├── integerAvg.html
+    │   │   │   ├── integerCount.html
+    │   │   │   ├── integerSimGlob.html
+    │   │   │   ├── integerSim.html
+    │   │   │   ├── optRange.html
+    │   │   │   ├── optSimilarity.html
+    │   │   │   ├── subsetCount.html
+    │   │   │   └── subsetSimilarity.html
+    │   │   ├── images
+    │   │   │   ├── logo-purple.png
+    │   │   │   └── team-builder-logo.png
+    │   │   └── js
+    │   │       ├── allocate.js                 Allocation page functionality
+    │   │       └── constraints.js              Client-side constraint handling and serialisation
+    │   └── templates                           Flask HTML templates
+    │       ├── allocation.html                 Template for /allocation page
+    │       ├── course-details.html             Template for /course/<id> pages
+    │       ├── courses.html                    Template for /courses page
+    │       ├── header.html                     Template for header included in other pages
+    │       └── landing.html                    Template for / page
     ├── teambuilder.ini                         uWSGI configuration
-    ├── teambuilder.py                          Flask functions for the TeamBuilder website
-    ├── templates                               Flask HTML templates
-    │   ├── allocation.html                     Template for /allocation page
-    │   ├── course-details.html                 Template for /course/<id> pages
-    │   ├── courses.html                        Template for /courses page
-    │   ├── header.html                         Template for header included in other pages
-    │   └── landing.html                        Template for / page
     └── wsgi.py                                 uWSGI entry point for the TeamBuilder website
