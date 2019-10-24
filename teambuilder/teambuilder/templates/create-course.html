@@ -252,7 +252,8 @@
             }
         }]);
 
-        app.controller("questionController", ['$rootScope', '$scope', 'QuestionHolder', function($rootScope, $scope, QuestionHolder){
+        app.controller("questionController", ['$rootScope', '$scope', '$timeout', 'QuestionHolder', 
+            function($rootScope, $scope, $timeout, QuestionHolder){
 
             $rootScope.questionList = [];
 
@@ -273,7 +274,9 @@
             }
 
             QuestionHolder.subscribe($scope, function(){
-                $rootScope.questionList = [...QuestionHolder.getQuestionList()];
+                $timeout(function() {
+                    $rootScope.questionList = [...QuestionHolder.getQuestionList()];
+                }, 0);
             });
         }]);
 
@@ -287,7 +290,7 @@
             }
 
             $rootScope.createCourse = function() {
-                console.log("run");
+                
                 if ($scope.course_name == "") {
                     return;
                 }
@@ -311,19 +314,18 @@
             }
         }]);
         
-       
-        $('#addQuestionBtn').on('click', function() {
+        var validateQuestion = function() {
             var questionTextInput = $('#question_text');
             var labelValInput = $('#question_label');
             var questionTypeInput = $('#question_type');
             var validResponsesInput = $('#question_answers');
             var error = false;
+
             if (questionTextInput.val() === "") {
                 questionTextInput.addClass('invalid');
                 error = true;
             } else {
                 questionTextInput.removeClass('invalid');
-                error = false;
             }
             if (labelValInput.val() === "" || 
                 angular.element($('#qController')).scope().questionLabelExists(labelValInput.val())) {
@@ -338,9 +340,27 @@
             } else {
                 validResponsesInput.removeClass('invalid');
             }
-            if (error) {
+            if (questionTypeInput.val() === "int") {
+                var split = validResponsesInput.val().split(",");
+                if (split.length != 2) {
+                    validResponsesInput.addClass('invalid');
+                    error = true;
+                } 
+            }
+            return !error;
+        }
+       
+        $('#addQuestionBtn').on('click', function() {
+            var questionTextInput = $('#question_text');
+            var labelValInput = $('#question_label');
+            var questionTypeInput = $('#question_type');
+            var validResponsesInput = $('#question_answers');
+            var error = false;
+            
+            if (!validateQuestion()) {
                 return;
             }
+
             responses = null;
             if (questionTypeInput.val() === "int") {
                 var split = validResponsesInput.val().split(",");
@@ -353,7 +373,7 @@
 
                     if (min === NaN || max == NaN) {
                         validResponsesInput.addClass('invalid');
-                        error = true;
+                        return;
                     } else {
                         responses = [min, max];
                     }                    
@@ -361,9 +381,6 @@
             } else {
                 responses = validResponsesInput.val().split(",");
                 validResponsesInput.removeClass('invalid');
-            }
-            if (error) {
-                return;
             }
             angular.element($('#qController')).scope().addQuestion();
         });
