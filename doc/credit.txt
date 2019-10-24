@@ -1,0 +1,30 @@
+Team Builder
+	Team builder is made by the Allotech team:
+		Aidan Stansfield <s4434177@student.uq.edu.au>
+		Ben Rodgers <s4200694@student.uq.edu.au>
+		Richard McGregor <s4317687@student.uq.edu.au>
+		Matthys Grobbelaar <s4436755@student.uq.edu.au>
+		Jamil Boashash <s4386414@student.uq.edu.au>
+	All files in this repository are copyright Allotech team, unless specified otherwise.
+
+
+Include Media
+	/site/css/external/_include-media.scss
+	http://include-media.com
+	Eduardo Boucas
+	Hugo Giraudel
+	MIT license
+
+
+Normalize.css
+	/site/css/external/_normalize.scss
+	https://github.com/necolas/normalize.css
+	Nicolas Gallagher
+	MIT License
+
+
+Simanneal
+	---
+	https://github.com/perrygeo/simanneal
+	Matthew Perry
+	ISC License
