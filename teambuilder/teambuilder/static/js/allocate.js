@@ -462,20 +462,6 @@ app.controller('rootController', ['$scope', '$compile', '$timeout', 'DataHolder'
             body.appendChild(modal);
             $compile(modal)($scope);
             modalOpen = true;
-            
-            
-            // var selectElms = body.getElementsByTagName('select');
-            // console.log(selectElms);
-            // console.log(selectElms.length);
-            // for (var i = 0; i < selectElms.length; i++) {
-            //     console.log(i);
-            //     console.log(selectElms[i].id);
-            // }
-            // console.log(selectElms);
-            // console.log(selectList);
-            // selectList.forEach(function(value, index, array){
-            //     console.log(value);//.material_select();
-            // })
         }
 
         $scope.closeConstraintModal = function() {
@@ -511,6 +497,7 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
             // Make the loader appear
             document.getElementsByClassName("loader-container")[0].classList.remove("loader-container--hidden");
             // Once we've populated everything, we are ready to send the request
+            console.log(window.$cid);
             $http({
                 method : "post",
                 url : "/allocate",

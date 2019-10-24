@@ -94,6 +94,7 @@ def course_info(id=None):
 @login_required
 def run_allocation():
     data = request.json
+    print(data)
     cid = data.get('cid')
     course = Course.query.filter_by(cid=cid).first()
     if (course == None):
