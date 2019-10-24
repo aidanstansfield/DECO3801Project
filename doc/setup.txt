@@ -1,0 +1,121 @@
+The following instructions act as a guide to installing TeamBuilder into your environment. 
+The instructions are based upon an Ubuntu 16.04 (Xenial) installation, however may be modified to suit your system.
+Please note, that this project has been developed to run on a UQ Zone, and takes advantage of UQ's SSO for various parts of the application.
+If you intend to run this project outside of a UQ Zone, you will need to implement your own login system and integrate this with flask-login.
+
+The first step is to clone the repository.
+This may be done with 'git clone <url>' where url is the location of the repository.
+It is recommended to clone the repository into /opt as this is where various configuration files are set to look.
+If you decide to clone the repo someplace else, make sure that you change the necessary paths.
+
+The next step is to install the necessary packages into your system.
+First, install the following packages into Ubuntu.
+sudo apt-get update && sudo apt-get install python3 python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools postgresql postgresql-contrib nginx uwsgi 
+
+Now install the necessary Python dependencies.
+pip3 install -r doc/requirements.txt
+
+There is an unfortunate bug with the Simulated Annealing package we use when our Flask app runs since it is multithreaded.
+To fix this, first find anneal.py
+sudo find / -iname "anneal.py" 2>/dev/null
+Next, edit this file and comment out the following line in Annealer.__init__
+#signal.signal(signal.SIGINT, self.set_user_exit)
+As of time of writing this, this is on line 61.
+
+Now we can begin configuration for your specific environment.
+Create a new file in teambuilder/ called .env
+you need to add the following:
+SECRET_KEY='supersecretkey'
+SQLALCHEMY_DATABASE_URI='postgresql://username:password@localhost/teambuilder'
+
+See the Flask documentation for recommendations on how to create a good SECRET_KEY
+As for the SQLALCHEMY_DATABASE_URI, don't worry about the username and password just yet, we shall revisit this shortly.
+
+Next, we shall configure postgresql.
+
+Begin by starting the service.
+sudo service postgresql start
+
+First of all, create a new user for your database interactions.
+In our example, we will use the username allotech.
+sudo -u postgres createuser --interactive
+Enter name of role to add: allotech
+Shall the new role be a superuser? (y/n) y
+
+NOTE: Remember that SQLALCHEMY_DATABASE_URI we put in our .env? Set the username and password of that string to be the username and password of this new user!
+
+By default, postgresql expects a database with the same name as your user, so we shall create this database.
+sudo -u postgres createdb allotech
+
+While on the topic of creating databases, we shall create a new database for TeamBuilder to use.
+sudo -u postgres createdb teambuilder
+
+In order to log in to Postgres Prompt with ident based authentication, you will need a user account in your Linux environment.
+So we now create a new user.
+sudo adduser allotech
+
+Now that we have our allotech user setup in both the OS and Postgres, we can log into Postgres Prompt as them.
+sudo -u allotech psql
+
+You are now in the Postgres Prompt, in the allotech database.
+You can check this by running
+\c
+
+You can connect to the teambuilder database by running
+\c teambuilder
+
+Exit the Postgres Prompt with
+\q
+
+We are now done with Postgresql setup.
+Next up, we will configure a TeamBuilder service.
+First edit conf/teambuilder.service and replace everything under [Service] to suit your system.
+
+Now copy this service file into the system directory
+cp conf/teambuilder.service /etc/systemd/system/teambuilder.service
+
+Before you can use systemctl, you must reload the daemon
+sudo systemctl daemon-reload
+
+You can now control TeamBuilder with systemctl
+To start teambuilder
+sudo systemctl start teambuilder
+
+To make sure teambuilder runs upon system startup
+sudo systemctl enable teambuilder
+
+You can also stop/restart, or check on its current running status with
+sudo systemctl stop/restart/status teambuilder
+
+The final setup procedure concerns setting up NGINX to serve our website
+Before we edit NGINX configuration files, start NGINX with
+sudo systemctl start nginx
+
+If you have an existing NGINX configuration, only copy the necessary bits out
+of the following files. Otherwise:
+Copy the following files into their respective locations:
+cp conf/allotech /etc/nginx/sites-available/allotech
+cp conf/nginx.conf /etc/nginx/nginx.conf
+NOTE: These files take advantage of the UQ SSO Module provided by the UQ Zone.
+NOTE: conf/allotech contains location blocks that are not needed by TeamBuilder. You can delete the location blocks for anything related to ipw
+
+We now enable the allotech site by putting it in sites-enabled
+sudo ln -s /etc/nginx/sites-available/allotech /etc/nginx/sites-enabled/allotech
+
+Now test the configuration, and if successful, restart nginx
+sudo nginx -t && sudo nginx -s reload
+
+If you are using are UQ Zone, visit the URL provided to you and you shall see TeamBuilder up & running!
+If you are not using a UQ Zone, you will need to setup the appropriate DNS records to point to your box running NGINX.
+
+That's it!
+
+If things don't work as planned, try the following troubleshooting tips:
+ - Check the status of the TeamBuilder service: sudo systemctl status teambuilder
+ - Check the logs: 
+    - sudo cat /var/log/uwsgi/errlog
+    - sudo cat /var/log/uwsgi/reqlog
+    - sudo cat /var/log/nginx/error.log
+ - For help setting up postgresql, see https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04
+ - Make sure you commented out the signal line in anneal.py as described
+ - Try turning Debug mode on in Flask.
