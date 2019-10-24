@@ -1,7 +1,6 @@
 // This file contains the functionality of the allocation page,
 // including setting up the angular.js application and sending
 // data to the server process.
-
 (function(){
 
 var app = angular.module('allocator', []);
@@ -506,7 +505,6 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
                     constraint.setCandidates(candidates[field]);
                 }
             });
-        
 
             // Make the loader appear
             document.getElementsByClassName("loader-container")[0].classList.remove("loader-container--hidden");
@@ -515,6 +513,7 @@ app.controller('controlsController', ['$rootScope', '$scope', '$http', 'Constrai
                 method : "post",
                 url : "/allocate",
                 data : {
+                    cid : parseInt(window.$cid, 10),
                     min_size : parseInt(ConstraintHolder.getMinSize(), 10),
                     ideal_size : parseInt(ConstraintHolder.getIdealSize(), 10),
                     max_size : parseInt(ConstraintHolder.getMaxSize(), 10),
