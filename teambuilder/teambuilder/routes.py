@@ -136,6 +136,7 @@ def survey(id=None):
         response = request.json
         student.response = json.dumps(response)
         db.session.commit()
+        return redirect(url_for("main_bp.home"))
 
 """ Danie put this into course create
 # To go into the create_course page:

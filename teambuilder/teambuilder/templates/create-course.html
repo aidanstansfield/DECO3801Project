@@ -63,7 +63,8 @@
                     For the 'Valid Responses' field, if the question type is a number,
                     please provide the valid range of values as two comma separated values
                     (e.g. 10, 12). For any other data type, provide the valid answers as 
-                    a set of comma-separated strings (e.g. Answer 1, Answer 2).
+                    a set of comma-separated strings (e.g. Answer 1, Answer 2). For
+                    boolean data types, the entered answer must be "Yes, No".
                 </p>
                 <div class='row'>
                     <div class="input-field col s12">
@@ -269,7 +270,8 @@
 
                 var trimmed_responses = []
                 for (var i = 0; i < responses.length; i++) {
-                    trimmed_responses.push(responses[i]);
+                    trimmed = responses[i].trim();
+                    trimmed_responses.push(trimmed);
                 }
                 QuestionHolder.addQuestion(text, label, type, trimmed_responses);
             }
@@ -351,6 +353,19 @@
                     validResponsesInput.addClass('invalid');
                     error = true;
                 } 
+            } else if (questionTypeInput.val() == "bool") {
+                var split = validResponsesInput.val().split(",");
+                if (split.length != 2) {
+                    validResponsesInput.addClass('invalid');
+                    error = true;
+                } 
+                var value1 = split[0].trim();
+                var value2 = split[1].trim();
+               
+                if ((value1 != "Yes" && value1 != "No") || (value2 != "Yes" && value2 != "No")) {
+                    validResponsesInput.addClass('invalid');
+                    error = true;
+                }
             }
             return !error;
         }

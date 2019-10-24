@@ -14,22 +14,21 @@
         <title>TeamBuilder</title>
     {% endif %} 
 </head>
-<body ng-app='courseCreator'>
+<body>
     <div class='container'>
         {% include 'header.html' %}
         
         <h1 class='center-align'>Student Survey for {{ course_name }}</h1>
         <div class='create-form__container'>
-            <form class='survey-form'>
+            <form name='survey-form' class='survey-form'>
                 {% for question in questions %}
                     <h2>Question {{ loop.index }}</h2>
                     <p>{{ question.text }}</p>
                     {% if question.type == 'integer' %}
                         <div class="input-field">
-                            <input name="answer_{{ question.label }}" 
-                                ng-model='course_{{ question.label }}' 
-                                type="number" class="validate" min="{{ question.responses[0].strip() }}"
-                                max="{{ question.responses[1].strip() }}" required>
+                            <input name="{{ question.label }}__{{question.type}}" 
+                                type="number" class="validate" min="{{ question.responses[0] }}"
+                                max="{{ question.responses[1] }}" required>
                         </div>
                     {% endif %}
                     {% if question.type == 'multi-select' %}
@@ -39,8 +38,9 @@
                             {% endif %}
                                 <div class='col s6'>
                                     <label>
-                                        <input type='checkbox' class='filled-in' id='{{ question.label }}_{{ opt }}'/>
-                                        <span for='{{ question.label }}_{{ opt }}'>{{ opt }}</span>
+                                        <input type='checkbox' class='filled-in' 
+                                            name='{{ question.label }}__{{ opt }}__{{question.type}}'/>
+                                        <span for='{{ question.label }}__{{ opt }}__{{question.type}}'>{{ opt }}</span>
                                     </label>
                                 </div>
                             {% if loop.index % 2 == 0 %}
@@ -53,8 +53,7 @@
                     {% endif %}
                     {% if question.type == 'option' %}
                         <div class="input-field">
-                            <select name="answer_{{ question.label }}" 
-                                ng-model='course_{{ question.label }}'  
+                            <select name="{{ question.label }}__{{question.type}}"   
                                 class="validate"required>
                                 {% for opt in question.responses %}
                                     <option value="{{ opt }}">{{ opt }}</option>
@@ -64,8 +63,7 @@
                     {% endif %}
                     {% if question.type == 'bool' %}
                         <div class="input-field">
-                            <select name="answer_{{ question.label }}" 
-                                ng-model='course_{{ question.label }}'  
+                            <select name="{{ question.label }}__{{question.type}}"
                                 class="validate"required>
                                 {% for opt in question.responses %}
                                     <option value="{{ opt }}">{{ opt }}</option>
@@ -75,7 +73,7 @@
                     {% endif %}
                 {% endfor %}
                 <div class='row center-align'>
-                    <button class='center-align waves-effect waves-light btn'>Submit Survey</button>
+                    <button type='submit' class='center-align waves-effect waves-light btn'>Submit Survey</button>
                 </div>
             </form>
         </div>
@@ -86,6 +84,60 @@
     <script type='text/javascript'>
         $(document).ready(function() {
             $('select').formSelect();
+        });
+        $('form').on('submit', function(event){
+            event.preventDefault();
+            data = $(this).serializeArray();
+            console.log(data);
+            // We need to convert this json into something we know
+            // and then send it to the server to store in the database.
+            // We don't need validation here since the HTML does it for us
+            //  -- booleans should be of the form 'name' : True/False
+            //  -- multi-selects should be of the form 'name' : ['selection', ...]
+            //  -- options should be of the form 'name': ['selection']
+            //  -- integers should be of the form 'name' : value
+            parsed_data = {}
+
+            for (var i = 0; i < data.length; i++) {
+                var name = data[i].name;
+                var value = data[i].value;
+                var split = name.split("__");
+
+                var type = split[split.length - 1];
+                var label = split[0];
+                
+                console.log(name, value, type, label);
+
+                if (type == 'integer') {
+                    parsed_data[label] = parseInt(value, 10);
+                } else if (type == 'option') {
+                    parsed_data[label] = [value];   
+                } else if (type == 'bool') {
+                    if (value == 'Yes') {
+                        parsed_data[label] = [true];
+                    } else {
+                        parsed_data[label] = [false];
+                    }
+                } else {
+                    var entry = split[1];
+                    if (label in parsed_data) {
+                        parsed_data[label].push(entry);
+                    } else {
+                        parsed_data[label] = [entry];
+                    }
+                }
+            }
+            
+            // Once the data is parsed, we send it to the
+            // server to update the records
+            var pageURL = window.location.href;
+            var lastURLSegment = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+            $.ajax({
+                url: "/survey/" + lastURLSegment,
+                type: 'post',
+                data: JSON.stringify(parsed_data),
+                contentType: "application/json"
+            });
         });
     </script>
 </body>
