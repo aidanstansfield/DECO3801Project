@@ -5,8 +5,8 @@
     </div>
     <div class='header__nav'>
         {% if require_back_btn %}
-            <a class="header__nav-btn" href="{{ back_btn_link }}">{{ back_btn_text }}</a>
+            <a class="waves-effect waves-light btn header__nav-btn" href="{{ back_btn_link }}">{{ back_btn_text }}</a>
         {% endif %}
-        <a class="header__nav-btn" href="{{ url_for('auth_bp.logout') }}">Logout</a>
+        <a class="waves-effect waves-light btn header__nav-btn" href="{{ url_for('auth_bp.logout') }}">Logout</a>
     </div>
 </div>

@@ -16,7 +16,7 @@
     }
 
     &__button {
-        @extend %button-green;
+        //@extend %button-green;
         margin-left: 10px;
 
         &:first-of-type {

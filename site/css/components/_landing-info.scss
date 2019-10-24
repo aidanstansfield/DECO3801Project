@@ -21,12 +21,14 @@
     }
 
     &__button {
-        @extend %button-green;
+        //@extend %button-green;
         @include centered-block;
-        width: 45%;
+        height: auto;
+        //width: 45%;
 
         @include media('<=small') {
             width: 80%;
+            line-height: 2;
         }
     }
 } 

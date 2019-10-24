@@ -31,7 +31,10 @@ def allocation():
 @main_bp.route('/course/<int:id>/allocate')
 @login_required
 def course_allocation(id=id):
-    return render_template('allocation.html')
+    course = Course.query.filter_by(cid=id).first()
+    if course == None:
+        return "didn't find it"
+    return render_template('allocation.html', page_title=course.name, require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses')
 
 # courses page
 @main_bp.route('/courses')
@@ -45,7 +48,7 @@ def courses():
         courses.append({'cid': course.cid, 'name': course.name, 
                 'num_responded': num_responded, 'num_pending': num_students - 
                 num_responded})
-    return render_template('courses.html', courses=courses)
+    return render_template('courses.html', courses=courses, page_title='My Courses')
 
 # course details page. Optionally takes a course ID field
 @main_bp.route('/course/<id>')

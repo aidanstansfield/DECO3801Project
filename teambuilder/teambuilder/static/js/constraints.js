@@ -79,9 +79,9 @@ function IntegerCountConstraint(shouldBool, countMin, countMax,
     function toHTML() {
         var sentence = "<p>Each group ";
         if (params["should_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "between ";
         sentence += "<strong>" + params["count_bxy"][0] + "</strong> ";
@@ -89,9 +89,9 @@ function IntegerCountConstraint(shouldBool, countMin, countMax,
         sentence += "<strong>" + params["count_bxy"][1] + "</strong> ";
         sentence += "members ";
         if (params["with_bool"]) {
-            sentence += "<strong>WITH</strong> ";
+            sentence += "<strong>with</strong> ";
         } else {
-            sentence += "<strong>WITHOUT</strong> ";
+            sentence += "<strong>without</strong> ";
         }
         sentence += "<strong>" + params["field"] + "</strong> ";
         sentence += "between ";
@@ -163,9 +163,9 @@ function IntegerAverageConstraint(shouldBool, field,
         var sentence = "<p>Each group ";
         console.log(typeof params["should_bool"]);
         if (params["should_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "average "
         sentence += "<strong>" + params["field"] + "</strong>";
@@ -223,9 +223,9 @@ function IntegerSimilarityConstraint(similarBool, field) {
     function toHTML() {
         var sentence = "<p>Each group ";
         if (params["similar_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "similar "
         sentence += "<strong>" + params["field"] + "</strong>";
@@ -340,9 +340,9 @@ function OptionCountConstraint(shouldBool, countMin, countMax,
     function toHTML() {
         var sentence = "<p>Each group ";
         if (params["should_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "between ";
         sentence += "<strong>" + params["count_bxy"][0] + "</strong> ";
@@ -350,9 +350,9 @@ function OptionCountConstraint(shouldBool, countMin, countMax,
         sentence += "<strong>" + params["count_bxy"][1] + "</strong> ";
         sentence += "members ";
         if (params["with_bool"]) {
-            sentence += "<strong>WITH</strong> ";
+            sentence += "<strong>with</strong> ";
         } else {
-            sentence += "<strong>WITHOUT</strong> ";
+            sentence += "<strong>without</strong> ";
         }
         sentence += "<strong>" + params["field"] + "</strong> ";
         sentence += "equal to ";
@@ -417,9 +417,9 @@ function OptionSimilarityConstraint(shouldBool, field) {
     function toHTML() {
         var sentence = "<p>Each group ";
         if (params["similar_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "similar "
         sentence += "<strong>" + params["field"] + "</strong>";
@@ -491,9 +491,9 @@ function SubsetCountConstraint(shouldBool, countMin, countMax,
     function toHTML() {
         var sentence = "<p>Each group ";
         if (params["should_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "between ";
         sentence += "<strong>" + params["count_bxy"][0] + "</strong> ";
@@ -501,9 +501,9 @@ function SubsetCountConstraint(shouldBool, countMin, countMax,
         sentence += "<strong>" + params["count_bxy"][1] + "</strong> ";
         sentence += "members ";
         if (params["with_bool"]) {
-            sentence += "<strong>WITH</strong> ";
+            sentence += "<strong>with</strong> ";
         } else {
-            sentence += "<strong>WITHOUT</strong> ";
+            sentence += "<strong>without</strong> ";
         }
         sentence += "<strong>" + params["field"] + "</strong> ";
         sentence += "containing ";
@@ -568,9 +568,9 @@ function SubsetSimilarityConstraint(shouldBool, field) {
     function toHTML() {
         var sentence = "<p>Each group ";
         if (params["similar_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "similar "
         sentence += "<strong>" + params["field"] + "</strong>";
@@ -640,9 +640,9 @@ function BooleanCountConstraint(shouldBool, countMin, countMax,
     function toHTML() {
         var sentence = "<p>Each group ";
         if (params["should_bool"]) {
-            sentence += "<strong>SHOULD HAVE</strong> ";
+            sentence += "<strong>should have</strong> ";
         } else {
-            sentence += "<strong>SHOULDN'T HAVE</strong> ";
+            sentence += "<strong>shouldn't have</strong> ";
         }
         sentence += "between ";
         sentence += "<strong>" + params["count_bxy"][0] + "</strong> ";
@@ -650,9 +650,9 @@ function BooleanCountConstraint(shouldBool, countMin, countMax,
         sentence += "<strong>" + params["count_bxy"][1] + "</strong> ";
         sentence += "members ";
         if (params["with_bool"]) {
-            sentence += "<strong>WITH</strong> ";
+            sentence += "<strong>with</strong> ";
         } else {
-            sentence += "<strong>WITHOUT</strong> ";
+            sentence += "<strong>without</strong> ";
         }
         sentence += "<strong>" + params["field"] + "</strong> ";
         

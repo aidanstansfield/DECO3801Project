@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel='stylesheet' type='text/css' href='/static/css/style.css'/>
     <link rel="stylesheet" href= 
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">     
@@ -13,8 +14,8 @@
         
         <div class="allocation-container">
             <div class="allocation-controls" ng-controller='controlsController'>
-                <button class="allocation-controls__button" ng-click="runAllocation()">Run Allocation</button>
-                <button class="allocation-controls__button" onclick="window.print()">Print Allocation</button>
+                <button class="waves-effect waves-light btn allocation-controls__button" ng-click="runAllocation()">Run Allocation</button>
+                <button class="waves-effect waves-light btn allocation-controls__button" onclick="window.print()">Print Allocation</button>
             </div>
             <div class='allocation-separator'>
                 <div class='allocation-constraints-wrapper'>
@@ -23,7 +24,7 @@
                         <p>Enter your preferred group sizes:</p>
                         <div class="allocation-constraints__size-holder">
                             <div>
-                                <input class="allocation-constraints__size-input" name="minSize" type="text" ng-model="minSize">
+                                <input class="input-field allocation-constraints__size-input" name="minSize" type="text" ng-model="minSize">
                                 <label class="allocation-constraints__size-label" for="minSize">Min</label>
                             </div>
                             <div>
@@ -37,17 +38,17 @@
                         </div>
                         <div class='allocation-constraints__title-holder'>
                             <h2 class="allocation-constraints__heading">Constraints</h2>
-                            <button class='allocation-constraints__title-button' ng-click="openConstraintModal()">Add New</button>
+                            <button class='waves-effect waves-light btn' ng-click="openConstraintModal()">Add New</button>
                         </div>
                         <div class='allocation-constraints__constraint-container'>
-                            <constraint class='allocation-constraint' ng-repeat="constraint in constraintList"></constraint>
+                            <constraint class='hoverable card-panel allocation-constraint' ng-repeat="constraint in constraintList"></constraint>
                         </div>
                     </div>
                 </div>
                 <div class="allocation-results-wrapper">
                     <h2>Allocation Results</h2>
                     <div class="allocation-results">                        
-                        <group class="allocation-group" ng-repeat="(entry, group) in teams">  
+                        <group class="card-panel hoverable allocation-group" ng-repeat="(entry, group) in teams">  
                         </group> 
                     </div>   
                     <div class='loader-container loader-container--hidden'>
@@ -68,6 +69,8 @@
         </div>
     </div> 
     <script type='text/javascript' src='/static/js/allocate.js'></script>
-    <script type='text/javascript' src='/static/js/constraints.js'></script>
+    <script type='text/javascript' src='/static/js/constraints.js'></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> 
 </body>
 </html>
