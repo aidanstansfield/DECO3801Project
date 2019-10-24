@@ -26,7 +26,7 @@ def home():
 @main_bp.route('/allocation')
 @login_required
 def allocation():
-    return render_template('allocation.html')
+    return render_template('allocation.html', page_title='Title Here', require_back_btn=True, back_btn_link='/courses', back_btn_text='All Courses')
 
 # courses page
 @main_bp.route('/courses')
