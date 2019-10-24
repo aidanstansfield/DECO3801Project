@@ -80,9 +80,9 @@
                     </div>
                     <div class="input-field col s6">
                         <select id='question_type' ng-model='question_type' required>
-                            <option value="int" selected>Integer</option>
-                            <option value="multi">Multiple Choice (Single Answer)</option>
-                            <option value="option">Multiple Choice (Multiple Answers)</option>
+                            <option value="integer" selected>Integer</option>
+                            <option value="option">Multiple Choice (Single Answer)</option>
+                            <option value="multi-select">Multiple Choice (Multiple Answers)</option>
                             <option value="bool">Boolean</option>
                         </select>
                         <label>Question Type</label>
@@ -265,8 +265,13 @@
                 var text = $scope.question_text;
                 var label = $scope.question_label;
                 var type = $scope.question_type;
-                var responses = $scope.question_answers;
-                QuestionHolder.addQuestion(text, label, type, responses);
+                var responses = $scope.question_answers.split(",");
+
+                var trimmed_responses = []
+                for (var i = 0; i < responses.length; i++) {
+                    trimmed_responses.push(responses[i]);
+                }
+                QuestionHolder.addQuestion(text, label, type, trimmed_responses);
             }
 
             $scope.removeQuestion = function(index) {
@@ -304,7 +309,7 @@
                     data : {
                         name : $scope.course_name,
                         students : students,
-                        questions: $rootScope.questions,
+                        questions: $rootScope.questionList,
                     }
                 }).then(function success(response) {
                    console.log("data sent successfully")

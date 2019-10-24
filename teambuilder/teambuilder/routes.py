@@ -64,7 +64,8 @@ def create_course():
     # otherwise we're posting data for a new course
     
     data = request.json
-    # print(data)
+    print(data)
+    
     # Create course & student
     new_course = Course(name=data.get('name'), questions=json.dumps(data.get('questions')), 
         uid=current_user.id)
@@ -124,11 +125,13 @@ def survey(id=None):
     course = Course.query.filter_by(cid=id).first()
     if (course == None):
         return "The URL you have input is invalid"
+    
     student = Student.query.filter_by(cid=id, sid=username).first()
     if (student == None):
         return "You are not a part of the course this survey regards."
     if request.method == 'GET':
-        return "put template for survey here"#render_template('survey.html', questions=course.questions)
+        print(course.questions)
+        return render_template('survey.html', course_name=course.name, questions=json.loads(course.questions))
     else:
         response = request.json
         student.response = json.dumps(response)

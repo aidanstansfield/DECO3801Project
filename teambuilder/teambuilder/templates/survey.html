@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel='stylesheet' type='text/css' href='/static/css/style.css'/>
+    <link rel="stylesheet" href= 
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+
+    {% if page_title %}
+        <title>{{ page_title }}</title>
+    {% else %}
+        <title>TeamBuilder</title>
+    {% endif %} 
+</head>
+<body ng-app='courseCreator'>
+    <div class='container'>
+        {% include 'header.html' %}
+        
+        <h1 class='center-align'>Student Survey for {{ course_name }}</h1>
+        <div class='create-form__container'>
+            <form class='survey-form'>
+                {% for question in questions %}
+                    <h2>Question {{ loop.index }}</h2>
+                    <p>{{ question.text }}</p>
+                    {% if question.type == 'integer' %}
+                        <div class="input-field">
+                            <input name="answer_{{ question.label }}" 
+                                ng-model='course_{{ question.label }}' 
+                                type="number" class="validate" min="{{ question.responses[0].strip() }}"
+                                max="{{ question.responses[1].strip() }}" required>
+                        </div>
+                    {% endif %}
+                    {% if question.type == 'multi-select' %}
+                        {% for opt in question.responses %}
+                            {% if loop.index % 2 == 1 %}
+                            <div class='row'>
+                            {% endif %}
+                                <div class='col s6'>
+                                    <label>
+                                        <input type='checkbox' class='filled-in' id='{{ question.label }}_{{ opt }}'/>
+                                        <span for='{{ question.label }}_{{ opt }}'>{{ opt }}</span>
+                                    </label>
+                                </div>
+                            {% if loop.index % 2 == 0 %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% if question.responses|length % 2 == 1 %}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    {% if question.type == 'option' %}
+                        <div class="input-field">
+                            <select name="answer_{{ question.label }}" 
+                                ng-model='course_{{ question.label }}'  
+                                class="validate"required>
+                                {% for opt in question.responses %}
+                                    <option value="{{ opt }}">{{ opt }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+                    {% if question.type == 'bool' %}
+                        <div class="input-field">
+                            <select name="answer_{{ question.label }}" 
+                                ng-model='course_{{ question.label }}'  
+                                class="validate"required>
+                                {% for opt in question.responses %}
+                                    <option value="{{ opt }}">{{ opt }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class='row center-align'>
+                    <button class='center-align waves-effect waves-light btn'>Submit Survey</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>  
+
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('select').formSelect();
+        });
+    </script>
+</body>
+</html>

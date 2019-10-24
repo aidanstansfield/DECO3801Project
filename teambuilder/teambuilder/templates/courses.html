@@ -34,7 +34,7 @@
                         <td><a href="/course/{{ course.cid }}/allocate">{{ course.name }}</td>
                         <td> {{ course.num_responded }} </td>
                         <td> {{ course.num_pending }} </td>
-                        <td> {{ course.survey_url }} </td>
+                        <td> <a href="{{ course.survey_url }}">{{ course.survey_url }}</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
