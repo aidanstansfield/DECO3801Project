@@ -5,8 +5,10 @@ repository                                      Root directory
 │   └── teambuilder.service                     Configuration file for the TeamBuilder service
 ├── doc                                         Documentation for developers
 │   ├── constraints.txt                         A list of the constraints which may be used in allocations
+│   ├── credit.txt                              Information about Allotech and third-party resources used in this project
 │   ├── files.txt                               This file
-│   └── credit.txt                              Information about Allotech and third-party resources used in this project
+│   ├── requirements.txt                        Python3 dependencies needed for this project
+│   └── setup.txt                               Instructions for installing TeamBuilder
 ├── ipw                                         Source code for informative product website (IPW)
 │   ├── config.py
 │   ├── __init__.py
@@ -54,7 +56,9 @@ repository                                      Root directory
 │   │   │   ├── allocation-form.scss
 │   │   │   ├── _allocation_results.scss
 │   │   │   ├── _container.scss
+│   │   │   ├── _create-course.scss
 │   │   │   ├── _header.scss
+│   │   │   ├── _heading.scss
 │   │   │   ├── _landing-info.scss
 │   │   │   ├── _loader.scss
 │   │   │   └── _modal.scss
@@ -125,6 +129,7 @@ repository                                      Root directory
     │       ├── allocation.html                 Template for /allocation page
     │       ├── course-details.html             Template for /course/<id> pages
     │       ├── courses.html                    Template for /courses page
+    │       ├── create-course.html              Template for /create-course page
     │       ├── header.html                     Template for header included in other pages
     │       └── landing.html                    Template for / page
     ├── teambuilder.ini                         uWSGI configuration
