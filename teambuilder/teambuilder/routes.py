@@ -83,7 +83,6 @@ def create_course():
     # otherwise we're posting data for a new course
     
     data = request.json
-    print(data)
     
     # Create course & student
     new_course = Course(name=data.get('name'), questions=json.dumps(data.get('questions')), 
