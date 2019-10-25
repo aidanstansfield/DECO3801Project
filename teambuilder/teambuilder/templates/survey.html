@@ -33,9 +33,7 @@
                     {% endif %}
                     {% if question.type == 'multi-select' %}
                         {% for opt in question.responses %}
-                            {% if loop.index % 2 == 1 %}
                             <div class='row'>
-                            {% endif %}
                                 <div class='col s6'>
                                     <label>
                                         <input type='checkbox' class='filled-in' 
@@ -43,13 +41,8 @@
                                         <span for='{{ question.label }}__{{ opt }}__{{question.type}}'>{{ opt }}</span>
                                     </label>
                                 </div>
-                            {% if loop.index % 2 == 0 %}
                             </div>
-                            {% endif %}
                         {% endfor %}
-                        {% if question.responses|length % 2 == 1 %}
-                        </div>
-                        {% endif %}
                     {% endif %}
                     {% if question.type == 'option' %}
                         <div class="input-field">
