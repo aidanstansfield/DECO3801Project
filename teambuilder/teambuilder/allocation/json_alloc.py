@@ -246,14 +246,22 @@ def validate_constraint(request, student_info, constraint):
 # such as whether answers are in the list of valid candidates
 def validate_data(request, constraints, student):
 	for constraint in constraints:
-		if constraint.constraint_type == "option":
-			responses = [student[constraint.field]]
-		elif constraint.constraint_type == "subset":
-			responses = student[constraint.field]
-		else:
-			continue
-		for response in responses:
+		if constraint.constraint_type == "integer":
+			response = student[constraint.field]
+			if type(response) != int:
+				raise InvalidRequestError(request, "Student response ({}) is not a valid choice for constraint ({})".format(response, constraint.name))
+		elif constraint.constraint_type == "option":
+			response = student[constraint.field]
 			if response not in constraint.candidates:
+					raise InvalidRequestError(request, "Student response ({}) is not a valid choice for constraint ({})".format(response, constraint.name))
+		elif constraint.constraint_type == "subset":
+			for response in student[constraint.field]:
+				if response not in constraint.candidates:
+					raise InvalidRequestError(request, "Student response ({}) is not a valid choice for constraint ({})".format(response, constraint.name))
+		else:
+			#constraint.constraint_type == "boolean":
+			response = student[constraint.field]
+			if type(response) != bool:
 				raise InvalidRequestError(request, "Student response ({}) is not a valid choice for constraint ({})".format(response, constraint.name))
 
 
