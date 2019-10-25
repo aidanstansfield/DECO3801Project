@@ -344,6 +344,36 @@ class TestValidateConstraint(unittest.TestCase):
 		self.assertEqual(cm.exception.message, "Constraint (preference constraint) type (subset) doesn't match student info field (preferences) type")
 
 
+# Tests for the validate_data function
+class TestValidateData(unittest.TestCase):
+	def test_option_field_as_list(self):
+		request_json = """{
+			"min_size": 1, "ideal_size": 3, "max_size": 5,
+			"students":
+				{"s4434177": {"age": 10, "hobbies": ["skiing", " fishing"], "degree": ["CS"], "smoke": [true]}},
+			"constraints": [
+				{
+					"constr_type": "IntegerAverageConstraint",
+					"name": "age constraint",
+					"should_bool": true,
+					"field": "age",
+					"priority": 1,
+					"average_bxy": [1, 2]
+				}, {
+					"constr_type": "OptionSimilarityConstraint",
+					"name": "degree constraint",
+					"similar_bool": true,
+					"field": "degree",
+					"candidates": ["CS", " Math", " Other"],
+					"priority": 1
+				}]}"""
+		result_json = json_alloc.allocate(request_json)
+		result = json.loads(result_json)
+		expected_reason = "Constraint (degree constraint) type (option) doesn't match student info field (degree) type"
+		self.assertFalse(result["success"])
+		self.assertEqual(result["reason"], expected_reason)
+
+
 class TestDecodeIntegerCountConstraint(unittest.TestCase):
 	def test_decode_valid(self):
 		constraint = """{
@@ -457,22 +487,22 @@ class TestDecodeSubsetCountConstraint(unittest.TestCase):
 		request_json = """{
 			"min_size": 3, "ideal_size": 4, "max_size": 5,
 			"students": {
-				"41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": false},
-				"41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree": ["CS"], "postgraduate": true},
-				"41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
-				"42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree": ["SE"], "postgraduate": true},
-				"43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree": ["CS"], "postgraduate": true},
-				"43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree": ["CS"], "postgraduate": false},
-				"44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree": ["SE"], "postgraduate": false},
-				"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
-				"44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree": ["IT"], "postgraduate": true},
-				"46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree": ["CS"], "postgraduate": true},
-				"47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree": ["SE"], "postgraduate": false},
-				"49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree": ["SE"], "postgraduate": true},
-				"49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": false},
-				"49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
-				"49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree": ["IT"], "postgraduate": true},
-				"49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree": ["IT"], "postgraduate": true}},
+				"41434186": {"name": "ARTIE MERCADO", "age": 20, "preferences": ["gameplay"], "degree": "IT", "postgraduate": false},
+				"41733160": {"name": "JENEE HAWKINS", "age": 21, "preferences": ["networking", "gameplay"], "degree": "CS", "postgraduate": true},
+				"41919562": {"name": "MISTIE DECKER", "age": 17, "preferences": ["gameplay"], "degree": "IT", "postgraduate": true},
+				"42000636": {"name": "PERRY WARE", "age": 23, "preferences": ["networking"], "degree": "SE", "postgraduate": true},
+				"43077121": {"name": "VEDA DUKE", "age": 26, "preferences": ["ui", "gameplay"], "degree": "CS", "postgraduate": true},
+				"43210058": {"name": "LEANNA HOOPER", "age": 22, "preferences": ["graphics"], "degree": "CS", "postgraduate": false},
+				"44284944": {"name": "ALYSON SANTOS", "age": 21, "preferences": ["graphics"], "degree": "SE", "postgraduate": false},
+				"44781573": {"name": "OPAL MAYER", "age": 22, "preferences": ["gameplay"], "degree": "IT", "postgraduate": true},
+				"44930399": {"name": "LEONE STRONG", "age": 27, "preferences": ["networking", "graphics"], "degree": "IT", "postgraduate": true},
+				"46211757": {"name": "EDDIE CRAWFORD", "age": 22, "preferences": ["gameplay"], "degree": "CS", "postgraduate": true},
+				"47912042": {"name": "GALEN STEVENS", "age": 18, "preferences": ["gameplay"], "degree": "SE", "postgraduate": false},
+				"49218373": {"name": "CANDRA KNAPP", "age": 20, "preferences": ["gameplay"], "degree": "SE", "postgraduate": true},
+				"49435228": {"name": "DANN BARRY", "age": 24, "preferences": ["gameplay"], "degree": "IT", "postgraduate": false},
+				"49801186": {"name": "NOVELLA HEWITT", "age": 19, "preferences": ["gameplay"], "degree": "IT", "postgraduate": true},
+				"49845902": {"name": "MITCHELL KIRK", "age": 17, "preferences": ["gameplay"], "degree": "IT", "postgraduate": true},
+				"49972059": {"name": "OWEN POWERS", "age": 26, "preferences": [], "degree": "IT", "postgraduate": true}},
 			"constraints": [{
 				"constr_type": "SubsetCountConstraint",
 				"name":        "preferences constraint",
