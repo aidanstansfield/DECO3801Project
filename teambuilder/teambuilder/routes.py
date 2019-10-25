@@ -35,6 +35,9 @@ def course_allocation(cid=None):
     course = Course.query.filter_by(cid=cid).first()
     if course == None:
         return render_template('error.html', err_message='We were unable to find the course you were looking for')
+    course = Course.query.filter_by(cid=cid, uid=current_user.id)
+    if (course == None):
+        return render_template('error.html', err_message='You do not own that course!')
     names = {}
     for student in course.students:
         if student.sname != None and student.sname != '':
