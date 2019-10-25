@@ -84,7 +84,7 @@ def create_course():
     # otherwise we're posting data for a new course
     
     data = request.json
-    print(data)
+    # print(data)
     
     # Create course & student
     new_course = Course(name=data.get('name'), questions=json.dumps(data.get('questions')), 
@@ -114,6 +114,7 @@ def course_info(id=None):
 @login_required
 def run_allocation():
     data = request.json
+    # print(data)
     cid = data.get('cid')
     course = Course.query.filter_by(cid=cid).first()
     if (course == None):
@@ -125,6 +126,7 @@ def run_allocation():
             students[student.sid] = json.loads(student.response)
     data.pop('cid')
     data['students'] = students
+    print(data)
     response = app.response_class(
         response = allocate(json.dumps(data)),
         status = 200,
