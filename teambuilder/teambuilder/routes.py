@@ -60,9 +60,9 @@ def courses():
                 num_responded, 'survey_url': request.url_root + url_for('main_bp.survey', cid=course.cid)[1:]})
     return render_template('courses.html', courses=courses, page_title='My Courses')
 
-@main_bp.route('/removecourse/<int:cid>')
+@main_bp.route('/removecourse/<int:cid>', methods=['POST'])
 @login_required
-def remove_course():
+def remove_course(cid=None):
     course = Course.query.filter_by(cid=cid).first()
     if course == None:
         return "No such course"
@@ -70,6 +70,7 @@ def remove_course():
     if course == None:
         return "That is not your course"
     db.session.delete(course)
+    db.session.commit()
     return "Course deleted"
     
 

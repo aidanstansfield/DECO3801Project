@@ -39,7 +39,7 @@
                         {% else %}
                             <td>{{ course.survey_url_display }}</td>
                         {% endif %}
-                        <td><button class='waves-effect waves-light btn red lighten-2'>Remove</button></td>
+                        <td><button class='waves-effect waves-light btn red lighten-2' onclick="removeCourse({{ course.cid }})">Remove</button></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -47,7 +47,21 @@
             <ul>
             </ul>
         </div>
-    </div> 
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>  
+    <script type='text/javascript'>
+        var removeCourse = function(id) {
+            console.log("Clicked");
+            $.ajax({
+                url: "/removecourse/" + id,
+                type: 'post',
+                contentType: "application/json",
+                success: function() {
+                    location.reload();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
