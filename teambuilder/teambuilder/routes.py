@@ -67,9 +67,9 @@ def courses():
                 num_responded, 'survey_url': request.url_root + url_for('main_bp.survey', cid=course.cid)[1:]})
     return render_template('courses.html', courses=courses, page_title='My Courses')
 
-@main_bp.route('/removecourse/<int:cid>')
+@main_bp.route('/removecourse/<int:cid>', methods=['POST'])
 @login_required
-def remove_course():
+def remove_course(cid=None):
     course = Course.query.filter_by(cid=cid).first()
     if course == None:
         return "No such course"
@@ -77,6 +77,7 @@ def remove_course():
     if course == None:
         return "That is not your course"
     db.session.delete(course)
+    db.session.commit()
     return "Course deleted"
     
 
@@ -119,6 +120,7 @@ def course_info(id=None):
 @login_required
 def run_allocation():
     data = request.json
+    # print(data)
     cid = data.get('cid')
     course = Course.query.filter_by(cid=cid).first()
     if (course == None):
@@ -130,6 +132,7 @@ def run_allocation():
             students[student.sid] = json.loads(student.response)
     data.pop('cid')
     data['students'] = students
+    print(data)
     response = app.response_class(
         response = allocate(json.dumps(data)),
         status = 200,

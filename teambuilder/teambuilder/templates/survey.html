@@ -88,7 +88,7 @@
         $('form').on('submit', function(event){
             event.preventDefault();
             data = $(this).serializeArray();
-            console.log(data);
+           
             // We need to convert this json into something we know
             // and then send it to the server to store in the database.
             // We don't need validation here since the HTML does it for us
@@ -111,12 +111,12 @@
                 if (type == 'integer') {
                     parsed_data[label] = parseInt(value, 10);
                 } else if (type == 'option') {
-                    parsed_data[label] = [value];   
+                    parsed_data[label] = value;   
                 } else if (type == 'bool') {
                     if (value == 'Yes') {
-                        parsed_data[label] = [true];
+                        parsed_data[label] = true;
                     } else {
-                        parsed_data[label] = [false];
+                        parsed_data[label] = false;
                     }
                 } else {
                     var entry = split[1];
@@ -136,7 +136,10 @@
                 url: "/survey/" + lastURLSegment,
                 type: 'post',
                 data: JSON.stringify(parsed_data),
-                contentType: "application/json"
+                contentType: "application/json",
+                success: function() {
+                    window.location.href = '/';
+                }
             });
         });
     </script>
