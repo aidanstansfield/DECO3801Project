@@ -12,6 +12,12 @@ from . import db
 
 main_bp = Blueprint('main_bp', __name__, template_folder='templates',
                     static_folder='static')
+scheme = 'http'
+external = False
+if app.config['FLASK_ENV'] == 'production':
+    scheme = 'https'
+    external = True
+
 # favicon route
 @app.route('/favicon.ico')
 def favicon():
@@ -47,6 +53,7 @@ def course_allocation(cid=None):
 @login_required
 def courses():
     courses = []
+    print(request.headers)
     for course in current_user.courses:
         if (course.questions == None or course.questions == ''):
             courses.append({'cid': course.cid, 'name': course.name, 
@@ -84,7 +91,6 @@ def create_course():
     # otherwise we're posting data for a new course
     
     data = request.json
-    print(data)
     
     # Create course & student
     new_course = Course(name=data.get('name'), questions=json.dumps(data.get('questions')), 
@@ -100,7 +106,7 @@ def create_course():
     db.session.commit()
 
     # Once we're done, we redirect them to the courses page
-    return redirect(url_for('main_bp.courses'))
+    return redirect(url_for('main_bp.courses', _scheme=scheme, _external=external))
 
 # course details page. Optionally takes a course ID field
 @main_bp.route('/course/<id>')
@@ -114,6 +120,7 @@ def course_info(id=None):
 @login_required
 def run_allocation():
     data = request.json
+    # print(data)
     cid = data.get('cid')
     course = Course.query.filter_by(cid=cid).first()
     if (course == None):
@@ -125,6 +132,7 @@ def run_allocation():
             students[student.sid] = json.loads(student.response)
     data.pop('cid')
     data['students'] = students
+    print(data)
     response = app.response_class(
         response = allocate(json.dumps(data)),
         status = 200,
@@ -159,7 +167,7 @@ def survey(cid=None):
         response = request.json
         student.response = json.dumps(response)
         db.session.commit()
-        return redirect(url_for("main_bp.home"))
+        return redirect(url_for("main_bp.home", _scheme=scheme, _external=external))
 
 """ Danie put this into course create
 # To go into the create_course page:
