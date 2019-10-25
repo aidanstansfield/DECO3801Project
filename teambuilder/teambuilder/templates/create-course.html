@@ -351,7 +351,7 @@
             } else {
                 validResponsesInput.removeClass('invalid');
             }
-            if (questionTypeInput.val() === "int") {
+            if (questionTypeInput.val() === "integer") {
                 var split = validResponsesInput.val().split(",");
                 if (split.length != 2) {
                     validResponsesInput.addClass('invalid');
@@ -386,7 +386,7 @@
             }
 
             responses = null;
-            if (questionTypeInput.val() === "int") {
+            if (questionTypeInput.val() === "integer") {
                 var split = validResponsesInput.val().split(",");
                 if (split.length != 2) {
                     validResponsesInput.addClass('invalid');
