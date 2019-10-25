@@ -22,7 +22,7 @@
             <h1>Step 1: Give Your Course a Name</h1>
             <div class="input-field">
                 <input id="course_name" 
-                    ng-model='course_name' type="text" class="validate" required>
+                    ng-model='course.course_name' type="text" class="validate" required>
                 <label for="course_name">Course Name</label>
                 <span></span>
             </div>
@@ -289,6 +289,9 @@
 
         app.controller("rootController", ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http){
             
+            $scope.course = {};
+            $scope.course.course_name = "";
+            
             var students = null;
             var questions = null;
 
@@ -297,8 +300,9 @@
             }
 
             $rootScope.createCourse = function() {
-                
-                if ($scope.course_name == "") {
+                console.log($scope.course);
+                console.log($scope.course.course_name);
+                if ($scope.course.course_name == "") {
                     return;
                 }
                 if (students == null) {
@@ -309,12 +313,12 @@
                     method : "post",
                     url : "/create-course",
                     data : {
-                        name : $scope.course_name,
+                        name : $scope.course.course_name,
                         students : students,
                         questions: $rootScope.questionList,
                     }
                 }).then(function success(response) {
-                   console.log("data sent successfully")
+                    window.location.href = '/courses';
                 }, function error(response) {
                     console.log("Error with response");
                 });
@@ -402,6 +406,14 @@
                 responses = validResponsesInput.val().split(",");
                 validResponsesInput.removeClass('invalid');
             }
+            questionTextInput.val('');
+            questionTextInput.removeClass("valid");
+            labelValInput.val('');
+            labelValInput.removeClass("valid");
+            questionTypeInput.val('');
+            questionTypeInput.removeClass("valid");
+            validResponsesInput.val('');
+            validResponsesInput.removeClass("valid");
             angular.element($('#qController')).scope().addQuestion();
         });
 
