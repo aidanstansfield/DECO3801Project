@@ -260,7 +260,7 @@ def validate_data(request, constraints, student):
 					raise InvalidRequestError(request, "Student response ({}) is not a valid choice for constraint ({})".format(response, constraint.name))
 		else:
 			#constraint.constraint_type == "boolean":
-			responses = student[constraint.field]
+			response = student[constraint.field]
 			if type(response) != bool:
 				raise InvalidRequestError(request, "Student response ({}) is not a valid choice for constraint ({})".format(response, constraint.name))
 
